@@ -1,0 +1,1 @@
+geopandas, libpysal, esda, statsmodels, scipy
