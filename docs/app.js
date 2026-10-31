@@ -1,7 +1,6 @@
 Chart.defaults.font.family = "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif";
 Chart.defaults.color = '#cbd5e1';
 
-// 1. Keyless Multi-Layer Raster Style (Esri Satellite + OSM Colorful + Esri Topo)
 const MAP_STYLE = {
     version: 8,
     sources: {
@@ -119,21 +118,27 @@ function computeExactGiStar(features, k) {
     });
 }
 
-// Fetch GeoJSON with Fallback Path
+// Bulletproof fetch with absolute GitHub Pages URL fallback
 async function loadGeoJSONData() {
-    const paths = ['data/lagos_uhi_processed.geojson', './data/lagos_uhi_processed.geojson', 'https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/data/lagos_uhi_processed.geojson'];
+    const paths = [
+        './data/lagos_uhi_processed.geojson',
+        'data/lagos_uhi_processed.geojson',
+        'https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/data/lagos_uhi_processed.geojson',
+        'https://raw.githubusercontent.com/oloyededavid/Lagos-Urban-Heat-Analytics/main/docs/data/lagos_uhi_processed.geojson'
+    ];
     for (let path of paths) {
         try {
             const res = await fetch(path);
             if (res.ok) {
                 const data = await res.json();
+                console.log(`Successfully loaded GeoJSON from: ${path}`);
                 return data;
             }
         } catch (e) {
-            console.warn(`Failed loading from ${path}`);
+            console.warn(`Path failed: ${path}`);
         }
     }
-    throw new Error("Could not load GeoJSON file from any path.");
+    throw new Error("Critical: Could not load lagos_uhi_processed.geojson from any path.");
 }
 
 loadGeoJSONData()
@@ -172,7 +177,10 @@ loadGeoJSONData()
         if (map.loaded()) initMapLayers();
         else map.on('load', initMapLayers);
     })
-    .catch(err => console.error('Critical GeoJSON Error:', err));
+    .catch(err => {
+        console.error(err);
+        alert("Error: Could not load data/lagos_uhi_processed.geojson. Please verify the file is uploaded inside the docs/data/ folder on GitHub.");
+    });
 
 function recomputeSimulation() {
     if (!rawGeoJSON) return;
