@@ -1,7 +1,7 @@
 Chart.defaults.font.family = "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif";
 Chart.defaults.color = '#cbd5e1';
 
-// 1. Keyless Multi-Layer Raster Style (Esri Satellite + OSM Colorful + Esri Topo — Zero API Keys Ever)
+// 1. Keyless Multi-Layer Raster Style (Esri Satellite + OSM Colorful + Esri Topo)
 const MAP_STYLE = {
     version: 8,
     sources: {
@@ -49,7 +49,6 @@ const map = new maplibregl.Map({
 
 map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right');
 
-// Global Application State
 let rawGeoJSON = null;
 let currentK = 5;
 let currentMetric = 'hotspot';
@@ -61,14 +60,13 @@ let selectedZoneName = null;
 let scatterChart = null;
 let hoverPopup = new maplibregl.Popup({ closeButton: false, closeOnClick: false });
 
-// Color Helpers
 function getHotspotColor(category) {
     switch (category) {
-        case 'Priority Cooling Zone': return '#ef4444';      // Vibrant Crimson
-        case 'Significant Heat Hotspot': return '#f97316';   // Bright Orange
-        case 'Elevated Thermal Cluster': return '#eab308';   // Golden Amber
-        case 'Thermal Refugium': return '#06b6d4';           // Cyan Blue
-        default: return '#64748b';                           // Slate Grey
+        case 'Priority Cooling Zone': return '#ef4444';
+        case 'Significant Heat Hotspot': return '#f97316';
+        case 'Elevated Thermal Cluster': return '#eab308';
+        case 'Thermal Refugium': return '#06b6d4';
+        default: return '#64748b';
     }
 }
 
@@ -82,7 +80,6 @@ const LST_PALETTE = ['#06b6d4', '#10b981', '#eab308', '#f97316', '#ef4444', '#b9
 const EXP_PALETTE = ['#334155', '#6366f1', '#a855f7', '#ec4899', '#ef4444', '#dc2626'];
 const NDVI_PALETTE = ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e', '#15803d'];
 
-// Compute Centroid for Any GeoJSON Polygon/MultiPolygon
 function getFeatureCenter(feature) {
     const coords = feature.geometry.type === 'MultiPolygon'
         ? feature.geometry.coordinates.flat(2)
@@ -92,32 +89,29 @@ function getFeatureCenter(feature) {
     return [(Math.min(...lngs) + Math.max(...lngs)) / 2, (Math.min(...lats) + Math.max(...lats)) / 2];
 }
 
-// Exact Real-Time Getis-Ord Gi* (star=True, row-standardized KNN) in JavaScript
 function computeExactGiStar(features, k) {
     const n = features.length;
     const vals = features.map(f => f.properties.sim_lst);
     const meanY = vals.reduce((a, b) => a + b, 0) / n;
     const s2 = vals.reduce((a, b) => a + Math.pow(b - meanY, 2), 0) / n;
     const s = Math.sqrt(s2) || 1e-6;
-
     const centers = features.map(f => f.properties._center);
 
     return features.map((_, i) => {
-        // Find k nearest neighbors (plus self i because star=True)
         const dists = centers.map((c, j) => ({
             idx: j,
             d: Math.hypot(c[0] - centers[i][0], c[1] - centers[i][1])
         })).sort((a, b) => a.d - b.d);
 
         const neighborIndices = dists.slice(0, Math.min(n, k + 1)).map(item => item.idx);
-        const m = neighborIndices.length; // k + 1 with focal unit included
+        const m = neighborIndices.length;
         const w = 1.0 / m;
 
         let sumWY = 0;
         neighborIndices.forEach(j => { sumWY += w * vals[j]; });
 
-        const sumW = 1.0; // Row-standardized
-        const sumW2 = m * (w * w); // 1 / m
+        const sumW = 1.0;
+        const sumW2 = m * (w * w);
 
         const num = sumWY - meanY * sumW;
         const den = s * Math.sqrt(Math.max(1e-9, (n * sumW2 - (sumW * sumW)) / (n - 1)));
@@ -125,22 +119,34 @@ function computeExactGiStar(features, k) {
     });
 }
 
-// Fetch Processed GeoJSON
-fetch('data/lagos_uhi_processed.geojson')
-    .then(res => res.json())
+// Fetch GeoJSON with Fallback Path
+async function loadGeoJSONData() {
+    const paths = ['data/lagos_uhi_processed.geojson', './data/lagos_uhi_processed.geojson', 'https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/data/lagos_uhi_processed.geojson'];
+    for (let path of paths) {
+        try {
+            const res = await fetch(path);
+            if (res.ok) {
+                const data = await res.json();
+                return data;
+            }
+        } catch (e) {
+            console.warn(`Failed loading from ${path}`);
+        }
+    }
+    throw new Error("Could not load GeoJSON file from any path.");
+}
+
+loadGeoJSONData()
     .then(data => {
         rawGeoJSON = data;
 
-        // Precompute centroids
         data.features.forEach(f => {
             f.properties._center = getFeatureCenter(f);
         });
 
-        // 70th percentile population density threshold for Priority Cooling Zones
         const densities = data.features.map(f => f.properties.pop_density || 0).sort((a, b) => a - b);
         popQuartile75 = densities[Math.floor(densities.length * 0.70)] || 0;
 
-        // Empirical OLS slope (dLST / dNDVI)
         const valid = data.features.filter(f => f.properties.ndvi != null && f.properties.mean_lst != null);
         if (valid.length > 2) {
             const mx = valid.reduce((s, f) => s + f.properties.ndvi, 0) / valid.length;
@@ -151,7 +157,6 @@ fetch('data/lagos_uhi_processed.geojson')
         }
         document.getElementById('ols-slope-label').innerText = empiricalSlope.toFixed(1);
 
-        // Populate Fly-to-Zone Dropdown
         const zoneSelect = document.getElementById('zone-select');
         const names = [...data.features].map(f => f.properties.ward_name).filter(Boolean).sort();
         names.forEach(name => {
@@ -167,14 +172,13 @@ fetch('data/lagos_uhi_processed.geojson')
         if (map.loaded()) initMapLayers();
         else map.on('load', initMapLayers);
     })
-    .catch(err => console.error('GeoJSON load error:', err));
+    .catch(err => console.error('Critical GeoJSON Error:', err));
 
 function recomputeSimulation() {
     if (!rawGeoJSON) return;
     const features = rawGeoJSON.features;
     const boost = ndviBoostPct / 100.0;
 
-    // 1. Apply NDVI boost & empirical LST cooling
     features.forEach(f => {
         const p = f.properties;
         const baseNdvi = Number(p.ndvi || 0.25);
@@ -186,9 +190,7 @@ function recomputeSimulation() {
         p.sim_delta_lst = dLst;
     });
 
-    // 2. Compute Exact KNN Getis-Ord Gi* (or use exact Python Gi* at 0% baseline)
     const exactGiScores = computeExactGiStar(features, Number(currentK));
-
     const baseMean = features.reduce((s, f) => s + Number(f.properties.mean_lst), 0) / features.length;
     const baseStd = Math.sqrt(features.reduce((s, f) => s + Math.pow(Number(f.properties.mean_lst) - baseMean, 2), 0) / features.length) || 1;
 
@@ -205,7 +207,6 @@ function recomputeSimulation() {
         const p = f.properties;
         p.sim_lst_zscore = (p.sim_lst - baseMean) / baseStd;
 
-        // Use Python precomputed Gi* when slider=0% and available, else exact live Gi* + thermal anomaly shift
         const pyGiz = p[`gi_zscore_k${currentK}`] ?? p.gi_zscore;
         const baseGiz = (pyGiz !== undefined) ? Number(pyGiz) : exactGiScores[idx];
         const coolingShift = (p.sim_delta_lst / baseStd);
@@ -248,9 +249,7 @@ function recomputeSimulation() {
         sumDelta += p.sim_delta_lst;
     });
 
-    // Update KPI Cards
-    const avgLst = lstVals.reduce((a, b) => a + b, 0) / lstVals.length;
-    document.getElementById('kpi-mean-lst').innerText = `${avgLst.toFixed(2)} °C`;
+    document.getElementById('kpi-mean-lst').innerText = `${(lstVals.reduce((a, b) => a + b, 0) / lstVals.length).toFixed(2)} °C`;
     document.getElementById('kpi-max-lst').innerText = `${lstMax.toFixed(2)} °C`;
     document.getElementById('kpi-priority-count').innerText = `${priorityCount} of ${features.length}`;
     document.getElementById('kpi-sim-delta').innerText = `${(sumDelta / features.length).toFixed(2)} °C`;
@@ -285,7 +284,6 @@ function initMapLayers() {
         data: rawGeoJSON
     });
 
-    // 1. Primary 3D Extrusion Layer
     map.addLayer({
         id: 'zones-3d',
         type: 'fill-extrusion',
@@ -298,7 +296,6 @@ function initMapLayers() {
         }
     });
 
-    // 2. Crisp Boundary Line Layer (Visible in 2D & Base of 3D)
     map.addLayer({
         id: 'zones-outline',
         type: 'line',
@@ -310,7 +307,6 @@ function initMapLayers() {
         }
     });
 
-    // 3. Selected Zone 3D Cyan Highlight Crown
     map.addLayer({
         id: 'zones-selected-3d',
         type: 'fill-extrusion',
@@ -324,7 +320,6 @@ function initMapLayers() {
         }
     });
 
-    // Hover Tooltip
     map.on('mousemove', 'zones-3d', (e) => {
         if (!e.features.length) return;
         map.getCanvas().style.cursor = 'pointer';
@@ -347,7 +342,6 @@ function initMapLayers() {
         hoverPopup.remove();
     });
 
-    // Click Zone Handler
     map.on('click', 'zones-3d', (e) => {
         if (!e.features.length) return;
         selectAndFlyToZone(e.features[0].properties.ward_name, e.lngLat);
@@ -435,23 +429,23 @@ function updateLegend(lstMin, lstMax) {
     const box = document.getElementById('legend-box');
     if (currentMetric === 'hotspot') {
         const items = [
-            ['Priority Cooling Zone (High Heat + Pop)', '#ef4444'],
-            ['Significant Heat Hotspot (Gi* ≥ 1.65)', '#f97316'],
-            ['Elevated Thermal Cluster (Gi* ≥ 1.28)', '#eab308'],
-            ['Thermal Refugium / Coldspot', '#06b6d4'],
-            ['Not Statistically Significant', '#64748b']
+            ['Priority Cooling Zone', '#ef4444'],
+            ['Significant Heat Hotspot', '#f97316'],
+            ['Elevated Thermal Cluster', '#eab308'],
+            ['Thermal Refugium', '#06b6d4'],
+            ['Not Significant', '#64748b']
         ];
-        box.innerHTML = `<span class="legend-heading">3D Hotspot Classification (Height = Exposure)</span>` +
+        box.innerHTML = `<span class="legend-heading">3D Hotspot Classification</span>` +
             items.map(([lbl, col]) => `<div class="legend-item"><span class="legend-color" style="background:${col}"></span><span>${lbl}</span></div>`).join('');
     } else if (currentMetric === 'lst') {
         box.innerHTML = `<span class="legend-heading">Mean Surface Temp (${lstMin.toFixed(1)}°C – ${lstMax.toFixed(1)}°C)</span>` +
             LST_PALETTE.map((col, i) => `<div class="legend-item"><span class="legend-color" style="background:${col}"></span><span>Thermal Tier ${i + 1}</span></div>`).join('');
     } else if (currentMetric === 'exposure') {
-        box.innerHTML = `<span class="legend-heading">Human Heat Exposure Index (0.0 – 1.0)</span>` +
-            EXP_PALETTE.map((col, i) => `<div class="legend-item"><span class="legend-color" style="background:${col}"></span><span>Exposure Class ${i + 1}</span></div>`).join('');
+        box.innerHTML = `<span class="legend-heading">Human Heat Exposure Index (0–1)</span>` +
+            EXP_PALETTE.map((col, i) => `<div class="legend-item"><span class="legend-color" style="background:${col}"></span><span>Exposure Tier ${i + 1}</span></div>`).join('');
     } else {
         box.innerHTML = `<span class="legend-heading">Sentinel-2 Canopy Greenness (NDVI)</span>` +
-            NDVI_PALETTE.map((col, i) => `<div class="legend-item"><span class="legend-color" style="background:${col}"></span><span>Vegetation Class ${i + 1}</span></div>`).join('');
+            NDVI_PALETTE.map((col, i) => `<div class="legend-item"><span class="legend-color" style="background:${col}"></span><span>Canopy Tier ${i + 1}</span></div>`).join('');
     }
 }
 
@@ -493,7 +487,7 @@ function initChart() {
             scales: {
                 x: {
                     grid: { color: '#1e293b' },
-                    title: { display: true, text: 'Sentinel-2 NDVI (Vegetation)', color: '#94a3b8', font: { weight: '700' } }
+                    title: { display: true, text: 'Sentinel-2 NDVI', color: '#94a3b8', font: { weight: '700' } }
                 },
                 y: {
                     grid: { color: '#1e293b' },
@@ -504,7 +498,6 @@ function initChart() {
     });
 }
 
-// Toolbar & Simulator Event Listeners
 document.getElementById('ndvi-slider').addEventListener('input', (e) => {
     ndviBoostPct = Number(e.target.value);
     document.getElementById('ndvi-boost-val').innerText = `+${ndviBoostPct}% NDVI`;
@@ -541,7 +534,6 @@ document.getElementById('zone-select').addEventListener('change', (e) => {
     }
 });
 
-// Clean Basemap Visibility Switcher (Never destroys layers or requires API keys)
 document.getElementById('basemap-select').addEventListener('change', (e) => {
     const mode = e.target.value;
     map.setLayoutProperty('base-sat', 'visibility', mode === 'satellite' ? 'visible' : 'none');
@@ -566,7 +558,6 @@ document.getElementById('btn-rotate-cam').addEventListener('click', () => {
     map.easeTo({ bearing: map.getBearing() + 45, duration: 700 });
 });
 
-// Policy Brief Downloader
 document.getElementById('download-brief').addEventListener('click', () => {
     if (!selectedZoneName || !rawGeoJSON) return;
     const feat = rawGeoJSON.features.find(f => f.properties.ward_name === selectedZoneName);
@@ -611,7 +602,6 @@ document.getElementById('download-brief').addEventListener('click', () => {
     URL.revokeObjectURL(url);
 });
 
-// CSV Exporter
 document.getElementById('export-csv').addEventListener('click', () => {
     if (!rawGeoJSON) return;
     const cols = ['ward_name', 'mean_lst', 'sim_lst', 'ndvi', 'sim_ndvi', 'elevation', 'pop_density', 'sim_exposure', 'sim_giz', 'sim_category'];
