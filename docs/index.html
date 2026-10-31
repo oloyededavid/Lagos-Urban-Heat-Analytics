@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lagos Urban Heat Analytics</title>
+    
+    <!-- Google Fonts: DM Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Custom Minimalist Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <span class="dot"></span>
+            <h1>Lagos Urban Heat Analytics</h1>
+            <span class="divider">/</span>
+            <p class="subtitle">Getis-Ord Gi* Spatial Clustering &amp; Thermal Exposure</p>
+        </div>
+        <div class="controls">
+            <label for="k-select">Spatial Weights</label>
+            <select id="k-select">
+                <option value="5" selected>KNN (k = 5 · Primary)</option>
+                <option value="3">KNN (k = 3 · Local)</option>
+                <option value="8">KNN (k = 8 · Broad)</option>
+            </select>
+        </div>
+    </header>
+
+    <main class="workspace">
+        <section id="map"></section>
+
+        <aside id="sidebar">
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="eyebrow">Spatial Unit Telemetry</span>
+                    <h2 id="ward-name">Select a Zone on Map</h2>
+                </div>
+                
+                <p id="instruction" class="muted-note">Click any administrative zone on the map to inspect its dry-season surface temperature anomaly, vegetation index, and FDR-corrected hotspot status.</p>
+
+                <div id="ward-details" class="metrics-wrapper hidden">
+                    <div class="status-row">
+                        <span class="status-label">Classification</span>
+                        <span id="val-class" class="badge">-</span>
+                    </div>
+
+                    <div class="metric-grid">
+                        <div class="metric-box">
+                            <span class="m-label">Mean LST</span>
+                            <span class="m-value"><span id="val-raw-lst">-</span> °C</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="m-label">LST Z-Score</span>
+                            <span class="m-value" id="val-lst">-</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="m-label">Pop. Density</span>
+                            <span class="m-value"><span id="val-pop">-</span> /km²</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="m-label">Exposure Index</span>
+                            <span class="m-value" id="val-exp">-</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="m-label">Sentinel-2 NDVI</span>
+                            <span class="m-value" id="val-ndvi">-</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="m-label">DEM Elevation</span>
+                            <span class="m-value"><span id="val-elev">-</span> m</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="m-label">Gi* Z-Score</span>
+                            <span class="m-value" id="val-giz">-</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="m-label">FDR (α = 0.05)</span>
+                            <span class="m-value" id="val-fdr">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="eyebrow">Covariate Distribution</span>
+                    <h2>Surface Temperature vs. NDVI</h2>
+                </div>
+                <div class="chart-box">
+                    <canvas id="uhiChart" height="155"></canvas>
+                </div>
+            </div>
+
+            <div class="panel policy-panel">
+                <div class="panel-header">
+                    <span class="eyebrow">From Data to Decision</span>
+                    <h2>Indicative Planning Priorities</h2>
+                </div>
+                <p class="policy-copy"><strong>Priority Cooling Zones</strong> isolate administrative units where FDR-corrected thermal hotspots (<em>p</em> &lt; 0.05) intersect top-quartile population density (&ge;75th percentile), pinpointing high-impact targets for urban canopy expansion and heat-mitigation infrastructure.</p>
+            </div>
+        </aside>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
