@@ -33,6 +33,7 @@ const map = new maplibregl.Map({
 
 map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right');
 
+let rawGeoJSON = null;
 let currentK = 5;
 let currentMetric = 'hotspot';
 let ndviBoostPct = 0;
@@ -63,20 +64,15 @@ const LST_PALETTE = ['#06b6d4', '#10b981', '#eab308', '#f97316', '#ef4444', '#b9
 const EXP_PALETTE = ['#334155', '#6366f1', '#a855f7', '#ec4899', '#ef4444', '#dc2626'];
 const NDVI_PALETTE = ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e', '#15803d'];
 
-// Fully Embedded Lagos LGA Dataset
-const rawGeoJSON = {
+// Fallback features in case fetch is restricted
+const FALLBACK_GEOJSON = {
     type: "FeatureCollection",
     features: [
         { type: "Feature", properties: { ward_name: "Lagos Island", mean_lst: 38.5, ndvi: 0.18, elevation: 5, pop_density: 22000, gi_zscore_k5: 3.4, fdr_sig_k5: true }, geometry: { type: "Polygon", coordinates: [[[3.38, 6.45], [3.42, 6.45], [3.42, 6.48], [3.38, 6.48], [3.38, 6.45]]] } },
         { type: "Feature", properties: { ward_name: "Ikeja", mean_lst: 37.2, ndvi: 0.22, elevation: 35, pop_density: 18000, gi_zscore_k5: 2.8, fdr_sig_k5: true }, geometry: { type: "Polygon", coordinates: [[[3.33, 6.58], [3.37, 6.58], [3.37, 6.62], [3.33, 6.62], [3.33, 6.58]]] } },
         { type: "Feature", properties: { ward_name: "Alimosho", mean_lst: 35.8, ndvi: 0.31, elevation: 45, pop_density: 15000, gi_zscore_k5: 1.9, fdr_sig_k5: false }, geometry: { type: "Polygon", coordinates: [[[3.25, 6.55], [3.32, 6.55], [3.32, 6.63], [3.25, 6.63], [3.25, 6.55]]] } },
         { type: "Feature", properties: { ward_name: "Eti-Osa", mean_lst: 37.9, ndvi: 0.20, elevation: 3, pop_density: 12000, gi_zscore_k5: 2.5, fdr_sig_k5: true }, geometry: { type: "Polygon", coordinates: [[[3.42, 6.42], [3.55, 6.42], [3.55, 6.48], [3.42, 6.48], [3.42, 6.42]]] } },
-        { type: "Feature", properties: { ward_name: "Surulere", mean_lst: 36.5, ndvi: 0.24, elevation: 12, pop_density: 25000, gi_zscore_k5: 2.1, fdr_sig_k5: true }, geometry: { type: "Polygon", coordinates: [[[3.34, 6.49], [3.38, 6.49], [3.38, 6.53], [3.34, 6.53], [3.34, 6.49]]] } },
-        { type: "Feature", properties: { ward_name: "Lagos Mainland", mean_lst: 37.0, ndvi: 0.21, elevation: 10, pop_density: 28000, gi_zscore_k5: 2.6, fdr_sig_k5: true }, geometry: { type: "Polygon", coordinates: [[[3.37, 6.50], [3.41, 6.50], [3.41, 6.54], [3.37, 6.54], [3.37, 6.50]]] } },
-        { type: "Feature", properties: { ward_name: "Kosofe", mean_lst: 35.2, ndvi: 0.35, elevation: 22, pop_density: 16000, gi_zscore_k5: 0.8, fdr_sig_k5: false }, geometry: { type: "Polygon", coordinates: [[[3.37, 6.55], [3.43, 6.55], [3.43, 6.62], [3.37, 6.62], [3.37, 6.55]]] } },
-        { type: "Feature", properties: { ward_name: "Ikorodu", mean_lst: 34.5, ndvi: 0.42, elevation: 30, pop_density: 9000, gi_zscore_k5: -0.5, fdr_sig_k5: false }, geometry: { type: "Polygon", coordinates: [[[3.45, 6.58], [3.55, 6.58], [3.55, 6.68], [3.45, 6.68], [3.45, 6.58]]] } },
-        { type: "Feature", properties: { ward_name: "Ibeju-Lekki", mean_lst: 33.8, ndvi: 0.48, elevation: 4, pop_density: 4000, gi_zscore_k5: -1.8, fdr_sig_k5: true }, geometry: { type: "Polygon", coordinates: [[[3.55, 6.42], [3.70, 6.42], [3.70, 6.52], [3.55, 6.52], [3.55, 6.42]]] } },
-        { type: "Feature", properties: { ward_name: "Epe", mean_lst: 34.0, ndvi: 0.46, elevation: 15, pop_density: 5000, gi_zscore_k5: -1.2, fdr_sig_k5: false }, geometry: { type: "Polygon", coordinates: [[[3.90, 6.55], [4.05, 6.55], [4.05, 6.65], [3.90, 6.65], [3.90, 6.55]]] } }
+        { type: "Feature", properties: { ward_name: "Surulere", mean_lst: 36.5, ndvi: 0.24, elevation: 12, pop_density: 25000, gi_zscore_k5: 2.1, fdr_sig_k5: true }, geometry: { type: "Polygon", coordinates: [[[3.34, 6.49], [3.38, 6.49], [3.38, 6.53], [3.34, 6.53], [3.34, 6.49]]] } }
     ]
 };
 
@@ -89,28 +85,59 @@ function getFeatureCenter(feature) {
     return [(Math.min(...lngs) + Math.max(...lngs)) / 2, (Math.min(...lats) + Math.max(...lats)) / 2];
 }
 
-rawGeoJSON.features.forEach(f => {
-    f.properties._center = getFeatureCenter(f);
+async function loadRealData() {
+    const paths = [
+        './data/lagos_uhi_processed.geojson',
+        'data/lagos_uhi_processed.geojson',
+        'https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/data/lagos_uhi_processed.geojson',
+        'https://raw.githubusercontent.com/oloyededavid/Lagos-Urban-Heat-Analytics/main/docs/data/lagos_uhi_processed.geojson'
+    ];
+    for (const path of paths) {
+        try {
+            const res = await fetch(path);
+            if (res.ok) {
+                const json = await res.json();
+                if (json && json.features && json.features.length > 0) {
+                    console.log(`Successfully loaded real GeoJSON from ${path}`);
+                    return json;
+                }
+            }
+        } catch (e) {
+            // try next path
+        }
+    }
+    console.warn("Using fallback dataset.");
+    return FALLBACK_GEOJSON;
+}
+
+loadRealData().then(data => {
+    rawGeoJSON = data;
+
+    data.features.forEach(f => {
+        if (!f.properties.ward_name) f.properties.ward_name = "Lagos Administrative Zone";
+        f.properties._center = getFeatureCenter(f);
+    });
+
+    const densities = data.features.map(f => f.properties.pop_density || 10000).sort((a, b) => a - b);
+    popQuartile75 = densities[Math.floor(densities.length * 0.70)] || 10000;
+
+    const zoneSelect = document.getElementById('zone-select');
+    data.features.forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f.properties.ward_name;
+        opt.innerText = f.properties.ward_name;
+        zoneSelect.appendChild(opt);
+    });
+
+    recomputeSimulation();
+    initChart();
+
+    if (map.loaded()) initMapLayers();
+    else map.on('load', initMapLayers);
 });
-
-const densities = rawGeoJSON.features.map(f => f.properties.pop_density).sort((a, b) => a - b);
-popQuartile75 = densities[Math.floor(densities.length * 0.70)] || 10000;
-
-const zoneSelect = document.getElementById('zone-select');
-rawGeoJSON.features.forEach(f => {
-    const opt = document.createElement('option');
-    opt.value = f.properties.ward_name;
-    opt.innerText = f.properties.ward_name;
-    zoneSelect.appendChild(opt);
-});
-
-recomputeSimulation();
-initChart();
-
-if (map.loaded()) initMapLayers();
-else map.on('load', initMapLayers);
 
 function recomputeSimulation() {
+    if (!rawGeoJSON) return;
     const features = rawGeoJSON.features;
     const boost = ndviBoostPct / 100.0;
 
@@ -199,7 +226,7 @@ function recomputeSimulation() {
 }
 
 function initMapLayers() {
-    if (map.getSource('lagos-zones')) return;
+    if (!rawGeoJSON || map.getSource('lagos-zones')) return;
 
     map.addSource('lagos-zones', {
         type: 'geojson',
@@ -224,8 +251,8 @@ function initMapLayers() {
         source: 'lagos-zones',
         paint: {
             'line-color': '#ffffff',
-            'line-width': 2,
-            'line-opacity': 0.95
+            'line-width': 1.5,
+            'line-opacity': 0.9
         }
     });
 
@@ -242,7 +269,6 @@ function initMapLayers() {
         }
     });
 
-    // Make mouse cursor pointer on hover
     map.on('mousemove', 'zones-3d', (e) => {
         if (!e.features.length) return;
         map.getCanvas().style.cursor = 'pointer';
@@ -265,11 +291,10 @@ function initMapLayers() {
         hoverPopup.remove();
     });
 
-    // CRITICAL: Full Click Interaction Handler
+    // Precise Polygon Click Handler
     map.on('click', 'zones-3d', (e) => {
         if (!e.features.length) return;
-        const zoneName = e.features[0].properties.ward_name;
-        selectAndFlyToZone(zoneName, e.lngLat);
+        selectAndFlyToZone(e.features[0].properties.ward_name, e.lngLat);
     });
 }
 
@@ -319,7 +344,7 @@ function populateSidebar(p) {
 
 function renderLeaderboard() {
     const tbody = document.getElementById('leaderboard-body');
-    if (!tbody) return;
+    if (!tbody || !rawGeoJSON) return;
 
     const sorted = [...rawGeoJSON.features].sort((a, b) => (b.properties.sim_exposure || 0) - (a.properties.sim_exposure || 0));
     tbody.innerHTML = sorted.map(f => {
@@ -452,7 +477,7 @@ document.getElementById('btn-rotate-cam').addEventListener('click', () => {
 });
 
 document.getElementById('download-brief').addEventListener('click', () => {
-    if (!selectedZoneName) return;
+    if (!selectedZoneName || !rawGeoJSON) return;
     const feat = rawGeoJSON.features.find(f => f.properties.ward_name === selectedZoneName);
     if (!feat) return;
     const p = feat.properties;
@@ -481,6 +506,7 @@ document.getElementById('download-brief').addEventListener('click', () => {
 });
 
 document.getElementById('export-csv').addEventListener('click', () => {
+    if (!rawGeoJSON) return;
     const cols = ['ward_name', 'mean_lst', 'sim_lst', 'ndvi', 'elevation', 'pop_density', 'sim_exposure', 'sim_giz', 'sim_category'];
     const rows = rawGeoJSON.features.map(f => cols.map(c => JSON.stringify(f.properties[c] ?? '')).join(','));
     const csv = [cols.join(','), ...rows].join('\n');
