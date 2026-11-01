@@ -34,14 +34,15 @@ body {
 
 /* Header */
 .topbar {
-    height: 64px;
-    padding: 0 24px;
+    min-height: 64px;
+    padding: 10px 24px;
     background: var(--bg-panel);
     border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
+    flex-wrap: wrap;
     z-index: 1000;
 }
 
@@ -56,6 +57,7 @@ body {
     height: 10px;
     border-radius: 50%;
     background: var(--red);
+    box-shadow: 0 0 8px var(--red);
 }
 
 .brand h1 {
@@ -78,6 +80,7 @@ body {
     display: flex;
     align-items: center;
     gap: 14px;
+    flex-wrap: wrap;
 }
 
 .ctrl-group {
@@ -87,7 +90,7 @@ body {
 }
 
 .ctrl-group label {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -156,8 +159,8 @@ body {
     border-radius: 8px;
     padding: 14px 16px;
     z-index: 800;
-    min-width: 220px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    min-width: 230px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
 }
 
 .legend-title {
@@ -295,6 +298,7 @@ body {
     border-radius: 6px;
     font-size: 0.82rem;
     font-weight: 700;
+    white-space: nowrap;
 }
 
 .slider-row {
@@ -326,6 +330,7 @@ body {
     font-size: 0.8rem;
     font-weight: 600;
     color: var(--text-muted);
+    white-space: nowrap;
 }
 
 .table-container {
@@ -387,14 +392,14 @@ body {
 
 /* Clean Leaflet Tooltip */
 .leaflet-tooltip.clean-tip {
-    background: rgba(15, 23, 42, 0.95);
+    background: rgba(15, 23, 42, 0.96);
     color: #f8fafc;
     border: 1px solid #334155;
     border-radius: 6px;
     padding: 8px 12px;
     font-family: 'DM Sans', sans-serif;
     font-size: 0.86rem;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 
 @media (max-width: 960px) {
