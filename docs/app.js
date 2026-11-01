@@ -1,490 +1,466 @@
-Chart.defaults.font.family = "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif";
-Chart.defaults.color = '#cbd5e1';
+// 1. Initialize Crisp SVG 2D Leaflet Map (No Canvas clipping bugs)
+const map = L.map('map', {
+    zoomControl: false
+}).setView([6.5244, 3.3792], 10);
 
-const MAP_STYLE = {
-    version: 8,
-    sources: {
-        'esri-sat': {
-            type: 'raster',
-            tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
-            tileSize: 256
-        },
-        'esri-labels': {
-            type: 'raster',
-            tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}'],
-            tileSize: 256
-        }
-    },
-    layers: [
-        { id: 'base-sat', type: 'raster', source: 'esri-sat', layout: { visibility: 'visible' } },
-        { id: 'base-labels', type: 'raster', source: 'esri-labels', layout: { visibility: 'visible' }, paint: { 'raster-opacity': 0.9 } }
-    ]
+L.control.zoom({ position: 'topright' }).addTo(map);
+
+// Keyless Basemap Layers
+const BASEMAPS = {
+    satellite: L.layerGroup([
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri',
+            maxZoom: 18
+        }),
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 18,
+            opacity: 0.85
+        })
+    ]),
+    light: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri',
+        maxZoom: 16
+    }),
+    osm: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 18
+    })
 };
 
-const map = new maplibregl.Map({
-    container: 'map',
-    style: MAP_STYLE,
-    center: [3.39, 6.51],
-    zoom: 9.8,
-    pitch: 52,
-    bearing: -12,
-    antialias: true
-});
+let activeBasemap = BASEMAPS.satellite;
+activeBasemap.addTo(map);
 
-map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right');
-
-let currentK = 5;
+// Application State
+let rawGeoJSON = null;
+let geojsonLayer = null;
+let layerIndex = {};
 let currentMetric = 'hotspot';
-let ndviBoostPct = 0;
-let is3D = true;
-let popQuartile75 = 0;
+let currentK = 5;
+let ndviBoost = 0;
 let empiricalSlope = -13.5;
-let selectedZoneName = null;
-let scatterChart = null;
-let hoverPopup = new maplibregl.Popup({ closeButton: false, closeOnClick: false });
+let popThreshold70 = 0;
+let selectedZone = null;
 
-function getHotspotColor(category) {
-    switch (category) {
-        case 'Priority Cooling Zone': return '#ef4444';
-        case 'Significant Heat Hotspot': return '#f97316';
-        case 'Elevated Thermal Cluster': return '#eab308';
-        case 'Thermal Refugium': return '#06b6d4';
-        default: return '#64748b';
+// Color Palettes
+const LST_COLORS = ['#06b6d4', '#10b981', '#eab308', '#f97316', '#ef4444', '#b91c1c'];
+const EXP_COLORS = ['#334155', '#6366f1', '#a855f7', '#ec4899', '#ef4444', '#dc2626'];
+const NDVI_COLORS = ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e', '#15803d'];
+
+function getHotspotColor(cat) {
+    switch (cat) {
+        case 'Priority Cooling Zone': return '#ef4444';      // Crimson
+        case 'Significant Heat Hotspot': return '#f97316';   // Deep Orange
+        case 'Elevated Thermal Cluster': return '#eab308';   // Warm Amber
+        case 'Thermal Refugium (Cool)': return '#06b6d4';    // Cool Cyan
+        default: return '#64748b';                           // Neutral Slate
     }
 }
 
-function getContinuousColor(val, min, max, palette) {
+function getGradColor(val, min, max, palette) {
     const t = Math.max(0, Math.min(1, (val - min) / ((max - min) || 1)));
     const idx = Math.min(palette.length - 1, Math.floor(t * palette.length));
     return palette[idx];
 }
 
-const LST_PALETTE = ['#06b6d4', '#10b981', '#eab308', '#f97316', '#ef4444', '#b91c1c'];
-const EXP_PALETTE = ['#334155', '#6366f1', '#a855f7', '#ec4899', '#ef4444', '#dc2626'];
-const NDVI_PALETTE = ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e', '#15803d'];
-
-// Direct Clean Lagos State GeoJSON Data Source
-const rawGeoJSON = {
-    type: "FeatureCollection",
-    features: [
-        { type: "Feature", properties: { ward_name: "Lagos Island", mean_lst: 38.5, ndvi: 0.18, elevation: 5, pop_density: 22000, gi_zscore_k5: 3.4, fdr_sig_k5: true }, geometry: { type: "Polygon", coordinates: [[[3.38, 6.43], [3.44, 6.43], [3.44, 6.49], [3.38, 6.49], [3.38, 6.43]]] } },
-        { type: "Feature", properties: { ward_name: "Ikeja", mean_lst: 37.2, ndvi: 0.22, elevation: 35, pop_density: 18000, gi_zscore_k5: 2.8, fdr_sig_k5: true }, geometry: { type: "Polygon", coordinates: [[[3.32, 6.56], [3.38, 6.56], [3.38, 6.64], [3.32, 6.64], [3.32, 6.56]]] } },
-        { type: "Feature", properties: { ward_name: "Alimosho", mean_lst: 35.8, ndvi: 0.31, elevation: 45, pop_density: 15000, gi_zscore_k5: 1.9, fdr_sig_k5: false }, geometry: { type: "Polygon", coordinates: [[[3.22, 6.53], [3.31, 6.53], [3.31, 6.65], [3.22, 6.65], [3.22, 6.53]]] } },
-        { type: "Feature", properties: { ward_name: "Eti-Osa", mean_lst: 37.9, ndvi: 0.20, elevation: 3, pop_density: 12000, gi_zscore_k5: 2.5, fdr_sig_k5: true }, geometry: { type: "Polygon", coordinates: [[[3.41, 6.40], [3.56, 6.40], [3.56, 6.50], [3.41, 6.50], [3.41, 6.40]]] } },
-        { type: "Feature", properties: { ward_name: "Surulere", mean_lst: 36.5, ndvi: 0.24, elevation: 12, pop_density: 25000, gi_zscore_k5: 2.1, fdr_sig_k5: true }, geometry: { type: "Polygon", coordinates: [[[3.33, 6.48], [3.39, 6.48], [3.39, 6.54], [3.33, 6.54], [3.33, 6.48]]] } },
-        { type: "Feature", properties: { ward_name: "Lagos Mainland", mean_lst: 37.0, ndvi: 0.21, elevation: 10, pop_density: 28000, gi_zscore_k5: 2.6, fdr_sig_k5: true }, geometry: { type: "Polygon", coordinates: [[[3.36, 6.49], [3.42, 6.49], [3.42, 6.55], [3.36, 6.55], [3.36, 6.49]]] } },
-        { type: "Feature", properties: { ward_name: "Kosofe", mean_lst: 35.2, ndvi: 0.35, elevation: 22, pop_density: 16000, gi_zscore_k5: 0.8, fdr_sig_k5: false }, geometry: { type: "Polygon", coordinates: [[[3.36, 6.54], [3.44, 6.54], [3.44, 6.63], [3.36, 6.63], [3.36, 6.54]]] } },
-        { type: "Feature", properties: { ward_name: "Ikorodu", mean_lst: 34.5, ndvi: 0.42, elevation: 30, pop_density: 9000, gi_zscore_k5: -0.5, fdr_sig_k5: false }, geometry: { type: "Polygon", coordinates: [[[3.44, 6.56], [3.56, 6.56], [3.56, 6.70], [3.44, 6.70], [3.44, 6.56]]] } },
-        { type: "Feature", properties: { ward_name: "Ibeju-Lekki", mean_lst: 33.8, ndvi: 0.48, elevation: 4, pop_density: 4000, gi_zscore_k5: -1.8, fdr_sig_k5: true }, geometry: { type: "Polygon", coordinates: [[[3.54, 6.39], [3.75, 6.39], [3.75, 6.54], [3.54, 6.54], [3.54, 6.39]]] } },
-        { type: "Feature", properties: { ward_name: "Epe", mean_lst: 34.0, ndvi: 0.46, elevation: 15, pop_density: 5000, gi_zscore_k5: -1.2, fdr_sig_k5: false }, geometry: { type: "Polygon", coordinates: [[[3.88, 6.52], [4.08, 6.52], [4.08, 6.68], [3.88, 6.68], [3.88, 6.52]]] } }
-    ]
-};
-
-function getFeatureCenter(feature) {
-    const coords = feature.geometry.coordinates.flat(2);
-    const lngs = coords.filter((_, i) => i % 2 === 0);
-    const lats = coords.filter((_, i) => i % 2 !== 0);
-    return [(Math.min(...lngs) + Math.max(...lngs)) / 2, (Math.min(...lats) + Math.max(...lats)) / 2];
+// Safe recursive coordinate parser for Polygon & MultiPolygon geometries
+function extractCoords(coords, list = []) {
+    if (!Array.isArray(coords)) return list;
+    if (coords.length >= 2 && typeof coords[0] === 'number' && typeof coords[1] === 'number') {
+        list.push(coords);
+    } else {
+        coords.forEach(c => extractCoords(c, list));
+    }
+    return list;
 }
 
-rawGeoJSON.features.forEach(f => {
-    f.properties._center = getFeatureCenter(f);
-});
+function getCentroid(feature) {
+    const pts = extractCoords(feature?.geometry?.coordinates || []);
+    if (!pts.length) return [3.3792, 6.5244];
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    pts.forEach(([x, y]) => {
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+    });
+    return [(minX + maxX) / 2, (minY + maxY) / 2];
+}
 
-const densities = rawGeoJSON.features.map(f => f.properties.pop_density).sort((a, b) => a - b);
-popQuartile75 = densities[Math.floor(densities.length * 0.70)] || 10000;
+// Exact KNN Getis-Ord Gi* (star=True) calculated live in JS
+function computeGiStar(features, k) {
+    const n = features.length;
+    const vals = features.map(f => Number(f.properties.sim_lst || 34));
+    const meanY = vals.reduce((a, b) => a + b, 0) / n;
+    const s = Math.sqrt(vals.reduce((a, b) => a + Math.pow(b - meanY, 2), 0) / n) || 1e-6;
+    const centers = features.map(f => f.properties._center);
 
-const zoneSelect = document.getElementById('zone-select');
-rawGeoJSON.features.forEach(f => {
-    const opt = document.createElement('option');
-    opt.value = f.properties.ward_name;
-    opt.innerText = f.properties.ward_name;
-    zoneSelect.appendChild(opt);
-});
+    return features.map((_, i) => {
+        const dists = centers.map((c, j) => ({
+            idx: j,
+            d: Math.hypot(c[0] - centers[i][0], c[1] - centers[i][1])
+        })).sort((a, b) => a.d - b.d);
 
-recomputeSimulation();
-initChart();
+        const nbrs = dists.slice(0, Math.min(n, k + 1)).map(d => d.idx);
+        const m = nbrs.length;
+        const w = 1.0 / m;
+        const sumWY = nbrs.reduce((acc, j) => acc + w * vals[j], 0);
+        const sumW2 = 1.0 / m;
+        const den = s * Math.sqrt(Math.max(1e-9, (n * sumW2 - 1.0) / (n - 1)));
+        return (sumWY - meanY) / den;
+    });
+}
 
-if (map.loaded()) initMapLayers();
-else map.on('load', initMapLayers);
+// Fetch Actual GeoJSON File from Repository
+async function fetchLagosGeoJSON() {
+    const urls = [
+        'data/lagos_uhi_processed.geojson',
+        './data/lagos_uhi_processed.geojson',
+        'https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/data/lagos_uhi_processed.geojson',
+        'https://raw.githubusercontent.com/oloyededavid/Lagos-Urban-Heat-Analytics/main/docs/data/lagos_uhi_processed.geojson'
+    ];
+    for (const url of urls) {
+        try {
+            const res = await fetch(url);
+            if (res.ok) {
+                const json = await res.json();
+                if (json && Array.isArray(json.features) && json.features.length > 0) {
+                    return json;
+                }
+            }
+        } catch (e) {
+            // Try next URL
+        }
+    }
+    throw new Error('Could not load lagos_uhi_processed.geojson');
+}
 
-function recomputeSimulation() {
+fetchLagosGeoJSON()
+    .then(data => {
+        rawGeoJSON = data;
+
+        // Standardize administrative zone names and centroids
+        data.features.forEach((f, i) => {
+            const p = f.properties;
+            p.ward_name = String(p.ward_name || p.ADM2_NAME || p.WardName || p.NAME || `Zone ${i + 1}`);
+            p._center = getCentroid(f);
+        });
+
+        // 65th percentile population density threshold for Priority Cooling Zones
+        const pops = data.features.map(f => Number(f.properties.pop_density || 0)).sort((a, b) => a - b);
+        popThreshold70 = pops[Math.floor(pops.length * 0.65)] || 0;
+
+        // Empirical OLS slope (dLST / dNDVI)
+        const valid = data.features.filter(f => f.properties.ndvi != null && f.properties.mean_lst != null);
+        if (valid.length > 2) {
+            const mx = valid.reduce((s, f) => s + Number(f.properties.ndvi), 0) / valid.length;
+            const my = valid.reduce((s, f) => s + Number(f.properties.mean_lst), 0) / valid.length;
+            const num = valid.reduce((s, f) => s + (Number(f.properties.ndvi) - mx) * (Number(f.properties.mean_lst) - my), 0);
+            const den = valid.reduce((s, f) => s + Math.pow(Number(f.properties.ndvi) - mx, 2), 0);
+            if (den > 0) empiricalSlope = num / den;
+        }
+        document.getElementById('slope-val').innerText = empiricalSlope.toFixed(1);
+
+        updateModel();
+        buildMapPolygons(true);
+    })
+    .catch(err => console.error('GeoJSON load error:', err));
+
+function updateModel() {
+    if (!rawGeoJSON) return;
     const features = rawGeoJSON.features;
-    const boost = ndviBoostPct / 100.0;
+    const boost = ndviBoost / 100.0;
 
     features.forEach(f => {
         const p = f.properties;
-        const baseNdvi = Number(p.ndvi || 0.25);
+        const baseNdvi = Number(p.ndvi ?? 0.25);
         const simNdvi = Math.min(0.85, baseNdvi * (1 + boost));
         const dLst = (simNdvi - baseNdvi) * empiricalSlope;
         p.sim_ndvi = simNdvi;
-        p.sim_lst = Number(p.mean_lst || 35) + dLst;
-        p.sim_delta_lst = dLst;
+        p.sim_lst = Number(p.mean_lst ?? 34) + dLst;
+        p.sim_delta = dLst;
     });
 
-    const baseMean = features.reduce((s, f) => s + f.properties.sim_lst, 0) / features.length;
-    const baseStd = Math.sqrt(features.reduce((s, f) => s + Math.pow(f.properties.sim_lst - baseMean, 2), 0) / features.length) || 1;
+    const exactGi = computeGiStar(features, currentK);
+    const baseMean = features.reduce((s, f) => s + Number(f.properties.mean_lst ?? 34), 0) / features.length;
+    const baseStd = Math.sqrt(features.reduce((s, f) => s + Math.pow(Number(f.properties.mean_lst ?? 34) - baseMean, 2), 0) / features.length) || 1;
 
     const lstVals = features.map(f => f.properties.sim_lst);
     const lstMin = Math.min(...lstVals), lstMax = Math.max(...lstVals);
 
-    let priorityCount = 0;
-    let sumDelta = 0;
+    const popLogs = features.map(f => Math.log1p(Number(f.properties.pop_density || 0)));
+    const pMin = Math.min(...popLogs), pMax = Math.max(...popLogs);
 
-    features.forEach(f => {
+    let priorityCount = 0;
+    let totalDelta = 0;
+
+    features.forEach((f, idx) => {
         const p = f.properties;
-        p.sim_lst_zscore = (p.sim_lst - baseMean) / baseStd;
-        p.sim_giz = Number(p.gi_zscore_k5 ?? 1.5) + ((p.sim_delta_lst / baseStd) * 0.5);
+        p.sim_lst_z = (p.sim_lst - baseMean) / baseStd;
+
+        // Use exact live KNN Gi* shifted by simulated cooling so every K and NDVI change reacts immediately
+        const pyGiz = p[`gi_zscore_k${currentK}`];
+        const baseGiz = (pyGiz !== undefined && pyGiz !== null) ? Number(pyGiz) : exactGi[idx];
+        p.sim_giz = baseGiz + (p.sim_delta / baseStd);
 
         const lstNorm = Math.max(0, (p.sim_lst - lstMin) / ((lstMax - lstMin) || 1));
-        const popNorm = Math.min(1, (p.pop_density || 10000) / 30000);
-        p.sim_exposure = lstNorm * popNorm;
+        const popNorm = (Math.log1p(Number(p.pop_density || 0)) - pMin) / ((pMax - pMin) || 1);
+        p.sim_exp = lstNorm * popNorm;
 
-        const isHot = p.sim_giz >= 1.28;
-        const isDense = (p.pop_density || 10000) >= popQuartile75;
+        // Responsive 5-tier classification combining Gi* spatial clustering and local thermal anomaly
+        const isDense = Number(p.pop_density || 0) >= popThreshold70;
+        const compositeHeat = Math.max(p.sim_giz, p.sim_lst_z);
 
-        if (isHot && isDense) {
-            p.sim_category = 'Priority Cooling Zone';
+        if (compositeHeat >= 0.65 && isDense) {
+            p.sim_cat = 'Priority Cooling Zone';
             priorityCount++;
-        } else if (isHot) {
-            p.sim_category = 'Significant Heat Hotspot';
-        } else if (p.sim_giz <= -1.28) {
-            p.sim_category = 'Thermal Refugium';
+        } else if (compositeHeat >= 0.85) {
+            p.sim_cat = 'Significant Heat Hotspot';
+        } else if (compositeHeat >= 0.15) {
+            p.sim_cat = 'Elevated Thermal Cluster';
+        } else if (compositeHeat <= -0.45) {
+            p.sim_cat = 'Thermal Refugium (Cool)';
         } else {
-            p.sim_category = 'Not Significant';
+            p.sim_cat = 'Moderate Urban Zone';
         }
 
         if (currentMetric === 'hotspot') {
-            p.activeColor = getHotspotColor(p.sim_category);
+            p.fillColor = getHotspotColor(p.sim_cat);
         } else if (currentMetric === 'lst') {
-            p.activeColor = getContinuousColor(p.sim_lst, lstMin, lstMax, LST_PALETTE);
+            p.fillColor = getGradColor(p.sim_lst, lstMin, lstMax, LST_COLORS);
         } else if (currentMetric === 'exposure') {
-            p.activeColor = getContinuousColor(p.sim_exposure, 0, 1, EXP_PALETTE);
+            p.fillColor = getGradColor(p.sim_exp, 0, 0.85, EXP_COLORS);
         } else {
-            p.activeColor = getContinuousColor(p.sim_ndvi, 0.15, 0.6, NDVI_PALETTE);
+            p.fillColor = getGradColor(p.sim_ndvi, 0.15, 0.65, NDVI_COLORS);
         }
 
-        p.extrudeHeight = is3D ? Math.max(1200, Math.round((p.sim_exposure * 7000) + ((p.sim_lst - 30) * 400))) : 0;
-        p.highlightHeight = p.extrudeHeight + 350;
-        sumDelta += p.sim_delta_lst;
+        totalDelta += p.sim_delta;
     });
 
-    document.getElementById('kpi-mean-lst').innerText = `${(lstVals.reduce((a, b) => a + b, 0) / lstVals.length).toFixed(2)} °C`;
-    document.getElementById('kpi-max-lst').innerText = `${lstMax.toFixed(2)} °C`;
-    document.getElementById('kpi-priority-count').innerText = `${priorityCount} of ${features.length}`;
-    document.getElementById('kpi-sim-delta').innerText = `${(sumDelta / features.length).toFixed(2)} °C`;
+    const avgDelta = totalDelta / features.length;
+    document.getElementById('sim-cooling-badge').innerText = `${avgDelta.toFixed(2)} °C Shift`;
+    document.getElementById('priority-summary').innerText = `${priorityCount} Priority Zones`;
 
-    updateLegend(lstMin, lstMax);
-    renderLeaderboard();
+    renderLegend(lstMin, lstMax);
+    renderTable();
 
-    const src = map.getSource('lagos-zones');
-    if (src) src.setData(rawGeoJSON);
-
-    if (selectedZoneName) {
-        const selFeat = features.find(f => f.properties.ward_name === selectedZoneName);
-        if (selFeat) populateSidebar(selFeat.properties);
+    // Update polygon colors & tooltips in place
+    if (geojsonLayer) {
+        geojsonLayer.eachLayer(layer => {
+            const p = layer.feature.properties;
+            const isSel = p.ward_name === selectedZone;
+            layer.setStyle({
+                fillColor: p.fillColor,
+                weight: isSel ? 3.5 : 1.5,
+                color: isSel ? '#38bdf8' : '#ffffff',
+                fillOpacity: isSel ? 0.90 : 0.76
+            });
+            layer.setTooltipContent(`
+                <strong>${p.ward_name}</strong><br/>
+                LST: <b>${p.sim_lst.toFixed(2)} °C</b> &middot; Gi*: <b>${p.sim_giz.toFixed(2)}</b><br/>
+                <span style="color:#38bdf8">${p.sim_cat}</span>
+            `);
+        });
     }
 
-    if (scatterChart) {
-        scatterChart.data.datasets[0].data = features.map(f => ({
-            x: f.properties.sim_ndvi,
-            y: f.properties.sim_lst,
-            ward: f.properties.ward_name
-        }));
-        scatterChart.data.datasets[0].backgroundColor = features.map(f => getHotspotColor(f.properties.sim_category));
-        scatterChart.update();
+    // Update right sidebar metrics
+    if (selectedZone) {
+        const feat = features.find(f => f.properties.ward_name === selectedZone);
+        if (feat) showZoneDetails(feat.properties);
+    } else {
+        showStateOverview(features);
     }
 }
 
-function initMapLayers() {
-    if (map.getSource('lagos-zones')) return;
+function buildMapPolygons(fitInitial = false) {
+    if (geojsonLayer) map.removeLayer(geojsonLayer);
+    layerIndex = {};
 
-    map.addSource('lagos-zones', {
-        type: 'geojson',
-        data: rawGeoJSON
-    });
+    geojsonLayer = L.geoJSON(rawGeoJSON, {
+        style: feature => ({
+            fillColor: feature.properties.fillColor,
+            weight: 1.5,
+            opacity: 1,
+            color: '#ffffff',
+            fillOpacity: 0.76
+        }),
+        onEachFeature: (feature, layer) => {
+            const p = feature.properties;
+            layerIndex[p.ward_name] = layer;
 
-    map.addLayer({
-        id: 'zones-3d',
-        type: 'fill-extrusion',
-        source: 'lagos-zones',
-        paint: {
-            'fill-extrusion-color': ['get', 'activeColor'],
-            'fill-extrusion-height': ['get', 'extrudeHeight'],
-            'fill-extrusion-base': 0,
-            'fill-extrusion-opacity': 0.88
+            layer.bindTooltip(`
+                <strong>${p.ward_name}</strong><br/>
+                LST: <b>${p.sim_lst.toFixed(2)} °C</b> &middot; Gi*: <b>${p.sim_giz.toFixed(2)}</b><br/>
+                <span style="color:#38bdf8">${p.sim_cat}</span>
+            `, { sticky: true, className: 'clean-tip' });
+
+            layer.on('mouseover', () => {
+                if (p.ward_name !== selectedZone) {
+                    layer.setStyle({ weight: 2.6, color: '#f8fafc', fillOpacity: 0.88 });
+                }
+            });
+
+            layer.on('mouseout', () => {
+                if (p.ward_name !== selectedZone) {
+                    layer.setStyle({ weight: 1.5, color: '#ffffff', fillOpacity: 0.76 });
+                }
+            });
+
+            layer.on('click', () => {
+                selectArea(p.ward_name);
+            });
         }
-    });
+    }).addTo(map);
 
-    map.addLayer({
-        id: 'zones-outline',
-        type: 'line',
-        source: 'lagos-zones',
-        paint: {
-            'line-color': '#ffffff',
-            'line-width': 1.5,
-            'line-opacity': 0.95
-        }
-    });
-
-    map.addLayer({
-        id: 'zones-selected-3d',
-        type: 'fill-extrusion',
-        source: 'lagos-zones',
-        filter: ['==', ['get', 'ward_name'], ''],
-        paint: {
-            'fill-extrusion-color': '#38bdf8',
-            'fill-extrusion-height': ['get', 'highlightHeight'],
-            'fill-extrusion-base': ['get', 'extrudeHeight'],
-            'fill-extrusion-opacity': 0.98
-        }
-    });
-
-    map.on('mousemove', 'zones-3d', (e) => {
-        if (!e.features.length) return;
-        map.getCanvas().style.cursor = 'pointer';
-        const p = e.features[0].properties;
-        hoverPopup
-            .setLngLat(e.lngLat)
-            .setHTML(`
-                <div style="line-height:1.45">
-                    <strong style="font-size:0.96rem">${p.ward_name}</strong><br/>
-                    Mean LST: <b>${Number(p.sim_lst).toFixed(2)} °C</b> &middot; Gi*: <b>${Number(p.sim_giz).toFixed(2)}</b><br/>
-                    Pop Density: <b>${Math.round(p.pop_density || 0).toLocaleString()} /km²</b><br/>
-                    <span style="color:#60a5fa;font-weight:700">${p.sim_category}</span>
-                </div>
-            `)
-            .addTo(map);
-    });
-
-    map.on('mouseleave', 'zones-3d', () => {
-        map.getCanvas().style.cursor = '';
-        hoverPopup.remove();
-    });
-
-    map.on('click', 'zones-3d', (e) => {
-        if (!e.features.length) return;
-        selectAndFlyToZone(e.features[0].properties.ward_name, e.lngLat);
-    });
+    if (fitInitial) {
+        map.fitBounds(geojsonLayer.getBounds(), { padding: [28, 28] });
+    }
 }
 
-function selectAndFlyToZone(wardName, customCenter = null) {
-    const feat = rawGeoJSON.features.find(f => f.properties.ward_name === wardName);
-    if (!feat) return;
+function selectArea(wardName) {
+    selectedZone = wardName;
 
-    selectedZoneName = wardName;
-    document.getElementById('zone-select').value = wardName;
+    geojsonLayer.eachLayer(layer => {
+        const p = layer.feature.properties;
+        const isSel = p.ward_name === wardName;
+        layer.setStyle({
+            fillColor: p.fillColor,
+            weight: isSel ? 3.5 : 1.5,
+            color: isSel ? '#38bdf8' : '#ffffff',
+            fillOpacity: isSel ? 0.90 : 0.72
+        });
+        if (isSel) layer.bringToFront();
+    });
 
-    if (map.getLayer('zones-selected-3d')) {
-        map.setFilter('zones-selected-3d', ['==', ['get', 'ward_name'], wardName]);
+    const targetLayer = layerIndex[wardName];
+    if (targetLayer) {
+        map.fitBounds(targetLayer.getBounds(), { padding: [65, 65], maxZoom: 12 });
+        showZoneDetails(targetLayer.feature.properties);
     }
 
-    const center = customCenter || feat.properties._center;
-    map.flyTo({
-        center: center,
-        zoom: 11.2,
-        pitch: is3D ? 56 : 0,
-        bearing: map.getBearing(),
-        duration: 1100
-    });
-
-    populateSidebar(feat.properties);
-    renderLeaderboard();
+    renderTable();
 }
 
-function populateSidebar(p) {
-    document.getElementById('instruction').classList.add('hidden');
-    document.getElementById('ward-details').classList.remove('hidden');
-
-    document.getElementById('ward-name').innerText = p.ward_name;
-    document.getElementById('val-raw-lst').innerText = `${Number(p.sim_lst).toFixed(2)} °C`;
-    document.getElementById('val-lst').innerText = Number(p.sim_lst_zscore).toFixed(2);
+function showZoneDetails(p) {
+    document.getElementById('zone-title').innerText = p.ward_name;
+    document.getElementById('val-lst').innerText = `${p.sim_lst.toFixed(2)} °C`;
+    document.getElementById('val-giz').innerText = p.sim_giz.toFixed(2);
+    document.getElementById('val-ndvi').innerText = p.sim_ndvi.toFixed(3);
+    document.getElementById('val-exp').innerText = p.sim_exp.toFixed(3);
     document.getElementById('val-pop').innerText = `${Math.round(p.pop_density || 0).toLocaleString()} /km²`;
-    document.getElementById('val-exp').innerText = Number(p.sim_exposure).toFixed(3);
-    document.getElementById('val-ndvi').innerText = Number(p.sim_ndvi).toFixed(3);
     document.getElementById('val-elev').innerText = `${Number(p.elevation || 0).toFixed(1)} m`;
-    document.getElementById('val-giz').innerText = Number(p.sim_giz).toFixed(2);
-    document.getElementById('val-fdr').innerText = p.sim_giz >= 1.28 ? 'Significant Hotspot' : 'Normal Tier';
 
-    const pill = document.getElementById('val-class');
-    pill.innerText = p.sim_category;
-    pill.style.backgroundColor = getHotspotColor(p.sim_category);
-    pill.style.color = '#ffffff';
+    const badge = document.getElementById('zone-badge');
+    badge.innerText = p.sim_cat;
+    badge.style.backgroundColor = getHotspotColor(p.sim_cat);
+    badge.style.color = '#ffffff';
 }
 
-function renderLeaderboard() {
-    const tbody = document.getElementById('leaderboard-body');
-    if (!tbody) return;
+function showStateOverview(features) {
+    const n = features.length;
+    const meanLst = features.reduce((s, f) => s + f.properties.sim_lst, 0) / n;
+    const maxGi = Math.max(...features.map(f => f.properties.sim_giz));
+    const meanNdvi = features.reduce((s, f) => s + f.properties.sim_ndvi, 0) / n;
+    const meanExp = features.reduce((s, f) => s + f.properties.sim_exp, 0) / n;
+    const meanPop = features.reduce((s, f) => s + Number(f.properties.pop_density || 0), 0) / n;
+    const meanElev = features.reduce((s, f) => s + Number(f.properties.elevation || 0), 0) / n;
 
-    const sorted = [...rawGeoJSON.features].sort((a, b) => (b.properties.sim_exposure || 0) - (a.properties.sim_exposure || 0));
+    document.getElementById('zone-title').innerText = 'Lagos State Overview (Mean)';
+    document.getElementById('val-lst').innerText = `${meanLst.toFixed(2)} °C`;
+    document.getElementById('val-giz').innerText = `${maxGi.toFixed(2)} (Peak)`;
+    document.getElementById('val-ndvi').innerText = meanNdvi.toFixed(3);
+    document.getElementById('val-exp').innerText = meanExp.toFixed(3);
+    document.getElementById('val-pop').innerText = `${Math.round(meanPop).toLocaleString()} /km²`;
+    document.getElementById('val-elev').innerText = `${meanElev.toFixed(1)} m`;
+
+    const badge = document.getElementById('zone-badge');
+    badge.innerText = 'Click Map to Inspect';
+    badge.style.backgroundColor = '#1e293b';
+    badge.style.color = '#cbd5e1';
+}
+
+function renderTable() {
+    const tbody = document.getElementById('zone-tbody');
+    const sorted = [...rawGeoJSON.features].sort((a, b) => b.properties.sim_exp - a.properties.sim_exp);
+
     tbody.innerHTML = sorted.map(f => {
         const p = f.properties;
-        const isSel = p.ward_name === selectedZoneName ? 'active-row' : '';
-        const col = getHotspotColor(p.sim_category);
+        const isSel = p.ward_name === selectedZone ? 'selected' : '';
+        const dotCol = getHotspotColor(p.sim_cat);
         return `
-            <tr class="${isSel}" data-ward="${p.ward_name}">
-                <td><span class="mini-dot" style="background:${col}"></span>${p.ward_name}</td>
-                <td>${Number(p.sim_lst).toFixed(1)}°C</td>
-                <td>${Number(p.sim_giz).toFixed(2)}</td>
-                <td>${p.sim_category.replace('Significant ', '')}</td>
+            <tr class="${isSel}" data-zone="${p.ward_name}">
+                <td><span class="dot-indicator" style="background:${dotCol}"></span>${p.ward_name}</td>
+                <td>${p.sim_lst.toFixed(1)} °C</td>
+                <td>${p.sim_ndvi.toFixed(2)}</td>
+                <td>${p.sim_giz.toFixed(2)}</td>
             </tr>
         `;
     }).join('');
 
-    tbody.querySelectorAll('tr').forEach(row => {
-        row.addEventListener('click', () => {
-            selectAndFlyToZone(row.getAttribute('data-ward'));
+    tbody.querySelectorAll('tr').forEach(tr => {
+        tr.addEventListener('click', () => {
+            selectArea(tr.getAttribute('data-zone'));
         });
     });
 }
 
-function updateLegend() {
-    const box = document.getElementById('legend-box');
-    const items = [
-        ['Priority Cooling Zone', '#ef4444'],
-        ['Significant Heat Hotspot', '#f97316'],
-        ['Elevated Thermal Cluster', '#eab308'],
-        ['Thermal Refugium', '#06b6d4'],
-        ['Not Significant', '#64748b']
-    ];
-    box.innerHTML = `<span class="legend-heading">3D Hotspot Classification</span>` +
-        items.map(([lbl, col]) => `<div class="legend-item"><span class="legend-color" style="background:${col}"></span><span>${lbl}</span></div>`).join('');
-}
-
-function initChart() {
-    const ctx = document.getElementById('uhiChart').getContext('2d');
-    scatterChart = new Chart(ctx, {
-        type: 'scatter',
-        data: {
-            datasets: [{
-                data: rawGeoJSON.features.map(f => ({
-                    x: f.properties.sim_ndvi,
-                    y: f.properties.sim_lst,
-                    ward: f.properties.ward_name
-                })),
-                backgroundColor: rawGeoJSON.features.map(f => getHotspotColor(f.properties.sim_category)),
-                borderColor: '#ffffff',
-                borderWidth: 1.5,
-                pointRadius: 6,
-                pointHoverRadius: 9
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            onClick: (evt, els) => {
-                if (els.length > 0) {
-                    const ward = scatterChart.data.datasets[0].data[els[0].index].ward;
-                    selectAndFlyToZone(ward);
-                }
-            },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: (c) => `${c.raw.ward}: NDVI ${c.raw.x.toFixed(3)} | LST ${c.raw.y.toFixed(2)}°C`
-                    }
-                }
-            },
-            scales: {
-                x: { grid: { color: '#1e293b' }, title: { display: true, text: 'Sentinel-2 NDVI', color: '#94a3b8', font: { weight: '700' } } },
-                y: { grid: { color: '#1e293b' }, title: { display: true, text: 'Mean LST (°C)', color: '#94a3b8', font: { weight: '700' } } }
-            }
-        }
-    });
-}
-
-document.getElementById('ndvi-slider').addEventListener('input', (e) => {
-    ndviBoostPct = Number(e.target.value);
-    document.getElementById('ndvi-boost-val').innerText = `+${ndviBoostPct}% NDVI`;
-    recomputeSimulation();
-});
-
-document.getElementById('reset-sim').addEventListener('click', () => {
-    ndviBoostPct = 0;
-    document.getElementById('ndvi-slider').value = 0;
-    document.getElementById('ndvi-boost-val').innerText = '+0% NDVI';
-    recomputeSimulation();
-});
-
-document.getElementById('k-select').addEventListener('change', (e) => {
-    currentK = Number(e.target.value);
-    recomputeSimulation();
-});
-
-document.getElementById('layer-select').addEventListener('change', (e) => {
-    currentMetric = e.target.value;
-    recomputeSimulation();
-});
-
-document.getElementById('zone-select').addEventListener('change', (e) => {
-    if (!e.target.value) {
-        selectedZoneName = null;
-        if (map.getLayer('zones-selected-3d')) {
-            map.setFilter('zones-selected-3d', ['==', ['get', 'ward_name'], '']);
-        }
-        map.flyTo({ center: [3.39, 6.51], zoom: 9.8, pitch: is3D ? 52 : 0, bearing: -12, duration: 1000 });
-        renderLeaderboard();
+function renderLegend(lstMin, lstMax) {
+    const box = document.getElementById('map-legend');
+    if (currentMetric === 'hotspot') {
+        const rows = [
+            ['Priority Cooling Zone (High Heat + Pop)', '#ef4444'],
+            ['Significant Heat Hotspot', '#f97316'],
+            ['Elevated Thermal Cluster', '#eab308'],
+            ['Thermal Refugium (Cool)', '#06b6d4'],
+            ['Moderate Urban Zone', '#64748b']
+        ];
+        box.innerHTML = `<span class="legend-title">Gi* Thermal Classification</span>` +
+            rows.map(([lbl, col]) => `<div class="legend-row"><span class="swatch" style="background:${col}"></span><span>${lbl}</span></div>`).join('');
+    } else if (currentMetric === 'lst') {
+        box.innerHTML = `<span class="legend-title">Mean Surface Temp (${lstMin.toFixed(1)}°C – ${lstMax.toFixed(1)}°C)</span>` +
+            LST_COLORS.map((col, i) => `<div class="legend-row"><span class="swatch" style="background:${col}"></span><span>Tier ${i + 1} Thermal Intensity</span></div>`).join('');
+    } else if (currentMetric === 'exposure') {
+        box.innerHTML = `<span class="legend-title">Heat Exposure Index (0–1)</span>` +
+            EXP_COLORS.map((col, i) => `<div class="legend-row"><span class="swatch" style="background:${col}"></span><span>Exposure Level ${i + 1}</span></div>`).join('');
     } else {
-        selectAndFlyToZone(e.target.value);
+        box.innerHTML = `<span class="legend-title">Sentinel-2 Canopy (NDVI)</span>` +
+            NDVI_COLORS.map((col, i) => `<div class="legend-row"><span class="swatch" style="background:${col}"></span><span>Canopy Density ${i + 1}</span></div>`).join('');
+    }
+}
+
+// UI Controls
+document.getElementById('metric-select').addEventListener('change', e => {
+    currentMetric = e.target.value;
+    updateModel();
+});
+
+document.getElementById('k-select').addEventListener('change', e => {
+    currentK = Number(e.target.value);
+    updateModel();
+});
+
+document.getElementById('basemap-select').addEventListener('change', e => {
+    const next = BASEMAPS[e.target.value];
+    if (next && next !== activeBasemap) {
+        map.removeLayer(activeBasemap);
+        activeBasemap = next;
+        activeBasemap.addTo(map);
+        if (geojsonLayer) geojsonLayer.bringToFront();
     }
 });
 
-document.getElementById('toggle-3d').addEventListener('click', (e) => {
-    is3D = !is3D;
-    e.target.classList.toggle('active', is3D);
-    e.target.innerText = is3D ? '3D Extrusion: ON' : '3D Extrusion: OFF';
-    recomputeSimulation();
-    map.easeTo({ pitch: is3D ? 52 : 0, bearing: is3D ? -12 : 0, duration: 850 });
+document.getElementById('ndvi-slider').addEventListener('input', e => {
+    ndviBoost = Number(e.target.value);
+    document.getElementById('slider-label').innerText = `+${ndviBoost}%`;
+    updateModel();
 });
 
-document.getElementById('btn-reset-cam').addEventListener('click', () => {
-    map.flyTo({ center: [3.39, 6.51], zoom: 9.8, pitch: is3D ? 52 : 0, bearing: -12, duration: 950 });
-});
-
-document.getElementById('btn-rotate-cam').addEventListener('click', () => {
-    map.easeTo({ bearing: map.getBearing() + 45, duration: 700 });
-});
-
-document.getElementById('download-brief').addEventListener('click', () => {
-    if (!selectedZoneName) return;
-    const feat = rawGeoJSON.features.find(f => f.properties.ward_name === selectedZoneName);
-    if (!feat) return;
-    const p = feat.properties;
-
-    const lines = [
-        `====================================================================`,
-        `LAGOS URBAN HEAT ANALYTICS - MUNICIPAL COOLING POLICY BRIEF`,
-        `====================================================================`,
-        `Administrative Unit (LGA) : ${p.ward_name}`,
-        `Classification Status     : ${p.sim_category}`,
-        `--------------------------------------------------------------------`,
-        `1. SATELLITE TELEMETRY`,
-        `   - Baseline Dry-Season LST : ${Number(p.sim_lst).toFixed(2)} °C`,
-        `   - Population Density      : ${Math.round(p.pop_density || 0).toLocaleString()} persons/km²`,
-        `   - Heat Exposure Index     : ${Number(p.sim_exposure).toFixed(3)}`,
-        `====================================================================`
-    ].join('\n');
-
-    const blob = new Blob([lines], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${p.ward_name.replace(/\s+/g, '_')}_Policy_Brief.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-});
-
-document.getElementById('export-csv').addEventListener('click', () => {
-    const cols = ['ward_name', 'mean_lst', 'sim_lst', 'ndvi', 'elevation', 'pop_density', 'sim_exposure', 'sim_giz', 'sim_category'];
-    const rows = rawGeoJSON.features.map(f => cols.map(c => JSON.stringify(f.properties[c] ?? '')).join(','));
-    const csv = [cols.join(','), ...rows].join('\n');
-
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `lagos_uhi_analytics.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
+document.getElementById('reset-view').addEventListener('click', () => {
+    selectedZone = null;
+    ndviBoost = 0;
+    document.getElementById('ndvi-slider').value = 0;
+    document.getElementById('slider-label').innerText = '+0%';
+    updateModel();
+    if (geojsonLayer) {
+        map.fitBounds(geojsonLayer.getBounds(), { padding: [28, 28] });
+    }
 });
