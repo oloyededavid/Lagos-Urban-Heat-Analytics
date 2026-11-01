@@ -3,227 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lagos Urban Heat Analytics | 3D Spatial Decision Support</title>
+    <title>Lagos Urban Heat Analytics</title>
     
     <!-- Google Fonts: DM Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
     
-    <!-- MapLibre GL JS CSS -->
-    <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+    <!-- Leaflet CSS (Clean 2D Vector Polygon Engine) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
-    <!-- Custom Stylesheet -->
+    <!-- Custom Clean Stylesheet -->
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <!-- Top Navigation Bar -->
+    <!-- Minimalist Topbar -->
     <header class="topbar">
         <div class="brand">
-            <span class="brand-badge">EO · GEE · PySAL</span>
-            <div>
-                <h1>Lagos Urban Heat Analytics</h1>
-                <p class="subtitle">3D Getis-Ord Gi* Thermal Clustering &amp; Canopy Cooling Simulator</p>
-            </div>
+            <span class="status-dot"></span>
+            <h1>Lagos Urban Heat Analytics</h1>
+            <span class="sep">/</span>
+            <span class="sub">Getis-Ord Gi* Spatial Clustering &amp; Canopy Cooling</span>
         </div>
 
-        <div class="toolbar">
-            <div class="control-item">
-                <label for="zone-select">Fly to Zone</label>
-                <select id="zone-select">
-                    <option value="">All Lagos State (Reset View)</option>
-                </select>
-            </div>
-
-            <div class="control-item">
-                <label for="layer-select">3D Surface Metric</label>
-                <select id="layer-select">
+        <div class="controls">
+            <div class="ctrl-group">
+                <label for="metric-select">Map Layer</label>
+                <select id="metric-select">
                     <option value="hotspot" selected>Gi* Hotspot Classification</option>
                     <option value="lst">Mean Surface Temp (LST °C)</option>
                     <option value="exposure">Heat Exposure Index (0–1)</option>
-                    <option value="ndvi">Sentinel-2 Canopy (NDVI)</option>
+                    <option value="ndvi">Vegetation Density (NDVI)</option>
                 </select>
             </div>
 
-            <div class="control-item">
-                <label for="k-select">KNN Bandwidth</label>
+            <div class="ctrl-group">
+                <label for="k-select">Spatial Weights</label>
                 <select id="k-select">
-                    <option value="5" selected>k = 5 Neighbors (Primary)</option>
-                    <option value="3">k = 3 Neighbors (Local)</option>
-                    <option value="8">k = 8 Neighbors (Regional)</option>
+                    <option value="5" selected>KNN (k = 5)</option>
+                    <option value="3">KNN (k = 3)</option>
+                    <option value="8">KNN (k = 8)</option>
                 </select>
             </div>
 
-            <div class="control-item">
-                <label for="basemap-select">Map Style (Keyless)</label>
+            <div class="ctrl-group">
+                <label for="basemap-select">Basemap</label>
                 <select id="basemap-select">
-                    <option value="satellite" selected>3D Satellite Hybrid (Esri)</option>
-                    <option value="osm">Colorful Street Map (OSM)</option>
-                    <option value="topo">Physical Terrain Topo (Esri)</option>
+                    <option value="light" selected>Clean Light Canvas</option>
+                    <option value="satellite">Esri Satellite Hybrid</option>
+                    <option value="osm">OpenStreetMap</option>
                 </select>
             </div>
 
-            <button id="toggle-3d" class="btn-action active" type="button">3D Extrusion: ON</button>
-            <button id="export-csv" class="btn-secondary" type="button">Export CSV</button>
+            <button id="reset-view" class="btn-outline" type="button">Reset Map</button>
         </div>
     </header>
 
-    <!-- Main Split Workspace -->
-    <main class="workspace">
-        <!-- Left: 3D Interactive Map Stage -->
-        <section class="map-stage">
+    <!-- Main Split View -->
+    <main class="layout">
+        <!-- Left: Interactive 2D Polygon Map -->
+        <section class="map-wrap">
             <div id="map"></div>
-
-            <!-- Top Floating KPI Cards -->
-            <div class="kpi-bar">
-                <div class="kpi-box">
-                    <span class="kpi-title">Lagos Mean LST</span>
-                    <strong class="kpi-number" id="kpi-mean-lst">—</strong>
-                </div>
-                <div class="kpi-box">
-                    <span class="kpi-title">Peak Zone LST</span>
-                    <strong class="kpi-number" id="kpi-max-lst">—</strong>
-                </div>
-                <div class="kpi-box alert">
-                    <span class="kpi-title">Priority Cooling Zones</span>
-                    <strong class="kpi-number" id="kpi-priority-count">—</strong>
-                </div>
-                <div class="kpi-box success">
-                    <span class="kpi-title">Simulated ΔLST Shift</span>
-                    <strong class="kpi-number" id="kpi-sim-delta">0.00 °C</strong>
-                </div>
-            </div>
-
-            <!-- Bottom-Left Floating Map Legend & Camera Controls -->
-            <div class="map-overlay-bottom">
-                <div class="map-legend" id="legend-box"></div>
-                <div class="camera-bar">
-                    <button id="btn-reset-cam" class="cam-btn" type="button">Reset Camera</button>
-                    <button id="btn-rotate-cam" class="cam-btn" type="button">Rotate 45°</button>
-                </div>
-            </div>
+            <div id="map-legend" class="legend-card"></div>
         </section>
 
-        <!-- Right: Analytical Command Center Sidebar -->
+        <!-- Right: Focused Telemetry Sidebar -->
         <aside class="sidebar">
-            <!-- Panel 1: Selected Zone Telemetry -->
-            <div class="card">
-                <div class="card-head">
+            <!-- 1. Selected Administrative Area Details -->
+            <div class="panel">
+                <div class="panel-top">
                     <div>
-                        <span class="section-tag">Spatial Unit Telemetry</span>
-                        <h2 id="ward-name">Click Any 3D Zone on Map</h2>
+                        <span class="tag">Selected Administrative Area</span>
+                        <h2 id="zone-title">Lagos State Overview</h2>
                     </div>
-                    <span id="val-class" class="status-pill">No Zone Selected</span>
+                    <span id="zone-badge" class="badge">Click Map to Inspect</span>
                 </div>
 
-                <p id="instruction" class="helper-box">
-                    Click any extruded 3D zone on the map, click a point in the scatter plot, or click any row in the leaderboard below to inspect satellite telemetry and generate a policy brief.
-                </p>
-
-                <div id="ward-details" class="hidden">
-                    <div class="telemetry-grid">
-                        <div class="stat-cell">
-                            <span class="stat-label">Mean / Sim. LST</span>
-                            <span class="stat-val" id="val-raw-lst">—</span>
-                        </div>
-                        <div class="stat-cell">
-                            <span class="stat-label">LST Z-Score</span>
-                            <span class="stat-val" id="val-lst">—</span>
-                        </div>
-                        <div class="stat-cell">
-                            <span class="stat-label">Pop. Density</span>
-                            <span class="stat-val" id="val-pop">—</span>
-                        </div>
-                        <div class="stat-cell">
-                            <span class="stat-label">Exposure Index</span>
-                            <span class="stat-val" id="val-exp">—</span>
-                        </div>
-                        <div class="stat-cell">
-                            <span class="stat-label">Sentinel-2 NDVI</span>
-                            <span class="stat-val" id="val-ndvi">—</span>
-                        </div>
-                        <div class="stat-cell">
-                            <span class="stat-label">Copernicus DEM</span>
-                            <span class="stat-val" id="val-elev">—</span>
-                        </div>
-                        <div class="stat-cell">
-                            <span class="stat-label">Gi* Z-Score (Exact)</span>
-                            <span class="stat-val" id="val-giz">—</span>
-                        </div>
-                        <div class="stat-cell">
-                            <span class="stat-label">Statistical Status</span>
-                            <span class="stat-val" id="val-fdr">—</span>
-                        </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="s-label">Land Surface Temp</span>
+                        <strong class="s-val" id="val-lst">—</strong>
                     </div>
-
-                    <button id="download-brief" class="btn-download-brief" type="button">
-                        Download Municipal Cooling Policy Brief (.TXT)
-                    </button>
+                    <div class="stat-item">
+                        <span class="s-label">Gi* Z-Score</span>
+                        <strong class="s-val" id="val-giz">—</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span class="s-label">Sentinel-2 NDVI</span>
+                        <strong class="s-val" id="val-ndvi">—</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span class="s-label">Heat Exposure (0–1)</span>
+                        <strong class="s-val" id="val-exp">—</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span class="s-label">Population Density</span>
+                        <strong class="s-val" id="val-pop">—</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span class="s-label">Mean Elevation</span>
+                        <strong class="s-val" id="val-elev">—</strong>
+                    </div>
                 </div>
             </div>
 
-            <!-- Panel 2: "What-If" Green Canopy Simulator -->
-            <div class="card sim-card">
-                <div class="card-head">
+            <!-- 2. Real-Time Canopy Cooling Simulator -->
+            <div class="panel">
+                <div class="panel-top">
                     <div>
-                        <span class="section-tag">Decision-Support Simulator</span>
-                        <h2>Urban Canopy Greening (+NDVI)</h2>
+                        <span class="tag">Real-Time Scenario</span>
+                        <h2>Canopy Greening Simulator</h2>
                     </div>
-                    <button id="reset-sim" class="btn-reset" type="button">Reset 0%</button>
+                    <strong id="sim- cooling-badge" class="cooling-pill">0.00 °C Shift</strong>
                 </div>
-                <p class="card-text">
-                    Models surface cooling using the empirical OLS regression slope (<strong id="ols-slope-label">-13.5</strong> °C per +1.0 NDVI) fitted across Lagos State, recalculating exact KNN $G_i^*$ statistics live.
+                <p class="desc">
+                    Adjust target vegetation canopy (+NDVI) to see real-time surface cooling across all Lagos zones (empirical OLS slope: <strong id="slope-val">-13.5</strong> °C / NDVI).
                 </p>
-
-                <div class="slider-wrap">
-                    <div class="slider-top">
-                        <span>Target Vegetation Increase</span>
-                        <strong id="ndvi-boost-val">+0% NDVI</strong>
-                    </div>
+                <div class="slider-row">
                     <input type="range" id="ndvi-slider" min="0" max="40" step="5" value="0" />
-                    <div class="slider-scale">
-                        <span>0% (Current)</span>
-                        <span>+20% Canopy</span>
-                        <span>+40% Canopy</span>
+                    <span id="slider-label">+0%</span>
+                </div>
+            </div>
+
+            <!-- 3. Interactive Ranking Table (Click to Select) -->
+            <div class="panel table-panel">
+                <div class="panel-top">
+                    <div>
+                        <span class="tag">All Lagos Zones</span>
+                        <h2>Thermal Exposure Ranking</h2>
                     </div>
+                    <span class="sub-note" id="priority-summary">—</span>
                 </div>
-            </div>
-
-            <!-- Panel 3: Interactive NDVI vs LST Scatter Plot -->
-            <div class="card">
-                <span class="section-tag">Covariate Distribution</span>
-                <h2>Sentinel-2 NDVI vs. Surface Temp (°C)</h2>
-                <p class="card-text">Click any circle to fly the 3D camera to that administrative unit.</p>
-                <div class="chart-wrap">
-                    <canvas id="uhiChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Panel 4: Live Interactive Zone Leaderboard -->
-            <div class="card">
-                <span class="section-tag">From Data to Decision</span>
-                <h2>Lagos Thermal Exposure Ranking</h2>
-                <p class="card-text">Sorted by composite Heat Exposure Index. Click any row to inspect.</p>
-                <div class="table-scroll">
-                    <table class="rank-table">
+                <div class="table-container">
+                    <table class="zone-table">
                         <thead>
                             <tr>
-                                <th>Zone (LGA)</th>
+                                <th>Administrative Area</th>
                                 <th>LST</th>
+                                <th>NDVI</th>
                                 <th>Gi*</th>
-                                <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody id="leaderboard-body"></tbody>
+                        <tbody id="zone-tbody"></tbody>
                     </table>
                 </div>
             </div>
         </aside>
     </main>
 
-    <!-- MapLibre GL & Chart.js -->
-    <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
