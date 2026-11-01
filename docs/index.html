@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
     
-    <!-- Leaflet CSS (Clean 2D Vector Polygon Engine) -->
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <!-- Custom Clean Stylesheet -->
@@ -28,7 +28,7 @@
 
         <div class="controls">
             <div class="ctrl-group">
-                <label for="metric-select">Map Layer</label>
+                <label for="metric-select">Layer</label>
                 <select id="metric-select">
                     <option value="hotspot" selected>Gi* Hotspot Classification</option>
                     <option value="lst">Mean Surface Temp (LST °C)</option>
@@ -38,7 +38,7 @@
             </div>
 
             <div class="ctrl-group">
-                <label for="k-select">Spatial Weights</label>
+                <label for="k-select">Weights</label>
                 <select id="k-select">
                     <option value="5" selected>KNN (k = 5)</option>
                     <option value="3">KNN (k = 3)</option>
@@ -49,13 +49,13 @@
             <div class="ctrl-group">
                 <label for="basemap-select">Basemap</label>
                 <select id="basemap-select">
-                    <option value="light" selected>Clean Light Canvas</option>
-                    <option value="satellite">Esri Satellite Hybrid</option>
+                    <option value="satellite" selected>Esri Satellite Hybrid</option>
+                    <option value="light">Clean Light Canvas</option>
                     <option value="osm">OpenStreetMap</option>
                 </select>
             </div>
 
-            <button id="reset-view" class="btn-outline" type="button">Reset Map</button>
+            <button id="reset-view" class="btn-outline" type="button">Reset View</button>
         </div>
     </header>
 
@@ -114,10 +114,10 @@
                         <span class="tag">Real-Time Scenario</span>
                         <h2>Canopy Greening Simulator</h2>
                     </div>
-                    <strong id="sim- cooling-badge" class="cooling-pill">0.00 °C Shift</strong>
+                    <strong id="sim-cooling-badge" class="cooling-pill">0.00 °C Shift</strong>
                 </div>
                 <p class="desc">
-                    Adjust target vegetation canopy (+NDVI) to see real-time surface cooling across all Lagos zones (empirical OLS slope: <strong id="slope-val">-13.5</strong> °C / NDVI).
+                    Slide to simulate urban tree-canopy expansion (+NDVI) and watch real-time surface cooling across Lagos (OLS slope: <strong id="slope-val">-13.5</strong> °C / NDVI).
                 </p>
                 <div class="slider-row">
                     <input type="range" id="ndvi-slider" min="0" max="40" step="5" value="0" />
@@ -129,7 +129,7 @@
             <div class="panel table-panel">
                 <div class="panel-top">
                     <div>
-                        <span class="tag">All Lagos Zones</span>
+                        <span class="tag">All Lagos Zones (Click Row to Zoom)</span>
                         <h2>Thermal Exposure Ranking</h2>
                     </div>
                     <span class="sub-note" id="priority-summary">—</span>
