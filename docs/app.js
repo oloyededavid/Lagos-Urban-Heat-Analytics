@@ -1,21 +1,37 @@
 Chart.defaults.font.family = "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif";
 Chart.defaults.color = '#cbd5e1';
 
+// 1. Keyless Multi-Layer Raster Style (Esri Satellite + OSM Colorful + Esri Topo)
 const MAP_STYLE = {
     version: 8,
     sources: {
         'esri-sat': {
             type: 'raster',
             tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
-            tileSize: 256
+            tileSize: 256,
+            attribution: 'Tiles &copy; Esri World Imagery'
         },
         'esri-labels': {
             type: 'raster',
             tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}'],
             tileSize: 256
+        },
+        'osm-colorful': {
+            type: 'raster',
+            tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+            tileSize: 256,
+            attribution: '&copy; OpenStreetMap contributors'
+        },
+        'esri-topo': {
+            type: 'raster',
+            tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'],
+            tileSize: 256,
+            attribution: 'Tiles &copy; Esri World Topo'
         }
     },
     layers: [
+        { id: 'base-osm', type: 'raster', source: 'osm-colorful', layout: { visibility: 'none' } },
+        { id: 'base-topo', type: 'raster', source: 'esri-topo', layout: { visibility: 'none' } },
         { id: 'base-sat', type: 'raster', source: 'esri-sat', layout: { visibility: 'visible' } },
         { id: 'base-labels', type: 'raster', source: 'esri-labels', layout: { visibility: 'visible' }, paint: { 'raster-opacity': 0.9 } }
     ]
@@ -64,7 +80,7 @@ const LST_PALETTE = ['#06b6d4', '#10b981', '#eab308', '#f97316', '#ef4444', '#b9
 const EXP_PALETTE = ['#334155', '#6366f1', '#a855f7', '#ec4899', '#ef4444', '#dc2626'];
 const NDVI_PALETTE = ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e', '#15803d'];
 
-// Fallback Lagos LGA features if external fetch fails
+// Robust Fallback Lagos LGA features if fetch is restricted by browser caching
 const FALLBACK_GEOJSON = {
     type: "FeatureCollection",
     features: [
@@ -92,9 +108,9 @@ function getFeatureCenter(feature) {
 
 async function loadData() {
     const paths = [
+        'https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/data/lagos_uhi_processed.geojson',
         './data/lagos_uhi_processed.geojson',
         'data/lagos_uhi_processed.geojson',
-        'https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/data/lagos_uhi_processed.geojson',
         'https://raw.githubusercontent.com/oloyededavid/Lagos-Urban-Heat-Analytics/main/docs/data/lagos_uhi_processed.geojson'
     ];
     for (let path of paths) {
@@ -103,15 +119,15 @@ async function loadData() {
             if (res.ok) {
                 const json = await res.json();
                 if (json && json.features && json.features.length > 0) {
-                    console.log("Loaded external GeoJSON successfully.");
+                    console.log(`Successfully loaded GeoJSON from: ${path}`);
                     return json;
                 }
             }
         } catch (e) {
-            // try next path
+            // Try next path
         }
     }
-    console.warn("Using built-in fallback Lagos LGA dataset.");
+    console.warn("Using bulletproof built-in Lagos LGA dataset fallback.");
     return FALLBACK_GEOJSON;
 }
 
@@ -462,6 +478,14 @@ document.getElementById('zone-select').addEventListener('change', (e) => {
     } else {
         selectAndFlyToZone(e.target.value);
     }
+});
+
+document.getElementById('basemap-select').addEventListener('change', (e) => {
+    const mode = e.target.value;
+    map.setLayoutProperty('base-sat', 'visibility', mode === 'satellite' ? 'visible' : 'none');
+    map.setLayoutProperty('base-labels', 'visibility', mode === 'satellite' ? 'visible' : 'none');
+    map.setLayoutProperty('base-osm', 'visibility', mode === 'osm' ? 'visible' : 'none');
+    map.setLayoutProperty('base-topo', 'visibility', mode === 'topo' ? 'visible' : 'none');
 });
 
 document.getElementById('toggle-3d').addEventListener('click', (e) => {
