@@ -63,7 +63,7 @@ const LST_PALETTE = ['#06b6d4', '#10b981', '#eab308', '#f97316', '#ef4444', '#b9
 const EXP_PALETTE = ['#334155', '#6366f1', '#a855f7', '#ec4899', '#ef4444', '#dc2626'];
 const NDVI_PALETTE = ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e', '#15803d'];
 
-// Fully Embedded Lagos LGA Dataset (Guaranteed 100% Uptime, Zero Fetch Failures)
+// Fully Embedded Lagos LGA Dataset
 const rawGeoJSON = {
     type: "FeatureCollection",
     features: [
@@ -89,7 +89,6 @@ function getFeatureCenter(feature) {
     return [(Math.min(...lngs) + Math.max(...lngs)) / 2, (Math.min(...lats) + Math.max(...lats)) / 2];
 }
 
-// Initialize on load
 rawGeoJSON.features.forEach(f => {
     f.properties._center = getFeatureCenter(f);
 });
@@ -243,6 +242,7 @@ function initMapLayers() {
         }
     });
 
+    // Make mouse cursor pointer on hover
     map.on('mousemove', 'zones-3d', (e) => {
         if (!e.features.length) return;
         map.getCanvas().style.cursor = 'pointer';
@@ -265,9 +265,11 @@ function initMapLayers() {
         hoverPopup.remove();
     });
 
+    // CRITICAL: Full Click Interaction Handler
     map.on('click', 'zones-3d', (e) => {
         if (!e.features.length) return;
-        selectAndFlyToZone(e.features[0].properties.ward_name, e.lngLat);
+        const zoneName = e.features[0].properties.ward_name;
+        selectAndFlyToZone(zoneName, e.lngLat);
     });
 }
 
