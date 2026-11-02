@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lagos Urban Heat Analytics</title>
+    <title>Lagos Urban Heat Analytics | Copernicus &amp; Landsat Decision-Support</title>
     
     <!-- Google Fonts: DM Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,141 +13,175 @@
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
-    <!-- Custom Clean Stylesheet -->
+    <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <!-- Minimalist Topbar -->
+    <!-- Top Navigation Bar -->
     <header class="topbar">
         <div class="brand">
             <span class="status-dot"></span>
-            <h1>Lagos Urban Heat Analytics</h1>
-            <span class="sep">/</span>
-            <span class="sub">Getis-Ord Gi* Spatial Clustering &amp; Canopy Cooling</span>
+            <div>
+                <h1>Lagos Urban Heat &amp; Population Exposure Dashboard</h1>
+                <p class="sub">Copernicus Sentinel-2, DEM &amp; Landsat 8/9 Getis-Ord Gi* Spatial Clustering (2022–2024 Dry-Season Composite · N = 20 LGAs)</p>
+            </div>
         </div>
 
         <div class="controls">
             <div class="ctrl-group">
-                <label for="metric-select">Layer</label>
+                <label for="metric-select">Graduated Layer</label>
                 <select id="metric-select">
-                    <option value="hotspot" selected>Gi* Hotspot Classification</option>
-                    <option value="lst">Mean Surface Temp (LST °C)</option>
-                    <option value="exposure">Heat Exposure Index (0–1)</option>
-                    <option value="ndvi">Vegetation Density (NDVI)</option>
+                    <option value="hotspot" selected>Gi* Thermal Clustering (on LST)</option>
+                    <option value="lst">Mean Land Surface Temp (LST °C)</option>
+                    <option value="exposure">Heat Exposure Index (HEI 0–1)</option>
+                    <option value="ndvi">Sentinel-2 Vegetation (NDVI)</option>
                 </select>
             </div>
 
             <div class="ctrl-group">
-                <label for="k-select">Weights</label>
+                <label for="k-select">KNN Weights</label>
                 <select id="k-select">
-                    <option value="5" selected>KNN (k = 5)</option>
-                    <option value="3">KNN (k = 3)</option>
-                    <option value="8">KNN (k = 8)</option>
+                    <option value="5" selected>k = 5 (Default · 25% N)</option>
+                    <option value="3">k = 3 (Local · 15% N)</option>
+                    <option value="8">k = 8 (Broad · 40% N)</option>
                 </select>
             </div>
 
             <div class="ctrl-group">
                 <label for="basemap-select">Basemap</label>
                 <select id="basemap-select">
-                    <option value="satellite" selected>Esri Satellite Hybrid</option>
-                    <option value="light">Clean Light Canvas</option>
-                    <option value="osm">OpenStreetMap</option>
+                    <option value="light" selected>Esri Light Gray Canvas</option>
+                    <option value="osm">OpenStreetMap Standard</option>
+                    <option value="satellite">Esri World Imagery</option>
                 </select>
             </div>
 
+            <label class="toggle-check" title="Toggle smart non-overlapping LGA labels on the map">
+                <input type="checkbox" id="toggle-labels" checked />
+                <span>Map Labels</span>
+            </label>
+
             <button id="reset-view" class="btn-outline" type="button">Reset View</button>
+            <a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics" target="_blank" rel="noopener" class="btn-link">GitHub Repo ↗</a>
         </div>
     </header>
 
-    <!-- Main Split View -->
+    <!-- Main Split Workspace -->
     <main class="layout">
-        <!-- Left: Interactive 2D Polygon Map -->
+        <!-- Left: Interactive 2D Cartographic Map -->
         <section class="map-wrap">
             <div id="map"></div>
             <div id="map-legend" class="legend-card"></div>
+            <div class="copernicus-credit">
+                Contains modified Copernicus Sentinel-2 &amp; GLO-30 DEM data (2022–2024) · USGS Landsat 8/9 C2 L2 · NASA MODIS MOD11A2 · WorldPop (2020) · UN FAO GAUL L2 (2015) · Basemaps &copy; Esri &amp; &copy; OpenStreetMap contributors · MIT License
+            </div>
         </section>
 
-        <!-- Right: Focused Telemetry Sidebar -->
+        <!-- Right: Decision-Support Sidebar -->
         <aside class="sidebar">
-            <!-- 1. Selected Administrative Area Details -->
+            <!-- 1. Selected LGA Telemetry -->
             <div class="panel">
                 <div class="panel-top">
                     <div>
-                        <span class="tag">Selected Administrative Area</span>
-                        <h2 id="zone-title">Lagos State Overview</h2>
+                        <span class="tag">Unit of Analysis: 20 Local Government Areas (UN FAO GAUL L2 · 2015 Vintage)</span>
+                        <h2 id="zone-title">Lagos State Overview (20 LGAs)</h2>
                     </div>
-                    <span id="zone-badge" class="badge">Click Map to Inspect</span>
+                    <span id="zone-badge" class="badge">Click Any LGA</span>
                 </div>
 
                 <div class="stats-grid">
                     <div class="stat-item">
-                        <span class="s-label">Land Surface Temperature </span>
+                        <span class="s-label" title="Landsat 8/9 Collection 2 Level-2 Surface Temperature (ST_B10, 30m), Dec–Mar 2022–2024 dry-season composite">Land Surface Temp (LST)</span>
                         <strong class="s-val" id="val-lst">—</strong>
                     </div>
                     <div class="stat-item">
-                        <span class="s-label">Gi* Z-Score</span>
-                        <strong class="s-val" id="val-giz">—</strong>
+                        <span class="s-label" title="Local Getis-Ord Gi* (star=True) Z-score computed strictly on physical mean_lst (°C) using row-standardised KNN weights, with Benjamini-Hochberg FDR (alpha=0.05) status">Gi* Z-Score (on LST) &amp; FDR</span>
+                        <strong class="s-val s-val-sm" id="val-giz">—</strong>
                     </div>
                     <div class="stat-item">
-                        <span class="s-label">Sentinel-2 NDVI</span>
-                        <strong class="s-val" id="val-ndvi">—</strong>
+                        <span class="s-label" title="Copernicus Sentinel-2 L2A median NDVI &amp; NDBI on MNDWI <= 0 land-masked pixels">Sentinel-2 NDVI / NDBI</span>
+                        <strong class="s-val s-val-sm" id="val-ndvi">—</strong>
                     </div>
                     <div class="stat-item">
-                        <span class="s-label">Heat Exposure (0–1)</span>
+                        <span class="s-label" title="Heat Exposure Index: HEI = MinMax(LST) × MinMax(ln(1 + PopDensity)), unitless [0, 1]">Heat Exposure Index (HEI)</span>
                         <strong class="s-val" id="val-exp">—</strong>
                     </div>
                     <div class="stat-item">
-                        <span class="s-label">Population Density</span>
-                        <strong class="s-val" id="val-pop">—</strong>
+                        <span class="s-label" title="WorldPop 2020 UN-adjusted gridded population density (people/km²)">Population Density</span>
+                        <strong class="s-val s-val-sm" id="val-pop">—</strong>
                     </div>
                     <div class="stat-item">
-                        <span class="s-label">Mean Elevation</span>
+                        <span class="s-label" title="Copernicus DEM GLO-30 (30m) mean land elevation above sea level">Mean Elevation (DEM)</span>
                         <strong class="s-val" id="val-elev">—</strong>
                     </div>
                 </div>
             </div>
 
-            <!-- 2. Real-Time Canopy Cooling Simulator -->
+            <!-- 2. Scenario Explorer: Association-Based Estimate -->
             <div class="panel">
                 <div class="panel-top">
                     <div>
-                        <span class="tag">Real-Time Scenario</span>
-                        <h2>Canopy Greening Simulator</h2>
+                        <span class="tag">Scenario: Association-Based Estimate, Not a Causal Prediction</span>
+                        <h2>Cross-Sectional NDVI–LST Association</h2>
                     </div>
                     <strong id="sim-cooling-badge" class="cooling-pill">0.00 °C Shift</strong>
                 </div>
                 <p class="desc">
-                    Slide to simulate urban tree-canopy expansion (+NDVI) and watch real-time surface cooling across Lagos (OLS slope: <strong id="slope-val">-13.5</strong> °C / NDVI).
+                    Applies the cross-sectional OLS slope fitted across the 20 Lagos LGAs (<strong id="slope-val">computing...</strong>, 95% CI, <span id="ols-stats">R²</span>; fitted NDVI domain <span id="ndvi-domain">—</span>). The slider adds an absolute NDVI increment (+0.00 to +0.15) scaled by non-built-up land fraction (<span class="mono">1 &minus; NDBI</span>), excluding water (<span class="mono">MNDWI &le; 0</span>) and capped at a realistic urban maximum of <span class="mono">NDVI = 0.45</span>.
                 </p>
                 <div class="slider-row">
-                    <input type="range" id="ndvi-slider" min="0" max="40" step="5" value="0" />
-                    <span id="slider-label">+0%</span>
+                    <span class="slider-caption">Absolute &Delta;NDVI Shift:</span>
+                    <input type="range" id="ndvi-slider" min="0" max="0.15" step="0.025" value="0" />
+                    <span id="slider-label">+0.000 NDVI</span>
                 </div>
             </div>
 
-            <!-- 3. Interactive Ranking Table (Click to Select) -->
+            <!-- 3. From Data to Decision: Heat Exposure Index (HEI) Ranking -->
             <div class="panel table-panel">
                 <div class="panel-top">
                     <div>
-                        <span class="tag">All Lagos Zones (Click Row to Zoom)</span>
-                        <h2>Thermal Exposure Ranking</h2>
+                        <span class="tag">From Data to Decision · Indicative Priority Rule</span>
+                        <h2>Heat Exposure Index (HEI) Ranking</h2>
                     </div>
                     <span class="sub-note" id="priority-summary">—</span>
                 </div>
+                <p class="rule-note">
+                    <strong>Formula:</strong> <span class="mono">HEI = MinMax(LST) &times; MinMax(ln(1 + PopDensity)) &in; [0, 1]</span>.<br/>
+                    <strong>Indicative Priority Rule:</strong> Elevated thermal clustering on physical LST (<span class="mono">Gi* Z</span> or <span class="mono">LST Z &ge; 0.65</span>; BH-FDR tested at <span class="mono">&alpha; = 0.05</span>) intersecting top-quartile population density.<br/>
+                    <span id="k-stability-note"><strong>KNN Sensitivity (k = 3, 5, 8):</strong> k = 5 (25% of N = 20) is the default weight matrix.</span>
+                    <span id="validation-inline"></span>
+                </p>
                 <div class="table-container">
                     <table class="zone-table">
                         <thead>
                             <tr>
-                                <th>Administrative Area</th>
-                                <th>LST</th>
+                                <th>LGA (N = 20)</th>
+                                <th>LST (°C)</th>
                                 <th>NDVI</th>
-                                <th>Gi*</th>
+                                <th>Gi* (LST)</th>
+                                <th>HEI (0–1)</th>
                             </tr>
                         </thead>
-                        <tbody id="zone-tbody"></tbody>
+                        <tbody id="zone-tbody">
+                            <tr><td colspan="5" style="text-align:center;padding:18px;color:#94a3b8;">Loading live GeoJSON data...</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
+
+            <!-- 4. Methods, Validation, Limitations & Related Work -->
+            <details class="panel methods-drawer">
+                <summary class="drawer-title">Methods, Validation, Limitations &amp; Related Work</summary>
+                <div class="drawer-content">
+                    <p><strong>1. Sensors, Dry-Season Window &amp; Scene Counts:</strong> Composited over the <strong>2022–2024 West African Dry Season (1 Dec – 31 Mar)</strong> in Google Earth Engine. Primary LST is derived from <strong>USGS Landsat 8 &amp; 9 Collection 2 Level-2</strong> (<span class="mono">ST_B10</span>, 30m grid, 100m native TIR; median of <strong>38 cloud-screened scenes</strong> via <span class="mono">QA_PIXEL</span>). Optical covariates (<span class="mono">NDVI</span>, <span class="mono">NDBI</span>, <span class="mono">MNDWI</span>) come from <strong>Copernicus Sentinel-2 L2A</strong> (<span class="mono">S2_SR_HARMONIZED</span>, 10m–20m; median of <strong>114 scenes</strong> via <span class="mono">SCL</span> screening). A strict land mask (<span class="mono">MNDWI &le; 0</span>) removes Lagos Lagoon, creeks, and the Atlantic Ocean prior to zonal reduction across all sensors. Topography uses <strong>Copernicus DEM GLO-30</strong> (30m); population uses <strong>WorldPop 2020</strong> (100m).</p>
+                    
+                    <p><strong>2. Spatial Weights, Hotspot Variable &amp; FDR Power:</strong> Local Getis-Ord <span class="mono">Gi* (star=True)</span> runs <strong>strictly on physical temperature (<span class="mono">mean_lst</span>, °C)</strong>—never on HEI—using row-standardised (<span class="mono">W = 'R'</span>) K-Nearest Neighbour centroid distances in <span class="mono">EPSG:32631</span> (UTM 31N), guaranteeing zero isolated island polygons. Because the unit of analysis is the <strong>20 LGAs (UN FAO GAUL Simplified 500m Level-2, 2015 vintage)</strong>, passing strict Benjamini-Hochberg FDR (<span class="mono">&alpha; = 0.05</span>) requires <span class="mono">p &le; 0.0025 (|Z| &ge; 3.02)</span>, which is statistically conservative at <span class="mono">N = 20</span>; our Python pipeline (<span class="mono">scripts/analyze_uhi.py</span>) supports direct replacement with <span class="mono">GRID3 Nigeria Operational Wards (N = 245)</span>.</p>
+
+                    <p><strong>3. Cross-Sensor Validation &amp; Thesis Comparison:</strong> Zonal Landsat 8/9 LST was cross-checked against independent <strong>NASA MODIS Terra MOD11A2 v061 Day 1km LST</strong> (30 eight-day granules, Dec–Mar 2022–2024), confirming strong spatial rank agreement. Compared with 30m pixel-level findings in the author's thesis / EarthArXiv preprint (<em>Oloyede, 2026</em>)—where commercial cores in <strong>Lagos Island, Surulere, and Mushin</strong> recorded peak pixel temperatures—polygon aggregation at the coarse 500m <span class="mono">FAO GAUL</span> LGA scale pulls <strong>Lagos Island LGA (35.0°C)</strong> lower than landlocked mainland LGAs (<strong>Ikeja 39.3°C, Oshodi/Isolo 39.0°C, Mushin 38.9°C, Surulere 38.5°C</strong>) due to simplified coastal boundary inclusion of Marina/lagoon edge mixed pixels and daytime sea-breeze advection.</p>
+
+                    <p><strong>4. Limitations &amp; Related Work:</strong> (i) <em>WorldPop circularity</em>: WorldPop dasymetric redistribution uses built-up settlement covariates, introducing partial collinearity with imperviousness; (ii) <em>MAUP &amp; peri-urban farmland</em>: large peri-urban LGAs (Ikorodu, Alimosho, Badagry) average dense urban pockets with agricultural/wetland fringes; (iii) <em>Harmattan haze</em>: dry-season dust aerosols attenuate TIR radiance; (iv) <em>Scenario caution</em>: the OLS slope reflects spatial co-variation, not a causal microclimate simulation. Builds upon tropical UHI studies (<em>Bassett et al., 2020</em>), UCD WRF/LCZ heat-risk modeling in Lagos, Ikorodu green-infrastructure research (<em>Sept 2026 preprint</em>), and <em>Oloyede (2026, EarthArXiv)</em>.</p>
+                </div>
+            </details>
         </aside>
     </main>
 
