@@ -3,243 +3,329 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Open-source urban heat island and population exposure decision-support dashboard for Lagos State, Nigeria, powered by Copernicus Sentinel-2 and USGS Landsat 8/9.">
-    <title>Lagos Urban Heat &amp; Population Exposure | Copernicus Open Science</title>
+    <meta name="description" content="Lagos Urban Heat & Population Exposure Decision-Support System powered by Copernicus Sentinel-2 and USGS Landsat 8/9.">
+    <title>Lagos Urban Heat &amp; Exposure Analytics | Copernicus Decision-Support</title>
 
-    <!-- Font: Inter -->
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Leaflet 1.9.4 -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <!-- Leaflet 1.9.4 CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-    <!-- Clean White Stylesheet -->
+    <!-- Main Stylesheet -->
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
     <div class="app-shell">
-        <!-- Slim Top Bar -->
-        <header class="top-bar" role="banner">
-            <div class="brand-group">
-                <span class="brand-dot" aria-hidden="true"></span>
+        <!-- Top Navigation Bar -->
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-dot"></span>
                 <div>
-                    <h1 class="app-title">Lagos Urban Heat &amp; Exposure</h1>
-                    <span class="app-subtitle">Copernicus Sentinel-2 &amp; Landsat 8/9 · 2022–2024 Dry Season (N = 20 LGAs)</span>
+                    <h1 class="brand-title">Lagos Urban Heat &amp; Exposure Analytics</h1>
+                    <p class="brand-sub">Copernicus Sentinel-2, GLO-30 DEM &amp; Landsat 8/9 Spatial Decision-Support (N = 20 LGAs)</p>
                 </div>
             </div>
 
-            <div class="top-controls" role="region" aria-label="Primary map controls">
-                <!-- Search Box -->
-                <div class="control-item search-wrap" id="tour-search">
-                    <label for="area-search" class="sr-only">Find LGA</label>
-                    <input type="search" id="area-search" list="lga-datalist" placeholder="Jump to LGA..." aria-label="Search for a Local Government Area" />
-                    <datalist id="lga-datalist"></datalist>
+            <div class="top-controls">
+                <!-- Quick Search -->
+                <div class="ctrl-item" id="tour-search">
+                    <input type="search" id="lga-search" list="lga-list" placeholder="Search LGA..." aria-label="Search Local Government Area" />
+                    <datalist id="lga-list"></datalist>
                 </div>
 
-                <!-- Layer Select -->
-                <div class="control-item" id="tour-layer">
-                    <label for="layer-select">Layer</label>
-                    <select id="layer-select" aria-label="Select map metric layer">
+                <!-- Layer Selector -->
+                <div class="ctrl-item" id="tour-layer">
+                    <label for="layer-select">Map Layer</label>
+                    <select id="layer-select">
                         <option value="lst" selected>Surface Temp (LST °C)</option>
-                        <option value="hotspot">Gi* Thermal Clustering (on LST)</option>
+                        <option value="hotspot">Gi* Thermal Clustering (Z)</option>
                         <option value="exposure">Heat Exposure Index (HEI)</option>
-                        <option value="ndvi">Vegetation Density (NDVI)</option>
+                        <option value="ndvi">Vegetation Canopy (NDVI)</option>
                     </select>
                 </div>
 
-                <!-- Basemap Select -->
-                <div class="control-item" id="tour-basemap">
+                <!-- Basemap Selector -->
+                <div class="ctrl-item">
                     <label for="basemap-select">Basemap</label>
-                    <select id="basemap-select" aria-label="Select cartographic basemap">
-                        <option value="light" selected>Light Canvas</option>
+                    <select id="basemap-select">
+                        <option value="light" selected>Light Cartographic</option>
                         <option value="osm">OpenStreetMap</option>
-                        <option value="satellite">Satellite</option>
+                        <option value="satellite">Esri Satellite</option>
                     </select>
                 </div>
 
-                <!-- Actions -->
-                <div class="control-item button-group" id="tour-help">
-                    <button type="button" id="btn-open-methods" class="btn-ghost" aria-haspopup="dialog">Method &amp; Data</button>
-                </div>
+                <!-- 3D Tilt & Labels Toggles -->
+                <button type="button" id="btn-3d" class="btn-chip" title="Toggle 3D Perspective Map Tilt">3D View</button>
+                <button type="button" id="btn-labels" class="btn-chip active" title="Toggle all 20 LGA names on map">20 LGA Labels</button>
+                <button type="button" id="btn-methods" class="btn-chip" title="View scientific methodology and equations">Methods</button>
+                <button type="button" id="btn-tour" class="btn-chip btn-accent" title="Launch interactive onboarding guide">? Guide</button>
             </div>
         </header>
 
-        <!-- Key-Findings Strip -->
-        <div class="findings-strip" role="status" aria-live="polite">
-            <p id="findings-text">
-                <strong>Key Finding:</strong> Dense inland mainland LGAs (<span id="finding-hotspots">loading...</span>) record the highest land surface temperatures, whereas coastal lagoon boundaries and marine breezes pull coastal polygon means lower.
-            </p>
-            <div class="strip-actions">
-                <label class="uncertainty-toggle">
-                    <input type="checkbox" id="toggle-uncertainty" checked />
-                    <span>Hatch Uncertain Areas</span>
-                </label>
-                <label class="uncertainty-toggle">
-                    <input type="checkbox" id="toggle-labels" checked />
-                    <span>Labels</span>
-                </label>
+        <!-- Key Empirical Summary Bar -->
+        <div class="summary-strip">
+            <div class="summary-text" id="executive-finding">
+                <strong>Key Empirical Finding:</strong> Loading satellite telemetry across 20 Lagos Local Government Areas...
+            </div>
+            <div class="summary-actions">
+                <button type="button" id="btn-export-csv" class="link-action">Export CSV ↓</button>
+                <button type="button" id="btn-export-geojson" class="link-action">Export GeoJSON ↓</button>
+                <button type="button" id="btn-reset" class="link-action">Reset Map View</button>
             </div>
         </div>
 
-        <!-- Main Workspace -->
-        <main class="main-stage" role="main">
-            <div id="status-banner" class="status-banner" role="alert">Loading spatial telemetry...</div>
-            <div id="map" class="map-canvas" tabindex="0" aria-label="Interactive choropleth map of Lagos State"></div>
+        <!-- Main Split Workspace -->
+        <main class="workspace">
+            <!-- Left: Interactive Map Container -->
+            <section class="map-stage" id="map-stage">
+                <div id="map-status" class="map-status">Loading Lagos GeoJSON telemetry...</div>
+                <div id="map" class="map-canvas"></div>
 
-            <!-- Legend Box -->
-            <div class="legend-box" id="tour-legend" role="region" aria-label="Map colour scale legend">
-                <div class="legend-top">
-                    <span id="legend-title">Land Surface Temp (°C)</span>
-                    <span class="legend-unit" id="legend-unit-tag">Landsat 30m</span>
-                </div>
-                <div class="legend-gradient" id="legend-bar" aria-hidden="true"></div>
-                <div class="legend-labels">
-                    <span id="legend-min">—</span>
-                    <span id="legend-mid">—</span>
-                    <span id="legend-max">—</span>
-                </div>
-            </div>
-
-            <!-- Footer Attribution -->
-            <footer class="map-credit-bar">
-                <span>Contains modified Copernicus Sentinel-2 &amp; GLO-30 DEM data · USGS Landsat 8/9 · WorldPop (2020) · UN FAO GAUL L2</span>
-                <div class="credit-links">
-                    <button type="button" id="btn-download-geojson" class="link-btn">GeoJSON ↓</button>
-                    <button type="button" id="btn-download-csv" class="link-btn">CSV ↓</button>
-                    <button type="button" id="btn-print" class="link-btn">Print Summary</button>
-                </div>
-            </footer>
-
-            <!-- Slide-Over Detail Drawer -->
-            <aside id="detail-drawer" class="detail-drawer is-closed" role="complementary" aria-label="Selected area telemetry">
-                <div class="drawer-top">
-                    <div>
-                        <span class="eyebrow" id="drawer-eyebrow">Local Government Area (N = 20)</span>
-                        <h2 id="drawer-title">Select an Area</h2>
+                <!-- Comprehensive Floating Map Legend -->
+                <div class="legend-card" id="tour-legend">
+                    <div class="legend-head">
+                        <strong id="legend-title">Land Surface Temp (LST °C)</strong>
+                        <span id="legend-tag" class="legend-tag">Landsat 8/9 (30m)</span>
                     </div>
-                    <button type="button" id="btn-close-drawer" class="btn-close" aria-label="Close detail panel">&times;</button>
+                    <div id="legend-bar" class="legend-bar"></div>
+                    <div class="legend-ticks">
+                        <span id="legend-min">—</span>
+                        <span id="legend-q25">—</span>
+                        <span id="legend-mid">—</span>
+                        <span id="legend-q75">—</span>
+                        <span id="legend-max">—</span>
+                    </div>
+                    <div id="legend-classes" class="legend-classes"></div>
                 </div>
 
-                <p class="plain-summary" id="drawer-plain-summary">Click any administrative zone on the map to inspect its thermal profile and population exposure.</p>
-
-                <!-- 4 Key Hero Numbers -->
-                <div class="key-metrics" id="tour-metrics">
-                    <div class="metric-card">
-                        <span class="metric-label">Surface Temp (LST)</span>
-                        <strong class="metric-value" id="m-lst">—</strong>
-                        <span class="metric-sub" id="m-lst-sub">Dry-season mean</span>
-                    </div>
-                    <div class="metric-card">
-                        <span class="metric-label">Gi* Clustering Z</span>
-                        <strong class="metric-value" id="m-giz">—</strong>
-                        <span class="metric-sub" id="m-giz-sub">KNN (k = 5)</span>
-                    </div>
-                    <div class="metric-card">
-                        <span class="metric-label">Exposure Index (HEI)</span>
-                        <strong class="metric-value" id="m-hei">—</strong>
-                        <span class="metric-sub" id="m-hei-sub">Rank &amp; Min-Max</span>
-                    </div>
-                    <div class="metric-card">
-                        <span class="metric-label">Vegetation (NDVI)</span>
-                        <strong class="metric-value" id="m-ndvi">—</strong>
-                        <span class="metric-sub" id="m-pop-sub">— people/km²</span>
-                    </div>
+                <div class="map-credit">
+                    Copernicus Sentinel-2 L2A &amp; GLO-30 DEM · USGS Landsat 8/9 C2 L2 · WorldPop (2020) · UN FAO GAUL L2 · Click any LGA to inspect (no camera jump)
                 </div>
+            </section>
 
-                <!-- Scenario Slider -->
-                <div class="scenario-card" id="tour-scenario">
-                    <div class="scenario-head">
+            <!-- Right: Clean White Analytical Sidebar -->
+            <aside class="sidebar" id="tour-sidebar">
+                <!-- 1. Selected LGA Header -->
+                <div class="card">
+                    <div class="card-head">
                         <div>
-                            <span class="eyebrow">Scenario: Association, Not Causation</span>
-                            <h3>Canopy Greening Association</h3>
+                            <span class="eyebrow" id="sel-eyebrow">Statewide Summary (20 LGAs)</span>
+                            <h2 id="sel-title">Lagos State Overview</h2>
                         </div>
-                        <span class="ci-pill" id="scenario-output">0.00 °C (&plusmn;0.00)</span>
+                        <div class="head-actions">
+                            <span id="sel-badge" class="status-badge">Click Any LGA</span>
+                            <button type="button" id="btn-zoom-lga" class="btn-mini is-hidden" title="Smoothly zoom to this LGA">Zoom ↗</button>
+                        </div>
                     </div>
-                    <p class="scenario-note">
-                        Applies OLS slope (<strong id="ols-slope-text">—</strong>, <span id="ols-r2-text">—</span>) scaled by non-built-up land (<span class="mono">1 &minus; NDBI</span>).
+
+                    <p class="plain-insight" id="sel-insight">
+                        Click any Local Government Area on the map or in the ranking table below to inspect its surface temperature, Gi* hotspot score, and residential livability profile.
                     </p>
-                    <div class="slider-wrap">
-                        <label for="ndvi-slider">Target &Delta;NDVI</label>
-                        <input type="range" id="ndvi-slider" min="0" max="0.15" step="0.025" value="0" />
-                        <span id="ndvi-slider-val" class="mono">+0.000</span>
+
+                    <!-- 6 Telemetry Metrics with Plain-English "?" Tooltips -->
+                    <div class="metrics-grid">
+                        <div class="metric-box">
+                            <span class="m-label">
+                                Surface Temp (LST)
+                                <button type="button" class="tip-btn" data-tip="Dry-season mean Land Surface Temperature (°C) from USGS Landsat 8/9 (30m), after removing lagoon and ocean water pixels (MNDWI <= 0).">?</button>
+                            </span>
+                            <strong class="m-val" id="val-lst">—</strong>
+                            <span class="m-sub" id="sub-lst">Dry-season composite</span>
+                        </div>
+
+                        <div class="metric-box">
+                            <span class="m-label">
+                                Gi* Clustering (Z)
+                                <button type="button" class="tip-btn" data-tip="Getis-Ord Gi* Z-score computed strictly on physical temperature (LST). Positive values (+Z) mean an LGA is surrounded by hot neighbours; negative (-Z) means a cooler cluster.">?</button>
+                            </span>
+                            <strong class="m-val" id="val-giz">—</strong>
+                            <span class="m-sub" id="sub-giz">KNN spatial weights</span>
+                        </div>
+
+                        <div class="metric-box">
+                            <span class="m-label">
+                                Heat Exposure (HEI)
+                                <button type="button" class="tip-btn" data-tip="Heat Exposure Index (0 to 1): combines normalized surface temperature with log population density to show where high heat overlaps dense populations.">?</button>
+                            </span>
+                            <strong class="m-val" id="val-hei">—</strong>
+                            <span class="m-sub" id="sub-hei">0–1 Exposure Scale</span>
+                        </div>
+
+                        <div class="metric-box">
+                            <span class="m-label">
+                                Vegetation (NDVI)
+                                <button type="button" class="tip-btn" data-tip="Copernicus Sentinel-2 Normalized Difference Vegetation Index (10m). Higher values indicate healthier tree canopy and green cover.">?</button>
+                            </span>
+                            <strong class="m-val" id="val-ndvi">—</strong>
+                            <span class="m-sub" id="sub-ndbi">NDBI: —</span>
+                        </div>
+
+                        <div class="metric-box">
+                            <span class="m-label">
+                                Pop. Density
+                                <button type="button" class="tip-btn" data-tip="WorldPop UN-adjusted gridded population density (people per km²).">?</button>
+                            </span>
+                            <strong class="m-val" id="val-pop">—</strong>
+                            <span class="m-sub">WorldPop (people/km²)</span>
+                        </div>
+
+                        <div class="metric-box">
+                            <span class="m-label">
+                                Elevation (DEM)
+                                <button type="button" class="tip-btn" data-tip="Copernicus GLO-30 Digital Elevation Model mean terrain height above sea level (meters).">?</button>
+                            </span>
+                            <strong class="m-val" id="val-elev">—</strong>
+                            <span class="m-sub">Copernicus GLO-30</span>
+                        </div>
+                    </div>
+
+                    <!-- Livability & Urban Planning Recommendation Box -->
+                    <div class="livability-box" id="livability-box">
+                        <div class="livability-title">
+                            <span class="eyebrow">Residential Thermal Comfort &amp; Planning Guide</span>
+                            <strong id="livability-rating">Best Cooler Residential Zones: Epe, Ibeju-Lekki, Badagry &amp; Coastal Eti-Osa</strong>
+                        </div>
+                        <p id="livability-desc">
+                            Areas with dense vegetation (NDVI &gt; 0.35) or coastal lagoon ventilation experience 2.5°C–4.2°C lower surface temperatures than landlocked mainland districts (Ikeja, Oshodi/Isolo, Mushin, Agege).
+                        </p>
                     </div>
                 </div>
 
-                <!-- Side-by-Side Comparison -->
-                <div class="compare-card">
-                    <div class="compare-head">
-                        <label for="compare-select" class="eyebrow">Compare With</label>
-                        <select id="compare-select" aria-label="Select a second area to compare">
-                            <option value="">None</option>
+                <!-- 2. Interactive Greening Scenario Simulator -->
+                <div class="card" id="tour-simulator">
+                    <div class="card-head">
+                        <div>
+                            <span class="eyebrow">Scenario Explorer · Cross-Sectional OLS Association</span>
+                            <h3>Canopy Greening Cooling Simulator</h3>
+                        </div>
+                        <span class="cooling-badge" id="sim-badge">0.00 °C Shift</span>
+                    </div>
+                    <p class="card-desc">
+                        Simulate adding urban tree canopy (<span class="mono">+ΔNDVI</span>). Uses the empirical NDBI-controlled OLS slope (<strong id="ols-slope-label">computing...</strong>) capped at <span class="mono">NDVI &le; 0.45</span>.
+                    </p>
+                    <div class="slider-control">
+                        <label for="ndvi-slider">Canopy Addition:</label>
+                        <input type="range" id="ndvi-slider" min="0" max="0.15" step="0.025" value="0" />
+                        <strong id="slider-val" class="mono">+0.000 NDVI</strong>
+                    </div>
+                    <div class="weights-row">
+                        <label for="k-select">Gi* Spatial Neighbours:</label>
+                        <select id="k-select">
+                            <option value="5" selected>KNN k = 5 (Default)</option>
+                            <option value="3">KNN k = 3 (Local)</option>
+                            <option value="8">KNN k = 8 (Regional)</option>
                         </select>
                     </div>
-                    <div id="compare-table-wrap" class="compare-table-wrap is-hidden">
-                        <table class="clean-table">
-                            <thead>
-                                <tr>
-                                    <th>Metric</th>
-                                    <th id="comp-col-1">Selected</th>
-                                    <th id="comp-col-2">Comparison</th>
-                                </tr>
-                            </thead>
-                            <tbody id="comp-tbody"></tbody>
-                        </table>
-                    </div>
                 </div>
 
-                <!-- Diagnostics Accordion -->
-                <details class="details-accordion">
-                    <summary>Statistical Diagnostics &amp; Sensitivity</summary>
-                    <div class="details-body">
-                        <div class="control-row">
-                            <label for="k-select">Spatial Weights</label>
-                            <select id="k-select">
-                                <option value="5" selected>KNN k = 5</option>
-                                <option value="3">KNN k = 3</option>
-                                <option value="8">KNN k = 8</option>
-                                <option value="queen">Queen Contiguity</option>
-                            </select>
+                <!-- 3. Side-by-Side LGA Comparison -->
+                <div class="card">
+                    <div class="card-head">
+                        <div>
+                            <span class="eyebrow">Side-by-Side Benchmark</span>
+                            <h3>Compare Two Lagos LGAs</h3>
                         </div>
-                        <dl class="diag-list">
-                            <div><dt>BH-FDR Status:</dt><dd id="diag-fdr">—</dd></div>
-                            <div><dt>Uncorrected p:</dt><dd id="diag-pval">—</dd></div>
-                            <div><dt>k-Stability (3,5,8):</dt><dd id="diag-kstab">—</dd></div>
-                            <div><dt>Elevation (DEM):</dt><dd id="diag-elev">—</dd></div>
-                        </dl>
                     </div>
-                </details>
+                    <div class="compare-selectors">
+                        <select id="comp-select-a" aria-label="First LGA for comparison"></select>
+                        <span class="vs-label">vs.</span>
+                        <select id="comp-select-b" aria-label="Second LGA for comparison"></select>
+                    </div>
+                    <table class="clean-table compare-table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th id="comp-th-a">LGA A</th>
+                                <th id="comp-th-b">LGA B</th>
+                                <th>Difference</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comp-tbody"></tbody>
+                    </table>
+                </div>
 
-                <div class="drawer-footer">
-                    <button type="button" id="btn-share-view" class="btn-secondary">Copy Link</button>
-                    <button type="button" id="btn-reset-map" class="btn-ghost">Reset Map</button>
+                <!-- 4. All 20 LGAs Interactive Ranking Table -->
+                <div class="card">
+                    <div class="card-head">
+                        <div>
+                            <span class="eyebrow">Complete Dataset (Click Any Row to Inspect)</span>
+                            <h3>All 20 LGAs Thermal &amp; Livability Ranking</h3>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="clean-table" id="ranking-table">
+                            <thead>
+                                <tr>
+                                    <th>LGA Name</th>
+                                    <th>LST (°C)</th>
+                                    <th>Gi* Z</th>
+                                    <th>NDVI</th>
+                                    <th>HEI</th>
+                                    <th>Thermal Tier</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ranking-tbody"></tbody>
+                        </table>
+                    </div>
                 </div>
             </aside>
         </main>
     </div>
 
-    <!-- Method Modal -->
-    <div id="methods-modal" class="modal-overlay is-hidden" role="dialog" aria-modal="true" aria-labelledby="methods-modal-title">
-        <div class="modal-window">
-            <div class="modal-header">
+    <!-- Scientific Methods Modal -->
+    <div id="methods-modal" class="modal-backdrop is-hidden" role="dialog" aria-modal="true">
+        <div class="modal-card">
+            <div class="modal-head">
                 <div>
-                    <span class="eyebrow">Documentation &amp; Reproducibility</span>
-                    <h2 id="methods-modal-title">Methods &amp; Data Lineage</h2>
+                    <span class="eyebrow">Scientific Documentation &amp; Reproducibility</span>
+                    <h2>Methodology, Sensor Lineage &amp; Validation</h2>
                 </div>
-                <button type="button" id="btn-close-methods" class="btn-close" aria-label="Close modal">&times;</button>
+                <button type="button" id="btn-close-methods" class="btn-close">&times;</button>
             </div>
-            <div class="modal-content">
-                <section class="method-section">
-                    <h3>Pipeline Overview</h3>
-                    <p id="method-live-diagnostics">Loading spatial diagnostics...</p>
-                    <p style="margin-top: 10px;">Composited over the 2022–2024 West African Dry Season (Dec–Mar) in Google Earth Engine. Water bodies are masked using Sentinel-2 MNDWI <= 0.</p>
-                </section>
+            <div class="modal-body">
+                <p id="live-model-summary" class="highlight-note">Computing live spatial econometric diagnostics...</p>
+                <h4>1. Satellite Sensor Stack (2022–2024 Dry-Season Window: Dec–Mar)</h4>
+                <p>Composited in Google Earth Engine across the West African dry season. Water pixels (Lagos Lagoon, creeks, Atlantic Ocean) are masked out using Sentinel-2 <span class="mono">MNDWI &le; 0</span> prior to polygon aggregation so water temperatures do not bias land statistics.</p>
+                <ul>
+                    <li><strong>Thermal (LST):</strong> USGS Landsat 8 &amp; 9 Collection 2 Level-2 Surface Temperature (<span class="mono">ST_B10</span>, 30m grid, 100m native TIR), cross-checked against NASA MODIS Terra <span class="mono">MOD11A2</span> 1km daytime LST.</li>
+                    <li><strong>Optical Covariates:</strong> Copernicus Sentinel-2 L2A (<span class="mono">NDVI</span> vegetation canopy, <span class="mono">NDBI</span> built-up imperviousness, <span class="mono">MNDWI</span> water mask).</li>
+                    <li><strong>Elevation &amp; Demography:</strong> Copernicus <span class="mono">GLO-30 DEM</span> (30m) and WorldPop Gridded Population Density (people/km²).</li>
+                </ul>
+                <h4>2. Decoupled Spatial Clustering &amp; Exposure Equations</h4>
+                <p>Local Getis-Ord <span class="mono">Gi* (star=True)</span> is computed strictly on physical temperature (<span class="mono">LST °C</span>) across row-standardized K-Nearest Neighbour weights (<span class="mono">k = 3, 5, 8</span>). The Heat Exposure Index is formulated as <span class="mono">HEI = MinMax(LST) &times; MinMax(ln(1 + PopDensity)) &in; [0, 1]</span> and verified against non-parametric percentile ranks via Spearman's &rho;.</p>
+                <h4>3. Coastal Ventilation vs. Inland Heat Trapping</h4>
+                <p>At the LGA polygon scale, landlocked mainland LGAs (<strong>Ikeja, Oshodi/Isolo, Mushin, Agege, Alimosho</strong>) record peak mean temperatures (&gt;38.5°C), whereas coastal/lagoon LGAs (<strong>Lagos Island, Eti-Osa, Epe, Badagry</strong>) record lower polygon means due to daytime sea-breeze advection and coastal boundary mixed pixels.</p>
             </div>
         </div>
     </div>
 
+    <!-- Interactive Spotlight Onboarding Tour -->
+    <div id="tour-overlay" class="tour-overlay is-hidden" role="dialog" aria-modal="true">
+        <div id="tour-Floater" class="tour-card">
+            <div class="tour-top">
+                <span class="eyebrow" id="tour-step-num">Step 1 of 4</span>
+                <button type="button" id="tour-close" class="tour-skip">Close &times;</button>
+            </div>
+            <h3 id="tour-title">Welcome to Lagos Urban Heat Analytics</h3>
+            <p id="tour-desc">Explore satellite-derived surface temperatures, statistical hotspots, and residential livability across all 20 Local Government Areas of Lagos State.</p>
+            <div class="tour-footer">
+                <div id="tour-dots" class="tour-dots"></div>
+                <div class="tour-btns">
+                    <button type="button" id="tour-prev" class="btn-chip">Back</button>
+                    <button type="button" id="tour-next" class="btn-chip btn-accent">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Plain-English Tooltip -->
+    <div id="floating-tip" class="floating-tip is-hidden" role="tooltip"></div>
+
     <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
