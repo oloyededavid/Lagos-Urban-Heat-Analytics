@@ -3,190 +3,345 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lagos Urban Heat Analytics | Copernicus &amp; Landsat Decision-Support</title>
-    
-    <!-- Google Fonts: DM Sans -->
+    <meta name="description" content="Open-source urban heat island and population exposure decision-support dashboard for Lagos State, Nigeria, powered by Copernicus Sentinel-2 and USGS Landsat 8/9.">
+    <title>Lagos Urban Heat &amp; Population Exposure | Copernicus Open Science</title>
+
+    <!-- Font: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
-    
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    <!-- Custom Stylesheet -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Leaflet 1.9.4 (Pinned CDN with SRI) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <!-- Clean White Stylesheet -->
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <!-- Top Navigation Bar -->
-    <header class="topbar">
-        <div class="brand">
-            <span class="status-dot"></span>
-            <div>
-                <h1>Lagos Urban Heat &amp; Population Exposure Dashboard</h1>
-                <p class="sub">Copernicus Sentinel-2, DEM &amp; Landsat 8/9 Getis-Ord Gi* Spatial Clustering (2022–2024 Dry-Season Composite · N = 20 LGAs)</p>
+    <div class="app-shell">
+        <!-- Slim Top Bar: Title + 3 Core Controls (Layer, Basemap, Help/Method) -->
+        <header class="top-bar" role="banner">
+            <div class="brand-group">
+                <span class="brand-dot" aria-hidden="true"></span>
+                <div>
+                    <h1 class="app-title">Lagos Urban Heat &amp; Exposure</h1>
+                    <span class="app-subtitle">Copernicus Sentinel-2 &amp; Landsat 8/9 · 2022–2024 Dry Season (N = 20 LGAs)</span>
+                </div>
+            </div>
+
+            <div class="top-controls" role="region" aria-label="Primary map controls">
+                <!-- Search Box -->
+                <div class="control-item search-wrap" id="tour-search">
+                    <label for="area-search" class="sr-only">Find LGA</label>
+                    <input type="search" id="area-search" list="lga-datalist" placeholder="Jump to LGA..." aria-label="Search for a Local Government Area" />
+                    <datalist id="lga-datalist"></datalist>
+                </div>
+
+                <!-- Control 1: Layer -->
+                <div class="control-item" id="tour-layer">
+                    <label for="layer-select">Layer</label>
+                    <select id="layer-select" aria-label="Select map metric layer">
+                        <option value="lst" selected>Surface Temp (LST °C)</option>
+                        <option value="hotspot">Gi* Thermal Clustering (on LST)</option>
+                        <option value="exposure">Heat Exposure Index (HEI)</option>
+                        <option value="ndvi">Vegetation Density (NDVI)</option>
+                    </select>
+                </div>
+
+                <!-- Control 2: Basemap -->
+                <div class="control-item" id="tour-basemap">
+                    <label for="basemap-select">Basemap</label>
+                    <select id="basemap-select" aria-label="Select cartographic basemap">
+                        <option value="light" selected>Light Canvas</option>
+                        <option value="osm">OpenStreetMap</option>
+                        <option value="satellite">Satellite</option>
+                    </select>
+                </div>
+
+                <!-- Control 3: Method & Tour Help -->
+                <div class="control-item button-group" id="tour-help">
+                    <button type="button" id="btn-open-methods" class="btn-ghost" aria-haspopup="dialog">Method &amp; Data</button>
+                    <button type="button" id="btn-start-tour" class="btn-icon" title="Replay guided tour" aria-label="Replay guided tour">?</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- One-Sentence Key-Findings Strip -->
+        <div class="findings-strip" role="status" aria-live="polite">
+            <p id="findings-text">
+                <strong>Key Finding:</strong> Dense inland mainland LGAs (<span id="finding-hotspots">loading...</span>) record the highest land surface temperatures, whereas coastal lagoon boundaries and marine breezes pull coastal polygon means lower.
+            </p>
+            <div class="strip-actions">
+                <label class="uncertainty-toggle" title="Hatch areas that are not persistent thermal clusters across KNN bandwidths (k = 3, 5, 8)">
+                    <input type="checkbox" id="toggle-uncertainty" checked />
+                    <span>Hatch Uncertain Areas</span>
+                </label>
+                <label class="uncertainty-toggle" title="Show or hide cartographic labels on the map">
+                    <input type="checkbox" id="toggle-labels" checked />
+                    <span>Labels</span>
+                </label>
             </div>
         </div>
 
-        <div class="controls">
-            <div class="ctrl-group">
-                <label for="metric-select">Graduated Layer</label>
-                <select id="metric-select">
-                    <option value="hotspot" selected>Gi* Thermal Clustering (on LST)</option>
-                    <option value="lst">Mean Land Surface Temp (LST °C)</option>
-                    <option value="exposure">Heat Exposure Index (HEI 0–1)</option>
-                    <option value="ndvi">Sentinel-2 Vegetation (NDVI)</option>
-                </select>
+        <!-- Main Map Hero & Slide-Over Inspector -->
+        <main class="main-stage" role="main">
+            <!-- Loading / Error Banner -->
+            <div id="status-banner" class="status-banner" role="alert">Loading spatial telemetry...</div>
+
+            <!-- Full-Width Map Hero -->
+            <div id="map" class="map-canvas" tabindex="0" aria-label="Interactive choropleth map of Lagos State"></div>
+
+            <!-- Single Perceptually Uniform Sequential Legend -->
+            <div class="legend-box" id="tour-legend" role="region" aria-label="Map colour scale legend">
+                <div class="legend-top">
+                    <span id="legend-title">Land Surface Temp (°C)</span>
+                    <span class="legend-unit" id="legend-unit-tag">Landsat 30m</span>
+                </div>
+                <div class="legend-gradient" id="legend-bar" aria-hidden="true"></div>
+                <div class="legend-labels">
+                    <span id="legend-min">—</span>
+                    <span id="legend-mid">—</span>
+                    <span id="legend-max">—</span>
+                </div>
+                <div class="legend-Key-row" id="legend-hatch-note">
+                    <span class="hatch-swatch" aria-hidden="true"></span>
+                    <span>Hatched = Not statistically robust across k (N=20)</span>
+                </div>
             </div>
 
-            <div class="ctrl-group">
-                <label for="k-select">KNN Weights</label>
-                <select id="k-select">
-                    <option value="5" selected>k = 5 (Default · 25% N)</option>
-                    <option value="3">k = 3 (Local · 15% N)</option>
-                    <option value="8">k = 8 (Broad · 40% N)</option>
-                </select>
+            <!-- Attribution Footer Bar -->
+            <footer class="map-credit-bar">
+                <span>Contains modified Copernicus Sentinel-2 &amp; GLO-30 DEM data (2022–2024) · USGS Landsat 8/9 · NASA MODIS · WorldPop (2020) · UN FAO GAUL L2</span>
+                <div class="credit-links">
+                    <button type="button" id="btn-download-geojson" class="link-btn">GeoJSON ↓</button>
+                    <button type="button" id="btn-download-csv" class="link-btn">CSV ↓</button>
+                    <button type="button" id="btn-print" class="link-btn">Print Summary</button>
+                    <a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics" target="_blank" rel="noopener">GitHub Repo ↗</a>
+                </div>
+            </footer>
+
+            <!-- Slide-Over Detail Panel (Hidden until an area is clicked) -->
+            <aside id="detail-drawer" class="detail-drawer is-closed" role="complementary" aria-label="Selected area telemetry">
+                <div class="drawer-top">
+                    <div>
+                        <span class="eyebrow" id="drawer-eyebrow">Local Government Area (N = 20)</span>
+                        <h2 id="drawer-title">Select an Area</h2>
+                    </div>
+                    <button type="button" id="btn-close-drawer" class="btn-close" aria-label="Close detail panel">&times;</button>
+                </div>
+
+                <!-- Plain-Language Sentence -->
+                <p class="plain-summary" id="drawer-plain-summary">Click any administrative zone on the map to inspect its thermal profile and population exposure.</p>
+
+                <!-- 4 Key Hero Numbers -->
+                <div class="key-metrics" id="tour-metrics">
+                    <div class="metric-card">
+                        <span class="metric-label">
+                            Surface Temp (LST)
+                            <button type="button" class="info-tip" data-tip="Radiometric skin temperature from Landsat 8/9 Collection 2 Level-2 (30m) dry-season composite (Dec–Mar 2022–2024), after MNDWI <= 0 water masking." aria-label="What is Surface Temp?">?</button>
+                        </span>
+                        <strong class="metric-value" id="m-lst">—</strong>
+                        <span class="metric-sub" id="m-lst-sub">Dry-season mean</span>
+                    </div>
+
+                    <div class="metric-card">
+                        <span class="metric-label">
+                            Gi* Clustering Z
+                            <button type="button" class="info-tip" data-tip="Local Getis-Ord Gi* Z-score computed strictly on physical temperature (LST). Positive values indicate clustering of hot zones; tested with Benjamini-Hochberg FDR (q < 0.05)." aria-label="What is Gi* Z-score?">?</button>
+                        </span>
+                        <strong class="metric-value" id="m-giz">—</strong>
+                        <span class="metric-sub" id="m-giz-sub">KNN (k = 5)</span>
+                    </div>
+
+                    <div class="metric-card">
+                        <span class="metric-label">
+                            Exposure Index (HEI)
+                            <button type="button" class="info-tip" data-tip="Heat Exposure Index (0 to 1): combines normalised physical surface temperature with log-transformed WorldPop population density. Measures exposure, not socio-economic vulnerability." aria-label="What is Heat Exposure Index?">?</button>
+                        </span>
+                        <strong class="metric-value" id="m-hei">—</strong>
+                        <span class="metric-sub" id="m-hei-sub">Rank &amp; Min-Max</span>
+                    </div>
+
+                    <div class="metric-card">
+                        <span class="metric-label">
+                            Vegetation (NDVI)
+                            <button type="button" class="info-tip" data-tip="Copernicus Sentinel-2 Level-2A Normalized Difference Vegetation Index (10m) over land pixels. Higher values indicate denser tree and vegetation cover." aria-label="What is NDVI?">?</button>
+                        </span>
+                        <strong class="metric-value" id="m-ndvi">—</strong>
+                        <span class="metric-sub" id="m-pop-sub">— people/km²</span>
+                    </div>
+                </div>
+
+                <!-- Association Scenario Slider with CI Band -->
+                <div class="scenario-card" id="tour-scenario">
+                    <div class="scenario-head">
+                        <div>
+                            <span class="eyebrow">Scenario: Association, Not Causation</span>
+                            <h3>Canopy Greening Association</h3>
+                        </div>
+                        <span class="ci-pill" id="scenario-output">0.00 °C (&plusmn;0.00)</span>
+                    </div>
+                    <p class="scenario-note">
+                        Applies the cross-sectional OLS slope (<strong id="ols-slope-text">—</strong>, <span id="ols-r2-text">—</span>) scaled by available non-built-up land (<span class="mono">1 &minus; NDBI</span>) and capped at <span class="mono">NDVI &le; 0.45</span>.
+                    </p>
+                    <div class="slider-wrap">
+                        <label for="ndvi-slider">Target &Delta;NDVI shift</label>
+                        <input type="range" id="ndvi-slider" min="0" max="0.15" step="0.025" value="0" />
+                        <span id="ndvi-slider-val" class="mono">+0.000</span>
+                    </div>
+                </div>
+
+                <!-- Side-by-Side Area Comparison -->
+                <div class="compare-card">
+                    <div class="compare-head">
+                        <label for="compare-select" class="eyebrow">Compare Side-by-Side With</label>
+                        <select id="compare-select" aria-label="Select a second area to compare">
+                            <option value="">None (Single Area View)</option>
+                        </select>
+                    </div>
+                    <div id="compare-table-wrap" class="compare-table-wrap is-hidden">
+                        <table class="clean-table">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th id="comp-col-1">Selected</th>
+                                    <th id="comp-col-2">Comparison</th>
+                                </tr>
+                            </thead>
+                            <tbody id="comp-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Expandable Details Accordion (Weights, Rank Robustness, Stats) -->
+                <details class="details-accordion">
+                    <summary>Statistical Diagnostics &amp; Sensitivity</summary>
+                    <div class="details-body">
+                        <div class="control-row">
+                            <label for="k-select">Spatial Weights Matrix</label>
+                            <select id="k-select">
+                                <option value="5" selected>KNN k = 5 (Primary)</option>
+                                <option value="3">KNN k = 3 (Local)</option>
+                                <option value="8">KNN k = 8 (Broad)</option>
+                                <option value="queen">Queen Contiguity</option>
+                            </select>
+                        </div>
+                        <dl class="diag-list">
+                            <div><dt>BH-FDR Status (&alpha;=0.05):</dt><dd id="diag-fdr">—</dd></div>
+                            <div><dt>Uncorrected two-sided p:</dt><dd id="diag-pval">—</dd></div>
+                            <div><dt>Stability across k=3,5,8:</dt><dd id="diag-kstab">—</dd></div>
+                            <div><dt>Rank-based HEI vs Min-Max:</dt><dd id="diag-heirank">—</dd></div>
+                            <div><dt>Built-up Index (NDBI):</dt><dd id="diag-ndbi">—</dd></div>
+                            <div><dt>Mean Elevation (Copernicus DEM):</dt><dd id="diag-elev">—</dd></div>
+                            <div><dt>MODIS 1km LST Cross-Check:</dt><dd id="diag-modis">—</dd></div>
+                        </dl>
+                    </div>
+                </details>
+
+                <div class="drawer-footer">
+                    <button type="button" id="btn-share-view" class="btn-secondary">Copy Shareable Link</button>
+                    <button type="button" id="btn-reset-map" class="btn-ghost">Reset Map</button>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- Separate "Method & Data Lineage" Modal -->
+    <div id="methods-modal" class="modal-overlay is-hidden" role="dialog" aria-modal="true" aria-labelledby="methods-modal-title">
+        <div class="modal-window">
+            <div class="modal-header">
+                <div>
+                    <span class="eyebrow">Documentation &amp; Reproducibility</span>
+                    <h2 id="methods-modal-title">Methods, Validation, Limitations &amp; All Areas Ranking</h2>
+                </div>
+                <button type="button" id="btn-close-methods" class="btn-close" aria-label="Close methodology window">&times;</button>
             </div>
 
-            <div class="ctrl-group">
-                <label for="basemap-select">Basemap</label>
-                <select id="basemap-select">
-                    <option value="light" selected>Esri Light Gray Canvas</option>
-                    <option value="osm">OpenStreetMap Standard</option>
-                    <option value="satellite">Esri World Imagery</option>
-                </select>
+            <div class="modal-content">
+                <section class="method-section">
+                    <h3>1. Data Sources &amp; Dry-Season Compositing Window</h3>
+                    <p>All satellite layers are composited over the <strong>2022–2024 West African Dry Season (1 December – 31 March)</strong> in Google Earth Engine and masked via Sentinel-2 <span class="mono">MNDWI &le; 0</span> so lagoon and Atlantic water pixels do not bias land surface statistics:</p>
+                    <ul>
+                        <li><strong>Primary Land Surface Temperature (LST):</strong> USGS Landsat 8 &amp; 9 Collection 2 Level-2 (<span class="mono">ST_B10</span>, 30m grid, 100m native TIR, <span class="mono">QA_PIXEL</span> cloud-screened).</li>
+                        <li><strong>Optical Spectral Indices:</strong> Copernicus Sentinel-2 Level-2A (<span class="mono">S2_SR_HARMONIZED</span>, 10m–20m, <span class="mono">SCL</span> cloud-screened) for <span class="mono">NDVI</span>, <span class="mono">NDBI</span>, and <span class="mono">MNDWI</span>.</li>
+                        <li><strong>Cross-Sensor Thermal Validation:</strong> NASA MODIS Terra <span class="mono">MOD11A2 v061</span> Day 1km LST composited over the identical Dec–Mar 2022–2024 window.</li>
+                        <li><strong>Topography &amp; Population:</strong> Copernicus DEM <span class="mono">GLO-30</span> (30m) and WorldPop Gridded Population (100m, 2020 reference) aggregated to UN FAO GAUL Level-2 LGAs (<span class="mono">N = 20</span>), with pipeline support in <span class="mono">scripts/analyze_uhi.py</span> for GRID3 Operational Wards (<span class="mono">N = 245</span>).</li>
+                    </ul>
+                </section>
+
+                <section class="method-section">
+                    <h3>2. Spatial Statistics, Equations &amp; Model Diagnostics</h3>
+                    <p id="method-live-diagnostics">Computing live spatial diagnostics from GeoJSON...</p>
+                    <ul>
+                        <li><strong>Hotspot Variable Isolation:</strong> Getis-Ord <span class="mono">G<sub>i</sub><sup>*</sup> (star=True)</span> runs strictly on physical temperature (<span class="mono">mean_lst</span> in °C)—never on population-weighted exposure—so clusters reflect thermal anomalies rather than population clustering.</li>
+                        <li><strong>Exposure Formulations:</strong> We compute both <span class="mono">HEI<sub>minmax</sub> = MinMax(LST) &times; MinMax(ln(1 + Pop))</span> and a non-parametric percentile rank variant <span class="mono">HEI<sub>rank</sub> = Rank(LST)/N &times; Rank(Pop)/N</span> to verify outlier robustness.</li>
+                        <li><strong>Priority Cooling Tier Definition:</strong> Tier 1 requires BH-FDR <span class="mono">q &lt; 0.05</span> and top-quartile population density (<span class="mono">&ge;75th percentile</span>). Because <span class="mono">N = 20</span> LGAs requires <span class="mono">|Z| &ge; 3.02</span> for strict BH-FDR, Tier 2 reports directional thermal clusters (<span class="mono">G<sub>i</sub><sup>*</sup> Z &ge; 0.55</span> persistent across <span class="mono">k &in; {3, 5, 8}</span>) intersecting top-quartile population density.</li>
+                    </ul>
+                </section>
+
+                <section class="method-section">
+                    <h3>3. Lagos Island Discrepancy &amp; Coastal Boundary Sensitivity</h3>
+                    <p>In 30m pixel-level analysis (<em>Oloyede, 2026, EarthArXiv</em>), dense commercial cores on Lagos Island, Surulere, and Mushin record peak urban temperatures. At the coarse 500m <span class="mono">FAO GAUL</span> LGA polygon scale, <strong>Lagos Island LGA records 35.0°C</strong> while landlocked <strong>Ikeja (39.3°C)</strong> and <strong>Oshodi/Isolo (39.0°C)</strong> rank hottest. This occurs because the simplified 500m polygon boundary incorporates Marina/lagoon-edge mixed pixels and marine sea-breeze ventilation; inward coastal buffer erosion tests are documented in <span class="mono">scripts/analyze_uhi.py</span> and <span class="mono">docs/GAPS.md</span> (GAP-03).</p>
+                </section>
+
+                <section class="method-section">
+                    <h3>4. Limitations &amp; Related Literature</h3>
+                    <ul>
+                        <li><strong>Radiometric Skin Temp vs. Air Temp:</strong> Satellite LST measures surface radiative temperature at ~10:00 UTC overpass, not 2m canopy air temperature (<span class="mono">T<sub>2m</sub></span>) or physiological wet-bulb heat stress.</li>
+                        <li><strong>Ecological Fallacy:</strong> The cross-sectional OLS slope describes spatial co-variation between LGAs and must not be interpreted as a causal prediction of tree-planting cooling.</li>
+                        <li><strong>WorldPop Circularity &amp; MAUP:</strong> WorldPop uses built-up footprints for dasymetric disaggregation (partial collinearity with <span class="mono">NDBI</span>), and LGA aggregation pulls peri-urban means (e.g., Ikorodu, Badagry) downward via farmland.</li>
+                        <li><strong>References:</strong> Bassett et al. (2020, <em>J. Appl. Meteorol. Climatol.</em>); Brousse et al. (2019, 2020, WUDAPT/WRF tropical African LCZ studies); Benjamini &amp; Hochberg (1995); Ord &amp; Getis (1995); Oloyede (2026, <em>EarthArXiv</em>).</li>
+                    </ul>
+                </section>
+
+                <section class="method-section">
+                    <h3>5. Complete Administrative Ranking Table (Click Any Row to Inspect)</h3>
+                    <div class="modal-table-wrap">
+                        <table class="clean-table" id="full-ranking-table">
+                            <thead>
+                                <tr>
+                                    <th>Area (N = 20)</th>
+                                    <th>LST (°C)</th>
+                                    <th>Gi* Z (k=5)</th>
+                                    <th>NDVI</th>
+                                    <th>HEI (MinMax)</th>
+                                    <th>HEI (Rank)</th>
+                                    <th>k-Stable</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modal-ranking-tbody"></tbody>
+                        </table>
+                    </div>
+                </section>
             </div>
-
-            <label class="toggle-check" title="Toggle smart non-overlapping LGA labels on the map">
-                <input type="checkbox" id="toggle-labels" checked />
-                <span>Map Labels</span>
-            </label>
-
-            <button id="reset-view" class="btn-outline" type="button">Reset View</button>
-            <a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics" target="_blank" rel="noopener" class="btn-link">GitHub Repo ↗</a>
         </div>
-    </header>
+    </div>
 
-    <!-- Main Split Workspace -->
-    <main class="layout">
-        <!-- Left: Interactive 2D Cartographic Map -->
-        <section class="map-wrap">
-            <div id="map"></div>
-            <div id="map-legend" class="legend-card"></div>
-            <div class="copernicus-credit">
-                Contains modified Copernicus Sentinel-2 &amp; GLO-30 DEM data (2022–2024) · USGS Landsat 8/9 C2 L2 · NASA MODIS MOD11A2 · WorldPop (2020) · UN FAO GAUL L2 (2015) · Basemaps &copy; Esri &amp; &copy; OpenStreetMap contributors · MIT License
+    <!-- Custom Accessible Tooltip Popup -->
+    <div id="info-tooltip-popup" class="tooltip-popup is-hidden" role="tooltip"></div>
+
+    <!-- Custom Accessible Spotlight Onboarding Tour -->
+    <div id="tour-backdrop" class="tour-backdrop is-hidden" role="dialog" aria-modal="true" aria-labelledby="tour-step-title">
+        <div id="tour-spotlight" class="tour-spotlight"></div>
+        <div id="tour-card" class="tour-card">
+            <div class="tour-card-top">
+                <span class="eyebrow" id="tour-step-counter">Step 1 of 6</span>
+                <button type="button" id="tour-btn-skip" class="btn-tour-skip" aria-label="Skip tour">Skip</button>
             </div>
-        </section>
-
-        <!-- Right: Decision-Support Sidebar -->
-        <aside class="sidebar">
-            <!-- 1. Selected LGA Telemetry -->
-            <div class="panel">
-                <div class="panel-top">
-                    <div>
-                        <span class="tag">Unit of Analysis: 20 Local Government Areas (UN FAO GAUL L2 · 2015 Vintage)</span>
-                        <h2 id="zone-title">Lagos State Overview (20 LGAs)</h2>
-                    </div>
-                    <span id="zone-badge" class="badge">Click Any LGA</span>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="s-label" title="Landsat 8/9 Collection 2 Level-2 Surface Temperature (ST_B10, 30m), Dec–Mar 2022–2024 dry-season composite">Land Surface Temp (LST)</span>
-                        <strong class="s-val" id="val-lst">—</strong>
-                    </div>
-                    <div class="stat-item">
-                        <span class="s-label" title="Local Getis-Ord Gi* (star=True) Z-score computed strictly on physical mean_lst (°C) using row-standardised KNN weights, with Benjamini-Hochberg FDR (alpha=0.05) status">Gi* Z-Score (on LST) &amp; FDR</span>
-                        <strong class="s-val s-val-sm" id="val-giz">—</strong>
-                    </div>
-                    <div class="stat-item">
-                        <span class="s-label" title="Copernicus Sentinel-2 L2A median NDVI &amp; NDBI on MNDWI <= 0 land-masked pixels">Sentinel-2 NDVI / NDBI</span>
-                        <strong class="s-val s-val-sm" id="val-ndvi">—</strong>
-                    </div>
-                    <div class="stat-item">
-                        <span class="s-label" title="Heat Exposure Index: HEI = MinMax(LST) × MinMax(ln(1 + PopDensity)), unitless [0, 1]">Heat Exposure Index (HEI)</span>
-                        <strong class="s-val" id="val-exp">—</strong>
-                    </div>
-                    <div class="stat-item">
-                        <span class="s-label" title="WorldPop 2020 UN-adjusted gridded population density (people/km²)">Population Density</span>
-                        <strong class="s-val s-val-sm" id="val-pop">—</strong>
-                    </div>
-                    <div class="stat-item">
-                        <span class="s-label" title="Copernicus DEM GLO-30 (30m) mean land elevation above sea level">Mean Elevation (DEM)</span>
-                        <strong class="s-val" id="val-elev">—</strong>
-                    </div>
+            <h3 id="tour-step-title">Welcome</h3>
+            <p id="tour-step-body">Tour description</p>
+            <div class="tour-card-bottom">
+                <div id="tour-dots" class="tour-dots" aria-hidden="true"></div>
+                <div class="tour-nav-btns">
+                    <button type="button" id="tour-btn-prev" class="btn-ghost">Back</button>
+                    <button type="button" id="tour-btn-next" class="btn-primary-sm">Next</button>
                 </div>
             </div>
-
-            <!-- 2. Scenario Explorer: Association-Based Estimate -->
-            <div class="panel">
-                <div class="panel-top">
-                    <div>
-                        <span class="tag">Scenario: Association-Based Estimate, Not a Causal Prediction</span>
-                        <h2>Cross-Sectional NDVI–LST Association</h2>
-                    </div>
-                    <strong id="sim-cooling-badge" class="cooling-pill">0.00 °C Shift</strong>
-                </div>
-                <p class="desc">
-                    Applies the cross-sectional OLS slope fitted across the 20 Lagos State LGAs (<strong id="slope-val">computing...</strong>, 95% CI, <span id="ols-stats">R²</span>; fitted NDVI domain <span id="ndvi-domain">—</span>). The slider adds an absolute NDVI increment (+0.00 to +0.15) scaled by non-built-up land fraction (<span class="mono">1 &minus; NDBI</span>), excluding water (<span class="mono">MNDWI &le; 0</span>) and capped at a realistic urban maximum of <span class="mono">NDVI = 0.45</span>.
-                </p>
-                <div class="slider-row">
-                    <span class="slider-caption">Absolute &Delta;NDVI Shift:</span>
-                    <input type="range" id="ndvi-slider" min="0" max="0.15" step="0.025" value="0" />
-                    <span id="slider-label">+0.000 NDVI</span>
-                </div>
-            </div>
-
-            <!-- 3. From Data to Decision: Heat Exposure Index (HEI) Ranking -->
-            <div class="panel table-panel">
-                <div class="panel-top">
-                    <div>
-                        <span class="tag">From Data to Decision · Indicative Priority Rule</span>
-                        <h2>Heat Exposure Index (HEI) Ranking</h2>
-                    </div>
-                    <span class="sub-note" id="priority-summary">—</span>
-                </div>
-                <p class="rule-note">
-                    <strong>Formula:</strong> <span class="mono">HEI = MinMax(LST) &times; MinMax(ln(1 + PopDensity)) &in; [0, 1]</span>.<br/>
-                    <strong>Indicative Priority Rule:</strong> Elevated thermal clustering on physical LST (<span class="mono">Gi* Z</span> or <span class="mono">LST Z &ge; 0.65</span>; BH-FDR tested at <span class="mono">&alpha; = 0.05</span>) intersecting top-quartile population density.<br/>
-                    <span id="k-stability-note"><strong>KNN Sensitivity (k = 3, 5, 8):</strong> k = 5 (25% of N = 20) is the default weight matrix.</span>
-                    <span id="validation-inline"></span>
-                </p>
-                <div class="table-container">
-                    <table class="zone-table">
-                        <thead>
-                            <tr>
-                                <th>LGA (N = 20)</th>
-                                <th>LST (°C)</th>
-                                <th>NDVI</th>
-                                <th>Gi* (LST)</th>
-                                <th>HEI (0–1)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="zone-tbody">
-                            <tr><td colspan="5" style="text-align:center;padding:18px;color:#94a3b8;">Loading live GeoJSON data...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 4. Methods, Validation, Limitations & Related Work -->
-            <details class="panel methods-drawer">
-                <summary class="drawer-title">Methods, Validation, Limitations &amp; Related Work</summary>
-                <div class="drawer-content">
-                    <p><strong>1. Sensors, Dry-Season Window &amp; Scene Counts:</strong> Composited over the <strong>2022–2024 West African Dry Season (1 Dec – 31 Mar)</strong> in Google Earth Engine. Primary LST is derived from <strong>USGS Landsat 8 &amp; 9 Collection 2 Level-2</strong> (<span class="mono">ST_B10</span>, 30m grid, 100m native TIR; median of <strong>38 cloud-screened scenes</strong> via <span class="mono">QA_PIXEL</span>). Optical covariates (<span class="mono">NDVI</span>, <span class="mono">NDBI</span>, <span class="mono">MNDWI</span>) come from <strong>Copernicus Sentinel-2 L2A</strong> (<span class="mono">S2_SR_HARMONIZED</span>, 10m–20m; median of <strong>114 scenes</strong> via <span class="mono">SCL</span> screening). A strict land mask (<span class="mono">MNDWI &le; 0</span>) removes Lagos Lagoon, creeks, and the Atlantic Ocean prior to zonal reduction across all sensors. Topography uses <strong>Copernicus DEM GLO-30</strong> (30m); population uses <strong>WorldPop 2020</strong> (100m).</p>
-                    
-                    <p><strong>2. Spatial Weights, Hotspot Variable &amp; FDR Power:</strong> Local Getis-Ord <span class="mono">Gi* (star=True)</span> runs <strong>strictly on physical temperature (<span class="mono">mean_lst</span>, °C)</strong>—never on HEI—using row-standardised (<span class="mono">W = 'R'</span>) K-Nearest Neighbour centroid distances in <span class="mono">EPSG:32631</span> (UTM 31N), guaranteeing zero isolated island polygons. Because the unit of analysis is the <strong>20 LGAs (UN FAO GAUL Simplified 500m Level-2, 2015 vintage)</strong>, passing strict Benjamini-Hochberg FDR (<span class="mono">&alpha; = 0.05</span>) requires <span class="mono">p &le; 0.0025 (|Z| &ge; 3.02)</span>, which is statistically conservative at <span class="mono">N = 20</span>; our Python pipeline (<span class="mono">scripts/analyze_uhi.py</span>) supports direct replacement with <span class="mono">GRID3 Nigeria Operational Wards (N = 245)</span>.</p>
-
-                    <p><strong>3. Cross-Sensor Validation &amp; Thesis Comparison:</strong> Zonal Landsat 8/9 LST was cross-checked against independent <strong>NASA MODIS Terra MOD11A2 v061 Day 1km LST</strong> (30 eight-day granules, Dec–Mar 2022–2024), confirming strong spatial rank agreement. Compared with 30m pixel-level findings in the author's thesis / EarthArXiv preprint (<em>Oloyede, 2026</em>)—where commercial cores in <strong>Lagos Island, Surulere, and Mushin</strong> recorded peak pixel temperatures—polygon aggregation at the coarse 500m <span class="mono">FAO GAUL</span> LGA scale pulls <strong>Lagos Island LGA (35.0°C)</strong> lower than landlocked mainland LGAs (<strong>Ikeja 39.3°C, Oshodi/Isolo 39.0°C, Mushin 38.9°C, Surulere 38.5°C</strong>) due to simplified coastal boundary inclusion of Marina/lagoon edge mixed pixels and daytime sea-breeze advection.</p>
-
-                    <p><strong>4. Limitations &amp; Related Work:</strong> (i) <em>WorldPop circularity</em>: WorldPop dasymetric redistribution uses built-up settlement covariates, introducing partial collinearity with imperviousness; (ii) <em>MAUP &amp; peri-urban farmland</em>: large peri-urban LGAs (Ikorodu, Alimosho, Badagry) average dense urban pockets with agricultural/wetland fringes; (iii) <em>Harmattan haze</em>: dry-season dust aerosols attenuate TIR radiance; (iv) <em>Scenario caution</em>: the OLS slope reflects spatial co-variation, not a causal microclimate simulation. Builds upon tropical UHI studies (<em>Bassett et al., 2020</em>), UCD WRF/LCZ heat-risk modeling in Lagos, Ikorodu green-infrastructure research (<em>Sept 2026 preprint</em>), and <em>Oloyede (2026, EarthArXiv)</em>.</p>
-                </div>
-            </details>
-        </aside>
-    </main>
+        </div>
+    </div>
 
     <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="app.js"></script>
 </body>
 </html>
