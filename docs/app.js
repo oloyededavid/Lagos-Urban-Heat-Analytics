@@ -67,13 +67,15 @@ const BASEMAPS = {
 
 let activeBasemap = BASEMAPS.light.addTo(map);
 let geojsonLayer = null;
-let hatchLayer = null;
 let labelGroup = L.layerGroup().addTo(map);
 let layerIndex = {};
 
 // 2. Color & Geometry Helpers
 function hexToRgb(hex) {
-    const num = parseInt(hex.replace('#', ''), 16);
+    if (!hex || typeof hex !== 'string') return [253, 204, 138];
+    const clean = hex.replace('#', '');
+    const num = parseInt(clean, 16);
+    if (isNaN(num)) return [253, 204, 138];
     return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
 }
 
@@ -144,7 +146,7 @@ function getPolygonCentroidAndArea(feature) {
     return { center: best.center, area: totalArea };
 }
 
-// True Topological Queen Contiguity (Shared Vertex Hash with Nearest-Neighbour Fallback for Islands)
+// True Topological Queen Contiguity
 function computeTrueQueenNeighbours(features) {
     const n = features.length;
     const vSets = features.map(f => {
@@ -190,30 +192,21 @@ function buildKnnNeighbours(features, kVal = 5) {
     });
 }
 
-// Inject True SVG Diagonal Hatching Pattern & Apply to Hatch Overlay Layer
-function applyTrueSvgHatching() {
-    const svg = map.getPanes().overlayPane.querySelector('svg');
-    if (!svg) return;
-    if (!svg.querySelector('#uncertainty-hatch')) {
-        const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-        defs.innerHTML = `
-            <pattern id="uncertainty-hatch" width="7" height="7" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-                <line x1="0" y1="0" x2="0" y2="7" stroke="#111827" stroke-width="1.4" stroke-opacity="0.38" />
-            </pattern>
-        `;
-        svg.insertBefore(defs, svg.firstChild);
-    }
-    if (hatchLayer) {
-        hatchLayer.eachLayer(l => {
-            const path = l.getElement();
-            if (path) {
-                const p = l.feature.properties;
-                const isUncertain = STATE.hatchUncertain && !p.k_stable && !p.sim_fdr;
-                path.setAttribute('fill', isUncertain ? 'url(#uncertainty-hatch)' : 'none');
-                path.setAttribute('fill-opacity', isUncertain ? '1' : '0');
-            }
-        });
-    }
+// Safe SVG Hatch Pattern Injection
+function ensureSvgHatchPattern() {
+    try {
+        const svg = map.getPanes().overlayPane.querySelector('svg');
+        if (!svg) return;
+        if (!svg.querySelector('#uncertainty-hatch')) {
+            const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+            defs.innerHTML = `
+                <pattern id="uncertainty-hatch" width="7" height="7" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                    <line x1="0" y1="0" x2="0" y2="7" stroke="#111827" stroke-width="1.4" stroke-opacity="0.38" />
+                </pattern>
+            `;
+            svg.insertBefore(defs, svg.firstChild);
+        }
+    } catch (e) {}
 }
 
 // 3. Econometric & Spatial Statistics Functions
@@ -291,7 +284,6 @@ function computeMoranI(vals, nbrLists) {
     return (n / (wSum || 1)) * (num / denom);
 }
 
-// Exact Two-Covariate OLS: y = b0 + b1*NDVI + b2*NDBI
 function fitMultivariateOLS(y, x1, x2) {
     const n = y.length;
     const my = y.reduce((a, b) => a + b, 0) / n;
@@ -334,8 +326,6 @@ function fitMultivariateOLS(y, x1, x2) {
 async function loadGeoJSON() {
     const banner = document.getElementById('status-banner');
     const urls = [
-        'data/lagos_uhi_ward.geojson',
-        'data/lagos_uhi_lga.geojson',
         'data/lagos_uhi_processed.geojson',
         './data/lagos_uhi_processed.geojson',
         'https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/data/lagos_uhi_processed.geojson',
@@ -357,7 +347,7 @@ async function loadGeoJSON() {
     throw new Error('GeoJSON load failed');
 }
 
-// 5. Initialize Pipeline & Econometric Model
+// 5. Initialize Pipeline
 loadGeoJSON().then(data => {
     STATE.geojson = data;
     STATE.features = data.features;
@@ -384,7 +374,6 @@ loadGeoJSON().then(data => {
         const xNdvi = valid.map(f => Number(f.properties.ndvi));
         const xNdbi = valid.map(f => Number(f.properties.ndbi ?? 0));
 
-        // Univariate OLS
         const mx = xNdvi.reduce((a, b) => a + b, 0) / n;
         const my = ys.reduce((a, b) => a + b, 0) / n;
         const sxx = xNdvi.reduce((s, x) => s + Math.pow(x - mx, 2), 0);
@@ -397,7 +386,6 @@ loadGeoJSON().then(data => {
         const uniSse = uniResids.reduce((s, r) => s + r * r, 0);
         STATE.stats.uniCI95 = 2.101 * Math.sqrt((uniSse / Math.max(1, n - 2)) / (sxx || 1));
 
-        // Multivariate OLS controlling for NDBI (Built-Up Fraction)
         const hasNdbiVariance = xNdbi.some(v => v !== xNdbi[0]);
         if (hasNdbiVariance) {
             const multi = fitMultivariateOLS(ys, xNdvi, xNdbi);
@@ -421,7 +409,6 @@ loadGeoJSON().then(data => {
         STATE.stats.globalMoranQueenI = computeMoranI(ys, nbrsQueen);
     }
 
-    // Check if modis_lst is actually present in the GeoJSON
     const modisValid = STATE.features.filter(f => f.properties.modis_lst != null && f.properties.mean_lst != null);
     if (modisValid.length > 3) {
         STATE.stats.modisSpearmanRho = spearmanCorrelation(
@@ -445,7 +432,7 @@ loadGeoJSON().then(data => {
     initTour();
 });
 
-// 6. Recompute Spatial Weights, Gi*, Rank vs MinMax HEI, and Scenarios
+// 6. Recompute Spatial Stats & Scenarios
 function recomputeAll() {
     if (!STATE.features.length) return;
     const features = STATE.features;
@@ -533,7 +520,7 @@ function recomputeAll() {
     syncUrlState();
 }
 
-// 7. Build & Style Map Polygons + True SVG Hatching Overlay
+// 7. Build Map & Uncertainty Hatching
 function buildMapLayer() {
     if (geojsonLayer) map.removeLayer(geojsonLayer);
     if (hatchLayer) map.removeLayer(hatchLayer);
@@ -579,7 +566,7 @@ function buildMapLayer() {
     }).addTo(map);
 
     map.fitBounds(geojsonLayer.getBounds(), { padding: [24, 24] });
-    applyTrueSvgHatching();
+    ensureSvgHatchPattern();
 }
 
 function updateMapColorsAndLabels() {
@@ -622,7 +609,19 @@ function updateMapColorsAndLabels() {
         `);
     });
 
-    applyTrueSvgHatching();
+    ensureSvgHatchPattern();
+    if (hatchLayer) {
+        hatchLayer.eachLayer(l => {
+            const p = l.feature.properties;
+            const isUncertain = STATE.hatchUncertain && !p.k_stable && !p.sim_fdr;
+            const el = l.getElement();
+            if (el) {
+                el.setAttribute('fill', isUncertain ? 'url(#uncertainty-hatch)' : 'none');
+                el.setAttribute('fill-opacity', isUncertain ? '1' : '0');
+            }
+        });
+    }
+
     updateLegendUI(vMin, vMax);
 
     if (!STATE.showLabels) return;
@@ -678,7 +677,7 @@ function updateLegendUI(vMin, vMax) {
     document.getElementById('legend-max').innerText = fmt(vMax);
 }
 
-// 8. Select Area & Populate Slide-Over Drawer
+// 8. Select Area & Drawer
 function selectArea(areaName) {
     const feat = STATE.features.find(f => f.properties.area_name.toLowerCase() === String(areaName).toLowerCase());
     if (!feat) return;
@@ -941,7 +940,6 @@ methodsModal.addEventListener('click', e => {
     if (e.target === methodsModal) methodsModal.classList.add('is-hidden');
 });
 
-// Plain-English Contextual Tooltips
 const tipPopup = document.getElementById('info-tooltip-popup');
 document.querySelectorAll('.info-tip').forEach(btn => {
     const showTip = () => {
