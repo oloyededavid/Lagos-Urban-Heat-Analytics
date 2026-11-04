@@ -4,42 +4,1044 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Lagos Urban Heat & Population Exposure Decision-Support System powered by Copernicus Sentinel-2 and USGS Landsat 8/9.">
-    <title>Lagos Urban Heat &amp; Exposure Analytics | Copernicus Decision-Support</title>
+    <title>Lagos Urban Heat &amp; Exposure Analytics | Spatial Decision-Support</title>
 
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Fontshare: Satoshi (400, 500, 700, 900) -->
+    <link rel="preconnect" href="https://api.fontshare.com">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
 
     <!-- Leaflet 1.9.4 CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-    <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="style.css" />
+    <style>
+        :root {
+            --bg-white: #FFFFFF;
+            --bg-canvas: #F8FAFC;
+            --bg-subtle: #F4F4F5;
+            --border-light: #E4E4E7;
+            --border-mid: #D4D4D8;
+            --border-dark: #18181B;
+
+            --ink-black: #09090B;
+            --ink-body: #3F3F46;
+            --ink-muted: #71717A;
+
+            --accent-blue: #0284C7;
+            --accent-blue-soft: #E0F2FE;
+
+            /* Custom Select Chevron */
+            --chevron-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2309090B' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 13.5px;
+            color: var(--ink-black);
+            background: var(--bg-white);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 0.9em;
+        }
+
+        .is-hidden {
+            display: none !important;
+        }
+
+        .app-shell {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* ==========================================================================
+           1. Top Header Bar (Defined Project Identity & Clean Controls)
+           ========================================================================== */
+        .topbar {
+            min-height: 68px;
+            padding: 10px 24px;
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            z-index: 1000;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-mark {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: var(--ink-black);
+            color: var(--bg-white);
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            font-size: 14px;
+            letter-spacing: -0.03em;
+            flex-shrink: 0;
+        }
+
+        .brand-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .brand-kicker {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent-blue);
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: -0.025em;
+            color: var(--ink-black);
+            line-height: 1.15;
+        }
+
+        .brand-sub {
+            font-size: 11.5px;
+            font-weight: 500;
+            color: var(--ink-muted);
+        }
+
+        .top-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Clean Custom Dropdowns & Search */
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .field-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--ink-muted);
+        }
+
+        .clean-select,
+        .clean-search {
+            appearance: none;
+            -webkit-appearance: none;
+            font-family: 'Satoshi', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--ink-black);
+            background-color: var(--bg-white);
+            border: 1.5px solid var(--border-mid);
+            border-radius: 8px;
+            padding: 7px 32px 7px 11px;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .clean-select {
+            background-image: var(--chevron-svg);
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 14px;
+        }
+
+        .clean-search {
+            padding-right: 11px;
+            width: 165px;
+            cursor: text;
+        }
+
+        .clean-search::placeholder {
+            color: var(--ink-muted);
+            font-weight: 500;
+        }
+
+        .clean-select:hover,
+        .clean-search:hover {
+            border-color: var(--ink-black);
+        }
+
+        .clean-select:focus,
+        .clean-search:focus {
+            border-color: var(--ink-black);
+            box-shadow: 0 0 0 3px rgba(9, 9, 11, 0.08);
+        }
+
+        .control-divider {
+            width: 1px;
+            height: 28px;
+            background: var(--border-light);
+            margin: 0 4px;
+        }
+
+        .btn-pill {
+            font-family: 'Satoshi', sans-serif;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--ink-black);
+            background: var(--bg-white);
+            border: 1.5px solid var(--border-mid);
+            border-radius: 8px;
+            padding: 7px 12px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            align-self: flex-end;
+        }
+
+        .btn-pill:hover {
+            border-color: var(--ink-black);
+            background: var(--bg-subtle);
+        }
+
+        .btn-pill.active {
+            background: var(--ink-black);
+            color: var(--bg-white);
+            border-color: var(--ink-black);
+        }
+
+        .btn-pill.btn-guide {
+            background: var(--accent-blue);
+            color: var(--bg-white);
+            border-color: var(--accent-blue);
+        }
+
+        .btn-pill.btn-guide:hover {
+            opacity: 0.92;
+        }
+
+        /* ==========================================================================
+           2. Key Finding Strip
+           ========================================================================== */
+        .summary-strip {
+            background: var(--bg-subtle);
+            border-bottom: 1px solid var(--border-light);
+            padding: 8px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            color: var(--ink-body);
+        }
+
+        .summary-strip strong {
+            color: var(--ink-black);
+            font-weight: 700;
+        }
+
+        .summary-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .link-action {
+            background: none;
+            border: none;
+            font-family: 'Satoshi', sans-serif;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--ink-black);
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .link-action:hover {
+            color: var(--accent-blue);
+        }
+
+        /* ==========================================================================
+           3. Main Split Workspace (Unobstructed Map + External Legend + 550px Sidebar)
+           ========================================================================== */
+        .workspace {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .map-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg-canvas);
+        }
+
+        .map-stage {
+            position: relative;
+            flex: 1;
+            width: 100%;
+            overflow: hidden;
+            perspective: 1200px;
+        }
+
+        .map-canvas {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: center center;
+        }
+
+        .map-stage.is-3d .map-canvas {
+            transform: rotateX(28deg) scale(1.08);
+            box-shadow: 0 24px 48px rgba(9, 9, 11, 0.2);
+        }
+
+        .map-status {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--ink-black);
+            color: var(--bg-white);
+            padding: 7px 16px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 850;
+        }
+
+        /* External Legend Dock (Outside the Map Canvas — Zero Map Interference) */
+        .legend-dock {
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-light);
+            padding: 10px 20px;
+            display: flex;
+             flex-direction: column;
+            gap: 6px;
+            z-index: 800;
+        }
+
+        .legend-dock-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .legend-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-title-wrap strong {
+            font-size: 12.5px;
+            font-weight: 900;
+            color: var(--ink-black);
+            letter-spacing: -0.01em;
+        }
+
+        .legend-source-pill {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--ink-muted);
+            background: var(--bg-subtle);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .legend-classes {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            font-size: 11.5px;
+            font-weight: 500;
+            color: var(--ink-body);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .swatch-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+        }
+
+        .legend-scale-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .legend-bar {
+            flex: 1;
+            height: 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(9, 9, 11, 0.14);
+        }
+
+        .legend-ticks {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--ink-muted);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .map-credit {
+            background: var(--bg-subtle);
+            border-top: 1px solid var(--border-light);
+            padding: 5px 20px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--ink-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Crisp Permanent LGA Labels on Map */
+        .lga-label-icon {
+            pointer-events: none !important;
+        }
+
+        .lga-pin {
+            display: inline-block;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid rgba(9, 9, 11, 0.25);
+            border-radius: 5px;
+            padding: 2px 6px;
+            font-family: 'Satoshi', sans-serif;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--ink-black);
+            white-space: nowrap;
+            line-height: 1.15;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            pointer-events: none;
+        }
+
+        .lga-pin.is-selected {
+            background: var(--ink-black);
+            color: var(--bg-white);
+            border-color: var(--ink-black);
+            font-size: 11.5px;
+            z-index: 999 !important;
+        }
+
+        .lga-pin span {
+            display: block;
+            font-size: 9.5px;
+            font-weight: 500;
+            color: var(--ink-muted);
+        }
+
+        .lga-pin.is-selected span {
+            color: #D4D4D8;
+        }
+
+        /* ==========================================================================
+           4. Expanded Right Sidebar (550px, Clear Hierarchy, Satoshi Cards)
+           ========================================================================== */
+        .sidebar {
+            width: 550px;
+            flex-shrink: 0;
+            background: var(--bg-subtle);
+            border-left: 1px solid var(--border-light);
+            padding: 18px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            scroll-behavior: smooth;
+        }
+
+        .card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 2px rgba(9, 9, 11, 0.03);
+        }
+
+        .card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .section-kicker {
+            display: inline-block;
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--ink-muted);
+            margin-bottom: 3px;
+        }
+
+        .card-title-lg {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--ink-black);
+            letter-spacing: -0.025em;
+            line-height: 1.15;
+        }
+
+        .card-title-md {
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--ink-black);
+            letter-spacing: -0.015em;
+        }
+
+        .status-tag {
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 5px 11px;
+            border-radius: 6px;
+            background: var(--bg-subtle);
+            color: var(--ink-black);
+            border: 1px solid var(--border-mid);
+            white-space: nowrap;
+        }
+
+        /* Merged LGA Details & Residential Comfort Guide */
+        .unified-brief {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-left: 3.5px solid var(--ink-black);
+            border-radius: 8px;
+            padding: 13px 15px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .brief-summary {
+            font-size: 13.5px;
+            font-weight: 500;
+            color: var(--ink-black);
+            line-height: 1.45;
+        }
+
+        .brief-comfort {
+            padding-top: 8px;
+            border-top: 1px solid var(--border-light);
+            font-size: 12.5px;
+            color: var(--ink-body);
+            line-height: 1.45;
+        }
+
+        .brief-comfort strong {
+            color: var(--ink-black);
+            font-weight: 700;
+        }
+
+        /* 6-Box Telemetry Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .metric-box {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 11px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .m-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--ink-muted);
+        }
+
+        .tip-btn {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid var(--border-mid);
+            background: var(--bg-subtle);
+            color: var(--ink-black);
+            font-family: 'Satoshi', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .tip-btn:hover {
+            background: var(--ink-black);
+            color: var(--bg-white);
+            border-color: var(--ink-black);
+        }
+
+        .m-val {
+            font-size: 19px;
+            font-weight: 900;
+            color: var(--ink-black);
+            letter-spacing: -0.02em;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .m-sub {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--ink-muted);
+        }
+
+        /* Scenario Explorer (Simpler Explanation + Clean Controls) */
+        .card-desc {
+            font-size: 13px;
+            color: var(--ink-body);
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        .shift-pill {
+            background: var(--ink-black);
+            color: var(--bg-white);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .slider-box {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .slider-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--ink-black);
+        }
+
+        .slider-box input[type="range"] {
+            width: 100%;
+            accent-color: var(--ink-black);
+            cursor: pointer;
+        }
+
+        .slider-ticks {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--ink-muted);
+        }
+
+        .scenario-meta-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-light);
+            font-size: 12px;
+            color: var(--ink-muted);
+        }
+
+        /* Cleaner Side-by-Side Benchmark */
+        .benchmark-controls {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: end;
+            gap: 10px;
+            margin-bottom: 14px;
+            padding: 12px;
+            background: var(--bg-subtle);
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+        }
+
+        .benchmark-controls .clean-select {
+            width: 100%;
+        }
+
+        .vs-pill {
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: var(--ink-muted);
+            padding-bottom: 8px;
+        }
+
+        .table-wrap {
+            max-height: 260px;
+            overflow-y: auto;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+        }
+
+        .clean-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12.5px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .clean-table th {
+            position: sticky;
+            top: 0;
+            background: var(--bg-subtle);
+            color: var(--ink-muted);
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-align: left;
+            padding: 9px 10px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .clean-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--ink-body);
+            font-weight: 500;
+        }
+
+        .clean-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .diff-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: var(--bg-subtle);
+            color: var(--ink-black);
+            font-weight: 700;
+            font-size: 11.5px;
+        }
+
+        #ranking-table tbody tr {
+            cursor: pointer;
+            transition: background 0.12s;
+        }
+
+        #ranking-table tbody tr:hover {
+            background: var(--bg-subtle);
+        }
+
+        #ranking-table tbody tr.is-active-row {
+            background: var(--accent-blue-soft);
+            color: var(--ink-black);
+            font-weight: 700;
+        }
+
+        /* ==========================================================================
+           5. Contextual Spotlight Onboarding Tour (Points to Each App Section)
+           ========================================================================== */
+        .tour-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 2500;
+            pointer-events: auto;
+        }
+
+        .tour-spotlight {
+            position: fixed;
+            border-radius: 12px;
+            border: 2px solid var(--accent-blue);
+            box-shadow: 0 0 0 9999px rgba(9, 9, 11, 0.52);
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            z-index: 2501;
+        }
+
+        .tour-tooltip {
+            position: fixed;
+            width: 340px;
+            max-width: calc(100vw - 24px);
+            background: var(--ink-black);
+            color: var(--bg-white);
+            border-radius: 12px;
+            padding: 18px 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+            z-index: 2502;
+            transition: top 0.28s cubic-bezier(0.16, 1, 0.3, 1), left 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .tour-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .tour-step-tag {
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #38BDF8;
+        }
+
+        .tour-skip {
+            background: none;
+            border: none;
+            font-family: 'Satoshi', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: #A1A1AA;
+            cursor: pointer;
+        }
+
+        .tour-skip:hover {
+            color: var(--bg-white);
+        }
+
+        .tour-tooltip h3 {
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: -0.015em;
+            margin-bottom: 6px;
+            color: var(--bg-white);
+        }
+
+        .tour-tooltip p {
+            font-size: 13px;
+            color: #D4D4D8;
+            line-height: 1.5;
+        }
+
+        .tour-footer {
+            margin-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tour-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .tour-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #3F3F46;
+        }
+
+        .tour-dot.active {
+            background: #38BDF8;
+            width: 18px;
+            border-radius: 999px;
+        }
+
+        .tour-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-tour-nav {
+            font-family: 'Satoshi', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #3F3F46;
+            background: #18181B;
+            color: var(--bg-white);
+            cursor: pointer;
+        }
+
+        .btn-tour-nav.primary {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: var(--bg-white);
+        }
+
+        /* Scientific Methods Modal & Floating "?" Tooltip */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(9, 9, 11, 0.5);
+            backdrop-filter: blur(2px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 2600;
+        }
+
+        .modal-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-mid);
+            border-radius: 12px;
+            max-width: 680px;
+            width: 100%;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-head {
+            padding: 16px 22px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--ink-muted);
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px 22px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-size: 13.5px;
+            color: var(--ink-body);
+        }
+
+        .modal-body h4 {
+            color: var(--ink-black);
+            font-weight: 900;
+            margin-top: 6px;
+        }
+
+        .modal-body ul {
+            padding-left: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .highlight-note {
+            background: var(--bg-subtle);
+            border-left: 3.5px solid var(--ink-black);
+            color: var(--ink-black);
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 12.5px;
+        }
+
+        .floating-tip {
+            position: fixed;
+            max-width: 260px;
+            background: var(--ink-black);
+            color: var(--bg-white);
+            padding: 9px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            line-height: 1.45;
+            z-index: 3000;
+            pointer-events: none;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .leaflet-tooltip.clean-tip {
+            background: rgba(255, 255, 255, 0.98);
+            color: var(--ink-black);
+            border: 1.5px solid var(--ink-black);
+            border-radius: 8px;
+            padding: 8px 11px;
+            font-family: 'Satoshi', sans-serif;
+            font-size: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        @media (max-width: 1080px) {
+            .workspace { flex-direction: column; }
+            .sidebar { width: 100%; height: 55%; }
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
 </head>
 <body>
     <div class="app-shell">
-        <!-- Top Navigation Bar -->
+        <!-- 1. Top Header Bar -->
         <header class="topbar">
             <div class="brand">
-                <span class="brand-dot"></span>
-                <div>
-                    <h1 class="brand-title">Lagos Urban Heat &amp; Exposure Analytics</h1>
-                    <p class="brand-sub">Copernicus Sentinel-2, GLO-30 DEM &amp; Landsat 8/9 Spatial Decision-Support (N = 20 LGAs)</p>
+                <div class="brand-mark">LUH</div>
+                <div class="brand-copy">
+                    <span class="brand-kicker">Copernicus Sentinel-2 &amp; USGS Landsat 8/9 Decision-Support</span>
+                    <h1 class="brand-title">Lagos Urban Heat &amp; Exposure Atlas</h1>
+                    <p class="brand-sub">Surface Temperature Clustering, Population Exposure &amp; Canopy Cooling Explorer (N = 20 LGAs)</p>
                 </div>
             </div>
 
-            <div class="top-controls">
-                <!-- Quick Search -->
-                <div class="ctrl-item" id="tour-search">
-                    <input type="search" id="lga-search" list="lga-list" placeholder="Search LGA..." aria-label="Search Local Government Area" />
+            <div class="top-controls" id="tour-top-controls">
+                <div class="field-group">
+                    <label class="field-label" for="lga-search">Quick Jump</label>
+                    <input type="search" id="lga-search" class="clean-search" list="lga-list" placeholder="Find an LGA..." aria-label="Search Local Government Area" />
                     <datalist id="lga-list"></datalist>
                 </div>
 
-                <!-- Layer Selector -->
-                <div class="ctrl-item" id="tour-layer">
-                    <label for="layer-select">Map Layer</label>
-                    <select id="layer-select">
+                <div class="field-group">
+                    <label class="field-label" for="layer-select">Map Layer</label>
+                    <select id="layer-select" class="clean-select">
                         <option value="lst" selected>Surface Temp (LST °C)</option>
                         <option value="hotspot">Gi* Thermal Clustering (Z)</option>
                         <option value="exposure">Heat Exposure Index (HEI)</option>
@@ -47,25 +1049,25 @@
                     </select>
                 </div>
 
-                <!-- Basemap Selector -->
-                <div class="ctrl-item">
-                    <label for="basemap-select">Basemap</label>
-                    <select id="basemap-select">
+                <div class="field-group">
+                    <label class="field-label" for="basemap-select">Basemap</label>
+                    <select id="basemap-select" class="clean-select">
                         <option value="light" selected>Light Cartographic</option>
                         <option value="osm">OpenStreetMap</option>
                         <option value="satellite">Esri Satellite</option>
                     </select>
                 </div>
 
-                <!-- 3D Tilt & Labels Toggles -->
-                <button type="button" id="btn-3d" class="btn-chip" title="Toggle 3D Perspective Map Tilt">3D View</button>
-                <button type="button" id="btn-labels" class="btn-chip active" title="Toggle all 20 LGA names on map">20 LGA Labels</button>
-                <button type="button" id="btn-methods" class="btn-chip" title="View scientific methodology and equations">Methods</button>
-                <button type="button" id="btn-tour" class="btn-chip btn-accent" title="Launch interactive onboarding guide">? Guide</button>
+                <div class="control-divider"></div>
+
+                <button type="button" id="btn-3d" class="btn-pill" title="Toggle 3D Perspective Map Tilt">3D Tilt</button>
+                <button type="button" id="btn-labels" class="btn-pill active" title="Toggle all 20 LGA names on map">Labels</button>
+                <button type="button" id="btn-methods" class="btn-pill" title="View scientific methodology and equations">Methods</button>
+                <button type="button" id="btn-tour" class="btn-pill btn-guide" title="Launch interactive section-by-section guide">? Guide</button>
             </div>
         </header>
 
-        <!-- Key Empirical Summary Bar -->
+        <!-- 2. Key Empirical Summary Strip -->
         <div class="summary-strip">
             <div class="summary-text" id="executive-finding">
                 <strong>Key Empirical Finding:</strong> Loading satellite telemetry across 20 Lagos Local Government Areas...
@@ -77,20 +1079,27 @@
             </div>
         </div>
 
-        <!-- Main Split Workspace -->
+        <!-- 3. Main Split Workspace -->
         <main class="workspace">
-            <!-- Left: Interactive Map Container -->
-            <section class="map-stage" id="map-stage">
-                <div id="map-status" class="map-status">Loading Lagos GeoJSON telemetry...</div>
-                <div id="map" class="map-canvas"></div>
+            <!-- Left Column: Unobstructed Map + External Legend Dock -->
+            <div class="map-column">
+                <section class="map-stage" id="map-stage">
+                    <div id="map-status" class="map-status">Loading Lagos GeoJSON telemetry...</div>
+                    <div id="map" class="map-canvas"></div>
+                </section>
 
-                <!-- Comprehensive Floating Map Legend -->
-                <div class="legend-card" id="tour-legend">
-                    <div class="legend-head">
-                        <strong id="legend-title">Land Surface Temp (LST °C)</strong>
-                        <span id="legend-tag" class="legend-tag">Landsat 8/9 (30m)</span>
+                <!-- Dedicated External Legend Dock (Outside the Map Canvas) -->
+                <div class="legend-dock" id="tour-legend">
+                    <div class="legend-dock-top">
+                        <div class="legend-title-wrap">
+                            <strong id="legend-title">Land Surface Temperature (LST °C)</strong>
+                            <span id="legend-tag" class="legend-source-pill">Landsat 8/9 (30m)</span>
+                        </div>
+                        <div id="legend-classes" class="legend-classes"></div>
                     </div>
-                    <div id="legend-bar" class="legend-bar"></div>
+                    <div class="legend-scale-row">
+                        <div id="legend-bar" class="legend-bar"></div>
+                    </div>
                     <div class="legend-ticks">
                         <span id="legend-min">—</span>
                         <span id="legend-q25">—</span>
@@ -98,57 +1107,59 @@
                         <span id="legend-q75">—</span>
                         <span id="legend-max">—</span>
                     </div>
-                    <div id="legend-classes" class="legend-classes"></div>
                 </div>
 
                 <div class="map-credit">
-                    Copernicus Sentinel-2 L2A &amp; GLO-30 DEM · USGS Landsat 8/9 C2 L2 · WorldPop (2020) · UN FAO GAUL L2 · Click any LGA to inspect (no camera jump)
+                    <span>Copernicus Sentinel-2 L2A &amp; GLO-30 DEM · USGS Landsat 8/9 C2 L2 · WorldPop (2020) · UN FAO GAUL L2</span>
+                    <span>Click any polygon to inspect metrics</span>
                 </div>
-            </section>
+            </div>
 
-            <!-- Right: Clean White Analytical Sidebar -->
-            <aside class="sidebar" id="tour-sidebar">
-                <!-- 1. Selected LGA Header -->
-                <div class="card">
+            <!-- Right Column: Expanded 550px Control & Analytics Sidebar -->
+            <aside class="sidebar" id="sidebar-scroll">
+                <!-- Card 01: Selected LGA & Unified Livability Guide -->
+                <div class="card" id="card-lga">
                     <div class="card-head">
                         <div>
-                            <span class="eyebrow" id="sel-eyebrow">Statewide Summary (20 LGAs)</span>
-                            <h2 id="sel-title">Lagos State Overview</h2>
+                            <span class="section-kicker" id="sel-eyebrow">01 · Selected Local Government Area</span>
+                            <h2 class="card-title-lg" id="sel-title">Lagos State Overview</h2>
                         </div>
-                        <div class="head-actions">
-                            <span id="sel-badge" class="status-badge">Click Any LGA</span>
-                            <button type="button" id="btn-zoom-lga" class="btn-mini is-hidden" title="Smoothly zoom to this LGA">Zoom ↗</button>
-                        </div>
+                        <span id="sel-badge" class="status-tag">Statewide Mean</span>
                     </div>
 
-                    <p class="plain-insight" id="sel-insight">
-                        Click any Local Government Area on the map or in the ranking table below to inspect its surface temperature, Gi* hotspot score, and residential livability profile.
-                    </p>
+                    <!-- Unified Simple Brief: Combines Area Details + Livability Comfort Guide -->
+                    <div class="unified-brief">
+                        <p class="brief-summary" id="sel-insight">
+                            Click any Local Government Area on the map to see how hot it is compared to the rest of Lagos, how many people live there, and whether it is a comfortable residential area.
+                        </p>
+                        <p class="brief-comfort" id="livability-combined">
+                            <strong>Where to Live vs. Where to Plant Trees:</strong> Coastal and green areas like <strong>Epe, Ibeju-Lekki, Badagry, and Eti-Osa</strong> are 2.5°C to 4.2°C cooler due to trees and lagoon breezes. Dense mainland areas like <strong>Ikeja, Oshodi/Isolo, Mushin, and Agege</strong> trap heat and need more street trees and reflective roofs.
+                        </p>
+                    </div>
 
-                    <!-- 6 Telemetry Metrics with Plain-English "?" Tooltips -->
                     <div class="metrics-grid">
                         <div class="metric-box">
                             <span class="m-label">
-                                Surface Temp (LST)
-                                <button type="button" class="tip-btn" data-tip="Dry-season mean Land Surface Temperature (°C) from USGS Landsat 8/9 (30m), after removing lagoon and ocean water pixels (MNDWI <= 0).">?</button>
+                                Surface Temp
+                                <button type="button" class="tip-btn" data-tip="Average daytime ground temperature (°C) measured by USGS Landsat 8/9 satellites during the dry season (Dec–Mar), excluding water.">?</button>
                             </span>
                             <strong class="m-val" id="val-lst">—</strong>
-                            <span class="m-sub" id="sub-lst">Dry-season composite</span>
+                            <span class="m-sub" id="sub-lst">Dry-season mean</span>
                         </div>
 
                         <div class="metric-box">
                             <span class="m-label">
-                                Gi* Clustering (Z)
-                                <button type="button" class="tip-btn" data-tip="Getis-Ord Gi* Z-score computed strictly on physical temperature (LST). Positive values (+Z) mean an LGA is surrounded by hot neighbours; negative (-Z) means a cooler cluster.">?</button>
+                                Heat Cluster (Gi*)
+                                <button type="button" class="tip-btn" data-tip="Getis-Ord Gi* score: Positive (+Z) means this LGA is part of a hot neighbourhood cluster; Negative (-Z) means it sits in a cooler zone.">?</button>
                             </span>
                             <strong class="m-val" id="val-giz">—</strong>
-                            <span class="m-sub" id="sub-giz">KNN spatial weights</span>
+                            <span class="m-sub" id="sub-giz">Spatial clustering</span>
                         </div>
 
                         <div class="metric-box">
                             <span class="m-label">
-                                Heat Exposure (HEI)
-                                <button type="button" class="tip-btn" data-tip="Heat Exposure Index (0 to 1): combines normalized surface temperature with log population density to show where high heat overlaps dense populations.">?</button>
+                                Exposure (HEI)
+                                <button type="button" class="tip-btn" data-tip="Heat Exposure Index (0 to 1): combines temperature and population density. Closer to 1.0 means high heat affecting a very large population.">?</button>
                             </span>
                             <strong class="m-val" id="val-hei">—</strong>
                             <span class="m-sub" id="sub-hei">0–1 Exposure Scale</span>
@@ -156,103 +1167,111 @@
 
                         <div class="metric-box">
                             <span class="m-label">
-                                Vegetation (NDVI)
-                                <button type="button" class="tip-btn" data-tip="Copernicus Sentinel-2 Normalized Difference Vegetation Index (10m). Higher values indicate healthier tree canopy and green cover.">?</button>
+                                Green Cover (NDVI)
+                                <button type="button" class="tip-btn" data-tip="Sentinel-2 Vegetation Index (0 to 1). Higher numbers mean more trees, parks, and healthy vegetation cooling the ground.">?</button>
                             </span>
                             <strong class="m-val" id="val-ndvi">—</strong>
-                            <span class="m-sub" id="sub-ndbi">NDBI: —</span>
+                            <span class="m-sub" id="sub-ndbi">Built-up NDBI: —</span>
                         </div>
 
                         <div class="metric-box">
                             <span class="m-label">
                                 Pop. Density
-                                <button type="button" class="tip-btn" data-tip="WorldPop UN-adjusted gridded population density (people per km²).">?</button>
+                                <button type="button" class="tip-btn" data-tip="Estimated number of residents per square kilometre from WorldPop.">?</button>
                             </span>
                             <strong class="m-val" id="val-pop">—</strong>
-                            <span class="m-sub">WorldPop (people/km²)</span>
+                            <span class="m-sub">People per km²</span>
                         </div>
 
                         <div class="metric-box">
                             <span class="m-label">
-                                Elevation (DEM)
-                                <button type="button" class="tip-btn" data-tip="Copernicus GLO-30 Digital Elevation Model mean terrain height above sea level (meters).">?</button>
+                                Elevation
+                                <button type="button" class="tip-btn" data-tip="Average land height above sea level (in meters) from the Copernicus GLO-30 Digital Elevation Model.">?</button>
                             </span>
                             <strong class="m-val" id="val-elev">—</strong>
-                            <span class="m-sub">Copernicus GLO-30</span>
+                            <span class="m-sub">Meters above sea</span>
                         </div>
-                    </div>
-
-                    <!-- Livability & Urban Planning Recommendation Box -->
-                    <div class="livability-box" id="livability-box">
-                        <div class="livability-title">
-                            <span class="eyebrow">Residential Thermal Comfort &amp; Planning Guide</span>
-                            <strong id="livability-rating">Best Cooler Residential Zones: Epe, Ibeju-Lekki, Badagry &amp; Coastal Eti-Osa</strong>
-                        </div>
-                        <p id="livability-desc">
-                            Areas with dense vegetation (NDVI &gt; 0.35) or coastal lagoon ventilation experience 2.5°C–4.2°C lower surface temperatures than landlocked mainland districts (Ikeja, Oshodi/Isolo, Mushin, Agege).
-                        </p>
                     </div>
                 </div>
 
-                <!-- 2. Interactive Greening Scenario Simulator -->
-                <div class="card" id="tour-simulator">
+                <!-- Card 02: Scenario Explorer (Explained in Simple Terms) -->
+                <div class="card" id="card-scenario">
                     <div class="card-head">
                         <div>
-                            <span class="eyebrow">Scenario Explorer · Cross-Sectional OLS Association</span>
-                            <h3>Canopy Greening Cooling Simulator</h3>
+                            <span class="section-kicker">02 · Scenario Explorer</span>
+                            <h3 class="card-title-md">What If We Plant More Trees?</h3>
                         </div>
-                        <span class="cooling-badge" id="sim-badge">0.00 °C Shift</span>
+                        <span class="shift-pill" id="sim-badge">0.00 °C Cooling</span>
                     </div>
                     <p class="card-desc">
-                        Simulate adding urban tree canopy (<span class="mono">+ΔNDVI</span>). Uses the empirical NDBI-controlled OLS slope (<strong id="ols-slope-label">computing...</strong>) capped at <span class="mono">NDVI &le; 0.45</span>.
+                        Drag the slider below to test what happens when we increase tree cover and green spaces (<span class="mono">+NDVI</span>) in available open areas. The map and temperatures update live to show the estimated cooling effect.
                     </p>
-                    <div class="slider-control">
-                        <label for="ndvi-slider">Canopy Addition:</label>
+                    <div class="slider-box">
+                        <div class="slider-top">
+                            <label for="ndvi-slider">Add Urban Green Cover</label>
+                            <span id="slider-val" class="mono">+0.000 NDVI (Baseline)</span>
+                        </div>
                         <input type="range" id="ndvi-slider" min="0" max="0.15" step="0.025" value="0" />
-                        <strong id="slider-val" class="mono">+0.000 NDVI</strong>
-                    </div>
-                    <div class="weights-row">
-                        <label for="k-select">Gi* Spatial Neighbours:</label>
-                        <select id="k-select">
-                            <option value="5" selected>KNN k = 5 (Default)</option>
-                            <option value="3">KNN k = 3 (Local)</option>
-                            <option value="8">KNN k = 8 (Regional)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- 3. Side-by-Side LGA Comparison -->
-                <div class="card">
-                    <div class="card-head">
-                        <div>
-                            <span class="eyebrow">Side-by-Side Benchmark</span>
-                            <h3>Compare Two Lagos LGAs</h3>
+                        <div class="slider-ticks">
+                            <span>0 (Current)</span>
+                            <span>+0.05 (Moderate)</span>
+                            <span>+0.10 (High)</span>
+                            <span>+0.15 (Max Greening)</span>
                         </div>
                     </div>
-                    <div class="compare-selectors">
-                        <select id="comp-select-a" aria-label="First LGA for comparison"></select>
-                        <span class="vs-label">vs.</span>
-                        <select id="comp-select-b" aria-label="Second LGA for comparison"></select>
+                    <div class="scenario-meta-bar">
+                        <span>Model: <strong id="ols-slope-label">computing...</strong></span>
+                        <div class="field-group" style="flex-direction:row;align-items:center;gap:6px;">
+                            <label class="field-label" for="k-select">Neighbours:</label>
+                            <select id="k-select" class="clean-select" style="padding:4px 26px 4px 8px;font-size:11.5px;">
+                                <option value="5" selected>k = 5 LGAs</option>
+                                <option value="3">k = 3 LGAs</option>
+                                <option value="8">k = 8 LGAs</option>
+                            </select>
+                        </div>
                     </div>
-                    <table class="clean-table compare-table">
-                        <thead>
-                            <tr>
-                                <th>Metric</th>
-                                <th id="comp-th-a">LGA A</th>
-                                <th id="comp-th-b">LGA B</th>
-                                <th>Difference</th>
-                            </tr>
-                        </thead>
-                        <tbody id="comp-tbody"></tbody>
-                    </table>
                 </div>
 
-                <!-- 4. All 20 LGAs Interactive Ranking Table -->
-                <div class="card">
+                <!-- Card 03: Side-by-Side Benchmark -->
+                <div class="card" id="card-benchmark">
                     <div class="card-head">
                         <div>
-                            <span class="eyebrow">Complete Dataset (Click Any Row to Inspect)</span>
-                            <h3>All 20 LGAs Thermal &amp; Livability Ranking</h3>
+                            <span class="section-kicker">03 · Side-by-Side Benchmark</span>
+                            <h3 class="card-title-md">Compare Any Two LGAs</h3>
+                        </div>
+                    </div>
+                    <div class="benchmark-controls">
+                        <div class="field-group">
+                            <label class="field-label" for="comp-select-a">First Area (Updates on Map Click)</label>
+                            <select id="comp-select-a" class="clean-select"></select>
+                        </div>
+                        <span class="vs-pill">VS</span>
+                        <div class="field-group">
+                            <label class="field-label" for="comp-select-b">Second Area (Benchmark)</label>
+                            <select id="comp-select-b" class="clean-select"></select>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="clean-table">
+                            <thead>
+                                <tr>
+                                    <th>Indicator</th>
+                                    <th id="comp-th-a">Area A</th>
+                                    <th id="comp-th-b">Area B</th>
+                                    <th>Difference (A − B)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="comp-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Card 04: Complete Dataset Ranking Table -->
+                <div class="card" id="card-dataset">
+                    <div class="card-head">
+                        <div>
+                            <span class="section-kicker">04 · Complete Dataset (Click Row to Inspect)</span>
+                            <h3 class="card-title-md">All 20 LGAs Thermal &amp; Exposure Ranking</h3>
                         </div>
                     </div>
                     <div class="table-wrap">
@@ -264,7 +1283,7 @@
                                     <th>Gi* Z</th>
                                     <th>NDVI</th>
                                     <th>HEI</th>
-                                    <th>Thermal Tier</th>
+                                    <th>Zone Status</th>
                                 </tr>
                             </thead>
                             <tbody id="ranking-tbody"></tbody>
@@ -280,8 +1299,8 @@
         <div class="modal-card">
             <div class="modal-head">
                 <div>
-                    <span class="eyebrow">Scientific Documentation &amp; Reproducibility</span>
-                    <h2>Methodology, Sensor Lineage &amp; Validation</h2>
+                    <span class="section-kicker">Scientific Documentation &amp; Reproducibility</span>
+                    <h2 class="card-title-lg">Methodology, Sensor Lineage &amp; Validation</h2>
                 </div>
                 <button type="button" id="btn-close-methods" class="btn-close">&times;</button>
             </div>
@@ -295,37 +1314,922 @@
                     <li><strong>Elevation &amp; Demography:</strong> Copernicus <span class="mono">GLO-30 DEM</span> (30m) and WorldPop Gridded Population Density (people/km²).</li>
                 </ul>
                 <h4>2. Decoupled Spatial Clustering &amp; Exposure Equations</h4>
-                <p>Local Getis-Ord <span class="mono">Gi* (star=True)</span> is computed strictly on physical temperature (<span class="mono">LST °C</span>) across row-standardized K-Nearest Neighbour weights (<span class="mono">k = 3, 5, 8</span>). The Heat Exposure Index is formulated as <span class="mono">HEI = MinMax(LST) &times; MinMax(ln(1 + PopDensity)) &in; [0, 1]</span> and verified against non-parametric percentile ranks via Spearman's &rho;.</p>
+                <p>Local Getis-Ord <span class="mono">Gi* (star=True)</span> is computed strictly on physical temperature (<span class="mono">LST °C</span>) across row-standardized K-Nearest Neighbour weights (<span class="mono">k = 3, 5, 8</span>). The Heat Exposure Index is formulated as <span class="mono">HEI = MinMax(LST) &times; MinMax(ln(1 + PopDensity)) &in; [0, 1]</span>.</p>
                 <h4>3. Coastal Ventilation vs. Inland Heat Trapping</h4>
                 <p>At the LGA polygon scale, landlocked mainland LGAs (<strong>Ikeja, Oshodi/Isolo, Mushin, Agege, Alimosho</strong>) record peak mean temperatures (&gt;38.5°C), whereas coastal/lagoon LGAs (<strong>Lagos Island, Eti-Osa, Epe, Badagry</strong>) record lower polygon means due to daytime sea-breeze advection and coastal boundary mixed pixels.</p>
             </div>
         </div>
     </div>
 
-    <!-- Interactive Spotlight Onboarding Tour -->
-    <div id="tour-overlay" class="tour-overlay is-hidden" role="dialog" aria-modal="true">
-        <div id="tour-Floater" class="tour-card">
+    <!-- Contextual Spotlight Onboarding Tour (Points to Each Actual App Section) -->
+    <div id="tour-layer" class="tour-layer is-hidden" role="dialog" aria-modal="true">
+        <div id="tour-spotlight" class="tour-spotlight"></div>
+        <div id="tour-tooltip" class="tour-tooltip">
             <div class="tour-top">
-                <span class="eyebrow" id="tour-step-num">Step 1 of 4</span>
-                <button type="button" id="tour-close" class="tour-skip">Close &times;</button>
+                <span class="tour-step-tag" id="tour-step-num">Step 1 of 5</span>
+                <button type="button" id="tour-close" class="tour-skip">Skip Guide &times;</button>
             </div>
-            <h3 id="tour-title">Welcome to Lagos Urban Heat Analytics</h3>
-            <p id="tour-desc">Explore satellite-derived surface temperatures, statistical hotspots, and residential livability across all 20 Local Government Areas of Lagos State.</p>
+            <h3 id="tour-title">Interactive Lagos Heat Map</h3>
+            <p id="tour-desc">Every Local Government Area is labeled on the map. Click any LGA to inspect its temperature without the camera jumping around.</p>
             <div class="tour-footer">
                 <div id="tour-dots" class="tour-dots"></div>
                 <div class="tour-btns">
-                    <button type="button" id="tour-prev" class="btn-chip">Back</button>
-                    <button type="button" id="tour-next" class="btn-chip btn-accent">Next</button>
+                    <button type="button" id="tour-prev" class="btn-tour-nav">Back</button>
+                    <button type="button" id="tour-next" class="btn-tour-nav primary">Next</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Floating Plain-English Tooltip -->
+    <!-- Floating Plain-English "?" Tooltip -->
     <div id="floating-tip" class="floating-tip is-hidden" role="tooltip"></div>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="app.js"></script>
+
+    <!-- Application Engine -->
+    <script>
+    (function () {
+        const PALETTES = {
+            lst: ['#FEF0D9', '#FDCC8A', '#FC8D59', '#E34A33', '#B30000'],
+            hotspot: ['#2166AC', '#92C5DE', '#F8FAFC', '#F4A582', '#B2182B'],
+            exposure: ['#FFF7EC', '#FDD49E', '#FC8D59', '#D7301F', '#7F0000'],
+            ndvi: ['#FEF0D9', '#D9F0A3', '#78C679', '#238443', '#004529']
+        };
+
+        const LABEL_OFFSETS = {
+            'Lagos Island': [-0.018, 0.008],
+            'Lagos Mainland': [0.002, 0.015],
+            'Surulere': [-0.008, -0.012],
+            'Mushin': [0.012, -0.010],
+            'Shomolu': [0.016, 0.014],
+            'Ajeromi-Ifelodun': [-0.022, -0.018],
+            'Apapa': [-0.028, 0.000],
+            'Agege': [0.020, -0.015],
+            'Ifako-Ijaye': [0.022, 0.005],
+            'Oshodi/Isolo': [-0.004, -0.022],
+            'Ikeja': [0.012, 0.002]
+        };
+
+        const STATE = {
+            geojson: null,
+            features: [],
+            layer: 'lst',
+            k: 5,
+            selectedLga: null,
+            compA: 'Ikeja',
+            compB: 'Epe',
+            deltaNdvi: 0,
+            showLabels: true,
+            is3D: false,
+            slope: -12.4,
+            slopeCI: 3.4,
+            r2: 0.48
+        };
+
+        function setTxt(id, val, isHtml) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (isHtml) el.innerHTML = val;
+            else el.innerText = val;
+        }
+
+        const map = L.map('map', {
+            zoomControl: false,
+            wheelPxPerZoomLevel: 90
+        }).setView([6.5244, 3.42], 10);
+
+        L.control.zoom({ position: 'topright' }).addTo(map);
+
+        const BASEMAPS = {
+            light: L.layerGroup([
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri',
+                    maxZoom: 16
+                }),
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+                    maxZoom: 16,
+                    opacity: 0.55
+                })
+            ]),
+            osm: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors',
+                maxZoom: 18
+            }),
+            satellite: L.layerGroup([
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri',
+                    maxZoom: 18
+                }),
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+                    maxZoom: 18,
+                    opacity: 0.75
+                })
+            ])
+        };
+
+        let activeBasemap = BASEMAPS.light.addTo(map);
+        let geojsonLayer = null;
+        let labelGroup = L.layerGroup().addTo(map);
+        let layerIndex = {};
+
+        function hexToRgb(hex) {
+            const clean = String(hex || '#FDCC8A').replace('#', '');
+            const num = parseInt(clean, 16);
+            if (isNaN(num)) return [253, 204, 138];
+            return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
+        }
+
+        function rgbToHex(r, g, b) {
+            return '#' + [r, g, b].map(x => Math.round(x).toString(16).padStart(2, '0')).join('');
+        }
+
+        function interpolateColor(val, min, max, ramp) {
+            const palette = ramp || PALETTES.lst;
+            const t = Math.max(0, Math.min(1, (val - min) / ((max - min) || 1)));
+            const scaled = t * (palette.length - 1);
+            const i = Math.min(palette.length - 2, Math.floor(scaled));
+            const f = scaled - i;
+            const c1 = hexToRgb(palette[i]);
+            const c2 = hexToRgb(palette[i + 1]);
+            return rgbToHex(
+                c1[0] + (c2[0] - c1[0]) * f,
+                c1[1] + (c2[1] - c1[1]) * f,
+                c1[2] + (c2[2] - c1[2]) * f
+            );
+        }
+
+        function computeRingCentroid(ring) {
+            let area2 = 0, cx = 0, cy = 0;
+            const n = ring.length;
+            if (n < 3) return { center: ring[0] || [3.3792, 6.5244], area: 0 };
+            for (let i = 0; i < n; i++) {
+                const [x0, y0] = ring[i];
+                const [x1, y1] = ring[(i + 1) % n];
+                const cross = x0 * y1 - x1 * y0;
+                area2 += cross;
+                cx += (x0 + x1) * cross;
+                cy += (y0 + y1) * cross;
+            }
+            if (Math.abs(area2) < 1e-11) {
+                return {
+                    center: [ring.reduce((s, p) => s + p[0], 0) / n, ring.reduce((s, p) => s + p[1], 0) / n],
+                    area: 0
+                };
+            }
+            return { center: [cx / (3 * area2), cy / (3 * area2)], area: Math.abs(area2) / 2 };
+        }
+
+        function getTrueCentroid(feature) {
+            const geom = feature && feature.geometry;
+            if (!geom || !geom.coordinates) return [3.3792, 6.5244];
+            if (geom.type === 'Polygon') {
+                return computeRingCentroid(geom.coordinates[0] || []).center;
+            } else if (geom.type === 'MultiPolygon') {
+                let best = { center: [3.3792, 6.5244], area: -1 };
+                geom.coordinates.forEach(poly => {
+                    const res = computeRingCentroid(poly[0] || []);
+                    if (res.area > best.area) best = res;
+                });
+                return best.center;
+            }
+            return [3.3792, 6.5244];
+        }
+
+        function normalizeFeatureProperties(f, idx) {
+            const p = f.properties || {};
+            p.lga_name = String(p.ward_name || p.NAME_2 || p.ADM2_NAME || p.NAME || p.lga_name || `LGA ${idx + 1}`).trim();
+            p.base_lst = Number(p.mean_lst ?? p.lst ?? p.LST ?? 35.5);
+            if (isNaN(p.base_lst)) p.base_lst = 35.5;
+            p.base_ndvi = Number(p.ndvi ?? p.NDVI ?? 0.25);
+            if (isNaN(p.base_ndvi)) p.base_ndvi = 0.25;
+            p.base_ndbi = Number(p.ndbi ?? p.NDBI ?? 0.08);
+            if (isNaN(p.base_ndbi)) p.base_ndbi = 0.08;
+            p.base_pop = Number(p.pop_density ?? p.population ?? 5000);
+            if (isNaN(p.base_pop)) p.base_pop = 5000;
+            p.base_elev = Number(p.elevation ?? p.dem ?? 15.0);
+            if (isNaN(p.base_elev)) p.base_elev = 15.0;
+            p._center = getTrueCentroid(f);
+        }
+
+        function computeGiStar(features, k) {
+            const n = features.length;
+            const vals = features.map(f => f.properties.sim_lst);
+            const meanY = vals.reduce((a, b) => a + b, 0) / n;
+            const stdY = Math.sqrt(vals.reduce((s, v) => s + Math.pow(v - meanY, 2), 0) / n) || 1e-6;
+            const centers = features.map(f => f.properties._center);
+
+            return features.map((_, i) => {
+                const dists = centers.map((c, j) => ({
+                    idx: j,
+                    d: Math.hypot(c[0] - centers[i][0], c[1] - centers[i][1])
+                })).sort((a, b) => a.d - b.d);
+
+                const nbrs = dists.slice(0, Math.min(n, Number(k) + 1)).map(d => d.idx);
+                const m = nbrs.length;
+                const sumWY = nbrs.reduce((acc, j) => acc + (1.0 / m) * vals[j], 0);
+                const den = stdY * Math.sqrt(Math.max(1e-9, (n * (1.0 / m) - 1.0) / (n - 1)));
+                return (sumWY - meanY) / den;
+            });
+        }
+
+        async function fetchLagosData() {
+            const statusEl = document.getElementById('map-status');
+            const urls = [
+                'data/lagos_uhi_processed.geojson',
+                './data/lagos_uhi_processed.geojson',
+                'https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/data/lagos_uhi_processed.geojson',
+                'https://raw.githubusercontent.com/oloyededavid/Lagos-Urban-Heat-Analytics/main/docs/data/lagos_uhi_processed.geojson',
+                'https://raw.githubusercontent.com/oloyededavid/Lagos-Urban-Heat-Analytics/main/data/lagos_uhi_processed.geojson'
+            ];
+            for (const url of urls) {
+                try {
+                    const res = await fetch(url);
+                    if (res.ok) {
+                        const rawText = await res.text();
+                        const cleanText = rawText.replace(/\bNaN\b/g, 'null').replace(/\bInfinity\b/g, 'null');
+                        const json = JSON.parse(cleanText);
+                        if (json && Array.isArray(json.features) && json.features.length > 0) {
+                            if (statusEl) statusEl.classList.add('is-hidden');
+                            return json;
+                        }
+                    }
+                } catch (err) {
+                    console.warn('Fallback URL attempt:', url, err);
+                }
+            }
+            if (statusEl) statusEl.innerText = 'Error: Could not load data/lagos_uhi_processed.geojson';
+            throw new Error('Could not load lagos_uhi_processed.geojson');
+        }
+
+        fetchLagosData().then(data => {
+            STATE.geojson = data;
+            STATE.features = data.features;
+
+            STATE.features.forEach((f, idx) => normalizeFeatureProperties(f, idx));
+
+            const n = STATE.features.length;
+            if (n > 3) {
+                const xs = STATE.features.map(f => f.properties.base_ndvi);
+                const ys = STATE.features.map(f => f.properties.base_lst);
+                const mx = xs.reduce((a, b) => a + b, 0) / n;
+                const my = ys.reduce((a, b) => a + b, 0) / n;
+                const sxx = xs.reduce((s, x) => s + Math.pow(x - mx, 2), 0);
+                const sxy = xs.reduce((s, x, i) => s + (x - mx) * (ys[i] - my), 0);
+                const syy = ys.reduce((s, y) => s + Math.pow(y - my, 2), 0);
+                if (sxx > 0 && syy > 0) {
+                    STATE.slope = sxy / sxx;
+                    STATE.r2 = Math.pow(sxy, 2) / (sxx * syy);
+                    const b0 = my - STATE.slope * mx;
+                    const sse = ys.reduce((s, y, i) => s + Math.pow(y - (b0 + STATE.slope * xs[i]), 2), 0);
+                    STATE.slopeCI = 2.101 * Math.sqrt((sse / Math.max(1, n - 2)) / sxx);
+                }
+            }
+
+            setTxt('ols-slope-label', `β = ${STATE.slope.toFixed(1)} ± ${STATE.slopeCI.toFixed(1)} °C per NDVI (R² = ${STATE.r2.toFixed(2)})`);
+
+            const sortedNames = STATE.features.map(f => f.properties.lga_name).sort();
+            setTxt('lga-list', sortedNames.map(name => `<option value="${name}"></option>`).join(''), true);
+
+            const compHtml = sortedNames.map(name => `<option value="${name}">${name}</option>`).join('');
+            const selA = document.getElementById('comp-select-a');
+            const selB = document.getElementById('comp-select-b');
+            if (selA && selB) {
+                selA.innerHTML = compHtml;
+                selB.innerHTML = compHtml;
+                STATE.compA = sortedNames.includes('Ikeja') ? 'Ikeja' : sortedNames[0];
+                STATE.compB = sortedNames.includes('Epe') ? 'Epe' : sortedNames[sortedNames.length - 1];
+                selA.value = STATE.compA;
+                selB.value = STATE.compB;
+            }
+
+            buildPolygons();
+            recomputeMetrics();
+            initTourIfFirstVisit();
+        }).catch(err => console.error(err));
+
+        function recomputeMetrics() {
+            if (!STATE.features.length) return;
+            const features = STATE.features;
+            const n = features.length;
+
+            let totalDelta = 0;
+            features.forEach(f => {
+                const p = f.properties;
+                const plantable = Math.max(0.30, Math.min(1.0, 1.0 - Math.max(0, p.base_ndbi) * 1.5));
+                const simNdvi = Math.min(0.45, Math.max(p.base_ndvi, p.base_ndvi + STATE.deltaNdvi * plantable));
+                const dNdvi = simNdvi - p.base_ndvi;
+                p.sim_ndvi = simNdvi;
+                p.sim_delta = dNdvi * STATE.slope;
+                p.sim_ci = dNdvi * STATE.slopeCI;
+                p.sim_lst = p.base_lst + p.sim_delta;
+                totalDelta += p.sim_delta;
+            });
+
+            const giScores = computeGiStar(features, STATE.k);
+            const lstVals = features.map(f => f.properties.sim_lst);
+            const lstMin = Math.min(...lstVals), lstMax = Math.max(...lstVals);
+
+            const logPops = features.map(f => Math.log1p(f.properties.base_pop));
+            const pMin = Math.min(...logPops), pMax = Math.max(...logPops);
+            const popSorted = features.map(f => f.properties.base_pop).sort((a, b) => a - b);
+            const popQ70 = popSorted[Math.floor(n * 0.65)] || 5000;
+
+            features.forEach((f, i) => {
+                const p = f.properties;
+                const preKey = `gi_zscore_k${STATE.k}`;
+                p.sim_giz = (STATE.deltaNdvi === 0 && p[preKey] != null && !isNaN(Number(p[preKey])))
+                    ? Number(p[preKey])
+                    : giScores[i];
+
+                const lstNorm = (p.sim_lst - lstMin) / ((lstMax - lstMin) || 1);
+                const popNorm = (logPops[i] - pMin) / ((pMax - pMin) || 1);
+                p.sim_hei = lstNorm * popNorm;
+
+                if (p.sim_lst >= 38.2 && p.base_pop >= popQ70) {
+                    p.tier = 'Priority Cooling Core';
+                    p.tierColor = '#B91C1C';
+                    p.livability = 'High heat stress and dense population. Needs urgent street-tree planting, shaded walkways, and reflective roofs.';
+                } else if (p.sim_lst >= 37.5) {
+                    p.tier = 'Warm Mainland Zone';
+                    p.tierColor = '#EA580C';
+                    p.livability = 'Warm inland neighbourhood. Adding neighbourhood parks and avenue trees will noticeably improve daytime comfort.';
+                } else if (p.sim_lst <= 35.8) {
+                    p.tier = 'Cooler Coastal / Green Zone';
+                    p.tierColor = '#047857';
+                    p.livability = 'Comfortable residential microclimate. Naturally cooled by lagoon/ocean breezes or abundant green cover.';
+                } else {
+                    p.tier = 'Moderate Urban Zone';
+                    p.tierColor = '#09090B';
+                    p.livability = 'Moderate daytime temperatures. Protecting existing trees and wetlands will prevent future heat buildup.';
+                }
+            });
+
+            const hottest = [...features].sort((a, b) => b.properties.sim_lst - a.properties.sim_lst).slice(0, 3);
+            const coolest = [...features].sort((a, b) => a.properties.sim_lst - b.properties.sim_lst).slice(0, 2);
+            setTxt(
+                'executive-finding',
+                `<strong>Key Empirical Finding:</strong> Landlocked mainland LGAs (<strong>${hottest.map(f => `${f.properties.lga_name} ${f.properties.sim_lst.toFixed(1)}°C`).join(', ')}</strong>) are the hottest in Lagos, while coastal and vegetated LGAs (<strong>${coolest.map(f => `${f.properties.lga_name} ${f.properties.sim_lst.toFixed(1)}°C`).join(' & ')}</strong>) remain significantly cooler.`,
+                true
+            );
+
+            const avgDelta = totalDelta / n;
+            setTxt('sim-badge', STATE.deltaNdvi === 0 ? '0.00 °C Cooling' : `${avgDelta.toFixed(2)} °C Avg. Cooling`);
+
+            setTxt(
+                'live-model-summary',
+                `Live Dataset Diagnostics (N = ${n} LGAs): Mean LST = ${(lstVals.reduce((a, b) => a + b, 0) / n).toFixed(2)}°C (Range: ${lstMin.toFixed(1)}°C to ${lstMax.toFixed(1)}°C) · OLS NDVI–LST Slope β = ${STATE.slope.toFixed(2)} ± ${STATE.slopeCI.toFixed(2)} °C/NDVI (R² = ${STATE.r2.toFixed(2)}).`
+            );
+
+            stylePolygonsAndLabels();
+            renderComparison();
+            renderRankingTable();
+
+            if (STATE.selectedLga) {
+                const feat = features.find(f => f.properties.lga_name === STATE.selectedLga);
+                if (feat) renderSelectedLga(feat.properties);
+            } else {
+                renderStateOverview();
+            }
+        }
+
+        function buildPolygons() {
+            if (geojsonLayer) map.removeLayer(geojsonLayer);
+            layerIndex = {};
+
+            geojsonLayer = L.geoJSON(STATE.geojson, {
+                style: () => ({
+                    fillColor: '#FDCC8A',
+                    weight: 1.4,
+                    color: '#27272A',
+                    fillOpacity: 0.85
+                }),
+                onEachFeature: (feature, layer) => {
+                    const p = feature.properties;
+                    layerIndex[p.lga_name] = layer;
+
+                    layer.bindTooltip('', { sticky: true, className: 'clean-tip' });
+
+                    layer.on('mouseover', () => {
+                        if (p.lga_name !== STATE.selectedLga) {
+                            layer.setStyle({ weight: 2.6, color: '#09090B', fillOpacity: 0.95 });
+                        }
+                    });
+
+                    layer.on('mouseout', () => {
+                        if (p.lga_name !== STATE.selectedLga) {
+                            layer.setStyle({ weight: 1.4, color: '#27272A', fillOpacity: 0.85 });
+                        }
+                    });
+
+                    layer.on('click', () => {
+                        selectLga(p.lga_name, false);
+                    });
+                }
+            }).addTo(map);
+
+            map.fitBounds(geojsonLayer.getBounds(), { padding: [24, 24] });
+        }
+
+        function stylePolygonsAndLabels() {
+            if (!geojsonLayer) return;
+            labelGroup.clearLayers();
+
+            const features = STATE.features;
+            const vals = features.map(f => {
+                const p = f.properties;
+                if (STATE.layer === 'lst') return p.sim_lst;
+                if (STATE.layer === 'hotspot') return p.sim_giz;
+                if (STATE.layer === 'exposure') return p.sim_hei;
+                return p.sim_ndvi;
+            });
+            const vMin = Math.min(...vals), vMax = Math.max(...vals);
+            const ramp = PALETTES[STATE.layer] || PALETTES.lst;
+
+            geojsonLayer.eachLayer(layer => {
+                const p = layer.feature.properties;
+                const val = STATE.layer === 'lst' ? p.sim_lst
+                          : STATE.layer === 'hotspot' ? p.sim_giz
+                          : STATE.layer === 'exposure' ? p.sim_hei
+                          : p.sim_ndvi;
+
+                p._color = interpolateColor(val, vMin, vMax, ramp);
+                const isSel = (p.lga_name === STATE.selectedLga);
+
+                layer.setStyle({
+                    fillColor: p._color,
+                    weight: isSel ? 3.5 : 1.4,
+                    color: isSel ? '#09090B' : '#27272A',
+                    fillOpacity: isSel ? 0.96 : 0.85
+                });
+
+                layer.setTooltipContent(`
+                    <strong>${p.lga_name} LGA</strong><br/>
+                    Temp: <b>${p.sim_lst.toFixed(2)} °C</b> · Gi* Z: <b>${p.sim_giz >= 0 ? '+' : ''}${p.sim_giz.toFixed(2)}</b><br/>
+                    Exposure (HEI): <b>${p.sim_hei.toFixed(3)}</b> · NDVI: <b>${p.sim_ndvi.toFixed(3)}</b><br/>
+                    <span style="color:${p.tierColor};font-weight:700;">${p.tier}</span>
+                `);
+            });
+
+            updateLegendDock(vMin, vMax, ramp);
+
+            if (!STATE.showLabels) return;
+
+            features.forEach(f => {
+                const p = f.properties;
+                const offset = LABEL_OFFSETS[p.lga_name] || [0, 0];
+                const lat = p._center[1] + offset[0];
+                const lng = p._center[0] + offset[1];
+                const isSel = (p.lga_name === STATE.selectedLga);
+
+                const metricText = STATE.layer === 'lst' ? `${p.sim_lst.toFixed(1)}°C`
+                                 : STATE.layer === 'hotspot' ? `Gi* ${p.sim_giz >= 0 ? '+' : ''}${p.sim_giz.toFixed(2)}`
+                                 : STATE.layer === 'exposure' ? `HEI ${p.sim_hei.toFixed(2)}`
+                                 : `NDVI ${p.sim_ndvi.toFixed(2)}`;
+
+                const marker = L.marker([lat, lng], {
+                    interactive: false,
+                    icon: L.divIcon({
+                        className: 'lga-label-icon',
+                        html: `<div class="lga-pin ${isSel ? 'is-selected' : ''}">${p.lga_name}<span>${metricText}</span></div>`,
+                        iconSize: [0, 0]
+                    })
+                });
+                labelGroup.addLayer(marker);
+            });
+        }
+
+        function updateLegendDock(vMin, vMax, ramp) {
+            const q25 = vMin + (vMax - vMin) * 0.25;
+            const mid = (vMin + vMax) * 0.50;
+            const q75 = vMin + (vMax - vMin) * 0.75;
+
+            const meta = {
+                lst: ['Land Surface Temperature (LST °C)', 'Landsat 8/9 (30m)', v => `${v.toFixed(1)}°C`, [
+                    ['#FEF0D9', 'Cooler (<36.0°C)'],
+                    ['#FDCC8A', 'Moderate (36–37°C)'],
+                    ['#FC8D59', 'Warm (37–38°C)'],
+                    ['#B30000', 'Hot Core (>38.2°C)']
+                ]],
+                hotspot: ['Getis-Ord Gi* Thermal Clustering (Z)', `KNN (k = ${STATE.k})`, v => `${v >= 0 ? '+' : ''}${v.toFixed(2)}`, [
+                    ['#2166AC', 'Cool Refugium (Z < -0.5)'],
+                    ['#92C5DE', 'Slightly Cool'],
+                    ['#F4A582', 'Warm Cluster'],
+                    ['#B2182B', 'Hotspot Core (Z > +0.6)']
+                ]],
+                exposure: ['Heat Exposure Index (HEI 0–1)', 'LST × log(Population)', v => v.toFixed(2), [
+                    ['#FFF7EC', 'Low Exposure (<0.20)'],
+                    ['#FDD49E', 'Moderate (0.20–0.45)'],
+                    ['#FC8D59', 'High (0.45–0.65)'],
+                    ['#7F0000', 'Critical (>0.65)']
+                ]],
+                ndvi: ['Vegetation Canopy Density (NDVI)', 'Sentinel-2 (10m)', v => v.toFixed(2), [
+                    ['#FEF0D9', 'Dense Built (<0.20)'],
+                    ['#D9F0A3', 'Sparse Green (0.20–0.30)'],
+                    ['#78C679', 'Moderate Canopy'],
+                    ['#004529', 'Dense Vegetation (>0.40)']
+                ]]
+            };
+
+            const [title, tag, fmt, classes] = meta[STATE.layer];
+            setTxt('legend-title', title);
+            setTxt('legend-tag', tag);
+            const bar = document.getElementById('legend-bar');
+            if (bar) bar.style.background = `linear-gradient(90deg, ${ramp.join(', ')})`;
+
+            setTxt('legend-min', fmt(vMin));
+            setTxt('legend-q25', fmt(q25));
+            setTxt('legend-mid', fmt(mid));
+            setTxt('legend-q75', fmt(q75));
+            setTxt('legend-max', fmt(vMax));
+
+            setTxt('legend-classes', classes.map(([col, label]) =>
+                `<div class="legend-item"><span class="swatch-dot" style="background:${col}"></span><span>${label}</span></div>`
+            ).join(''), true);
+        }
+
+        function selectLga(lgaName, shouldZoom) {
+            const feat = STATE.features.find(f => f.properties.lga_name.toLowerCase() === String(lgaName).toLowerCase());
+            if (!feat) return;
+
+            STATE.selectedLga = feat.properties.lga_name;
+
+            const targetLayer = layerIndex[STATE.selectedLga];
+            if (targetLayer) {
+                targetLayer.bringToFront();
+                if (shouldZoom) {
+                    map.flyToBounds(targetLayer.getBounds(), { padding: [70, 70], maxZoom: 12, duration: 0.65 });
+                }
+            }
+
+            STATE.compA = STATE.selectedLga;
+            const selA = document.getElementById('comp-select-a');
+            if (selA) selA.value = STATE.compA;
+
+            stylePolygonsAndLabels();
+            renderSelectedLga(feat.properties);
+            renderComparison();
+            renderRankingTable();
+        }
+
+        function renderSelectedLga(p) {
+            const sortedLst = STATE.features.map(f => f.properties.sim_lst).sort((a, b) => a - b);
+            const rankIdx = sortedLst.indexOf(p.sim_lst);
+            const warmerPct = Math.round((rankIdx / Math.max(1, sortedLst.length - 1)) * 100);
+
+            setTxt('sel-eyebrow', '01 · Selected Local Government Area');
+            setTxt('sel-title', `${p.lga_name} LGA`);
+            setTxt(
+                'sel-insight',
+                `${p.lga_name} has an average ground temperature of ${p.sim_lst.toFixed(2)} °C (warmer than ${warmerPct}% of Lagos LGAs), with green cover NDVI of ${p.sim_ndvi.toFixed(3)} and about ${Math.round(p.base_pop).toLocaleString()} residents per km².`
+            );
+            setTxt(
+                'livability-combined',
+                `<strong>Comfort & Planning Guide (${p.tier}):</strong> ${p.livability}`,
+                true
+            );
+
+            const badge = document.getElementById('sel-badge');
+            if (badge) {
+                badge.innerText = p.tier;
+                badge.style.background = p.tierColor;
+                badge.style.color = '#FFFFFF';
+                badge.style.borderColor = p.tierColor;
+            }
+
+            setTxt('val-lst', `${p.sim_lst.toFixed(2)} °C`);
+            setTxt('sub-lst', STATE.deltaNdvi > 0 ? `Cooled by ${Math.abs(p.sim_delta).toFixed(2)} °C` : `Warmer than ${warmerPct}% of Lagos`);
+
+            setTxt('val-giz', `${p.sim_giz >= 0 ? '+' : ''}${p.sim_giz.toFixed(2)}`);
+            setTxt('sub-giz', p.sim_giz >= 0.55 ? 'Hot cluster zone' : (p.sim_giz <= -0.45 ? 'Cooler cluster zone' : 'Average cluster'));
+
+            setTxt('val-hei', p.sim_hei.toFixed(3));
+            setTxt('sub-hei', p.sim_hei >= 0.55 ? 'High population heat load' : 'Moderate/low exposure');
+
+            setTxt('val-ndvi', p.sim_ndvi.toFixed(3));
+            setTxt('sub-ndbi', `Built-up NDBI: ${p.base_ndbi.toFixed(3)}`);
+
+            setTxt('val-pop', `${Math.round(p.base_pop).toLocaleString()}`);
+            setTxt('val-elev', `${p.base_elev.toFixed(1)} m`);
+        }
+
+        function renderStateOverview() {
+            const features = STATE.features;
+            const n = features.length;
+            const meanLst = features.reduce((s, f) => s + f.properties.sim_lst, 0) / n;
+            const maxGi = Math.max(...features.map(f => f.properties.sim_giz));
+            const meanHei = features.reduce((s, f) => s + f.properties.sim_hei, 0) / n;
+            const meanNdvi = features.reduce((s, f) => s + f.properties.sim_ndvi, 0) / n;
+            const meanNdbi = features.reduce((s, f) => s + f.properties.base_ndbi, 0) / n;
+            const meanPop = features.reduce((s, f) => s + f.properties.base_pop, 0) / n;
+            const meanElev = features.reduce((s, f) => s + f.properties.base_elev, 0) / n;
+
+            setTxt('sel-eyebrow', '01 · Statewide Summary (All 20 LGAs)');
+            setTxt('sel-title', 'Lagos State Overview');
+
+            const badge = document.getElementById('sel-badge');
+            if (badge) {
+                badge.innerText = 'Click Any LGA';
+                badge.style.background = '#F4F4F5';
+                badge.style.color = '#09090B';
+                badge.style.borderColor = '#D4D4D8';
+            }
+
+            setTxt('val-lst', `${meanLst.toFixed(2)} °C`);
+            setTxt('sub-lst', 'Statewide average');
+            setTxt('val-giz', `+${maxGi.toFixed(2)}`);
+            setTxt('sub-giz', 'Peak hotspot score');
+            setTxt('val-hei', meanHei.toFixed(3));
+            setTxt('sub-hei', 'Average exposure');
+            setTxt('val-ndvi', meanNdvi.toFixed(3));
+            setTxt('sub-ndbi', `Mean NDBI: ${meanNdbi.toFixed(3)}`);
+            setTxt('val-pop', `${Math.round(meanPop).toLocaleString()}`);
+            setTxt('val-elev', `${meanElev.toFixed(1)} m`);
+        }
+
+        function renderComparison() {
+            const fA = STATE.features.find(f => f.properties.lga_name === STATE.compA) || STATE.features[0];
+            const fB = STATE.features.find(f => f.properties.lga_name === STATE.compB) || STATE.features[1];
+            if (!fA || !fB) return;
+
+            const a = fA.properties, b = fB.properties;
+            setTxt('comp-th-a', a.lga_name);
+            setTxt('comp-th-b', b.lga_name);
+
+            const diffLst = a.sim_lst - b.sim_lst;
+            const diffHei = a.sim_hei - b.sim_hei;
+            const diffNdvi = a.sim_ndvi - b.sim_ndvi;
+
+            const rows = [
+                ['Surface Temp (LST)', `${a.sim_lst.toFixed(2)} °C`, `${b.sim_lst.toFixed(2)} °C`, `${diffLst >= 0 ? '+' : ''}${diffLst.toFixed(2)} °C`],
+                ['Heat Cluster (Gi* Z)', `${a.sim_giz >= 0 ? '+' : ''}${a.sim_giz.toFixed(2)}`, `${b.sim_giz >= 0 ? '+' : ''}${b.sim_giz.toFixed(2)}`, `${(a.sim_giz - b.sim_giz >= 0 ? '+' : '')}${(a.sim_giz - b.sim_giz).toFixed(2)}`],
+                ['Heat Exposure (HEI)', a.sim_hei.toFixed(3), b.sim_hei.toFixed(3), `${diffHei >= 0 ? '+' : ''}${diffHei.toFixed(3)}`],
+                ['Green Cover (NDVI)', a.sim_ndvi.toFixed(3), b.sim_ndvi.toFixed(3), `${diffNdvi >= 0 ? '+' : ''}${diffNdvi.toFixed(3)}`],
+                ['Pop. Density (/km²)', Math.round(a.base_pop).toLocaleString(), Math.round(b.base_pop).toLocaleString(), `${(a.base_pop - b.base_pop >= 0 ? '+' : '')}${Math.round(a.base_pop - b.base_pop).toLocaleString()}`]
+            ];
+
+            setTxt('comp-tbody', rows.map(([m, va, vb, d]) =>
+                `<tr><td>${m}</td><td><strong>${va}</strong></td><td><strong>${vb}</strong></td><td><span class="diff-badge mono">${d}</span></td></tr>`
+            ).join(''), true);
+        }
+
+        function renderRankingTable() {
+            const tbody = document.getElementById('ranking-tbody');
+            if (!tbody) return;
+            const sorted = [...STATE.features].sort((a, b) => b.properties.sim_hei - a.properties.sim_hei);
+
+            tbody.innerHTML = sorted.map(f => {
+                const p = f.properties;
+                const isSel = p.lga_name === STATE.selectedLga ? 'is-active-row' : '';
+                return `
+                    <tr class="${isSel}" data-lga="${p.lga_name}">
+                        <td><span class="swatch-dot" style="background:${p._color};display:inline-block;margin-right:6px;vertical-align:middle;"></span><strong>${p.lga_name}</strong></td>
+                        <td>${p.sim_lst.toFixed(1)} °C</td>
+                        <td>${p.sim_giz >= 0 ? '+' : ''}${p.sim_giz.toFixed(2)}</td>
+                        <td>${p.sim_ndvi.toFixed(2)}</td>
+                        <td>${p.sim_hei.toFixed(3)}</td>
+                        <td style="color:${p.tierColor};font-weight:700;">${p.tier.split(' ')[0]}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            tbody.querySelectorAll('tr').forEach(tr => {
+                tr.addEventListener('click', () => {
+                    selectLga(tr.getAttribute('data-lga'), false);
+                });
+            });
+        }
+
+        // UI Controls
+        document.getElementById('layer-select').addEventListener('change', e => {
+            STATE.layer = e.target.value;
+            stylePolygonsAndLabels();
+        });
+
+        document.getElementById('basemap-select').addEventListener('change', e => {
+            const next = BASEMAPS[e.target.value];
+            if (next && next !== activeBasemap) {
+                map.removeLayer(activeBasemap);
+                activeBasemap = next.addTo(map);
+                if (geojsonLayer) geojsonLayer.bringToFront();
+            }
+        });
+
+        document.getElementById('k-select').addEventListener('change', e => {
+            STATE.k = Number(e.target.value);
+            recomputeMetrics();
+        });
+
+        document.getElementById('ndvi-slider').addEventListener('input', e => {
+            STATE.deltaNdvi = Number(e.target.value);
+            setTxt('slider-val', STATE.deltaNdvi === 0 ? '+0.000 NDVI (Baseline)' : `+${STATE.deltaNdvi.toFixed(3)} NDVI`);
+            recomputeMetrics();
+        });
+
+        document.getElementById('comp-select-a').addEventListener('change', e => {
+            STATE.compA = e.target.value;
+            renderComparison();
+        });
+
+        document.getElementById('comp-select-b').addEventListener('change', e => {
+            STATE.compB = e.target.value;
+            renderComparison();
+        });
+
+        document.getElementById('lga-search').addEventListener('change', e => {
+            if (e.target.value) {
+                selectLga(e.target.value, true);
+                e.target.value = '';
+            }
+        });
+
+        document.getElementById('btn-3d').addEventListener('click', e => {
+            STATE.is3D = !STATE.is3D;
+            document.getElementById('map-stage').classList.toggle('is-3d', STATE.is3D);
+            e.currentTarget.classList.toggle('active', STATE.is3D);
+        });
+
+        document.getElementById('btn-labels').addEventListener('click', e => {
+            STATE.showLabels = !STATE.showLabels;
+            e.currentTarget.classList.toggle('active', STATE.showLabels);
+            stylePolygonsAndLabels();
+        });
+
+        document.getElementById('btn-reset').addEventListener('click', () => {
+            STATE.selectedLga = null;
+            STATE.deltaNdvi = 0;
+            document.getElementById('ndvi-slider').value = 0;
+            setTxt('slider-val', '+0.000 NDVI (Baseline)');
+            if (geojsonLayer) map.flyToBounds(geojsonLayer.getBounds(), { padding: [24, 24], duration: 0.6 });
+            recomputeMetrics();
+        });
+
+        function downloadBlob(content, filename, mime) {
+            const blob = new Blob([content], { type: mime });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        document.getElementById('btn-export-csv').addEventListener('click', () => {
+            if (!STATE.features.length) return;
+            const headers = ['LGA_Name', 'LST_C', 'Gi_Star_Z', 'HEI_Index', 'NDVI', 'NDBI', 'Pop_Density_km2', 'Elevation_m', 'Thermal_Tier'];
+            const rows = STATE.features.map(f => {
+                const p = f.properties;
+                return [`"${p.lga_name}"`, p.sim_lst.toFixed(2), p.sim_giz.toFixed(3), p.sim_hei.toFixed(3), p.sim_ndvi.toFixed(3), p.base_ndbi.toFixed(3), Math.round(p.base_pop), p.base_elev.toFixed(1), `"${p.tier}"`].join(',');
+            });
+            downloadBlob([headers.join(','), ...rows].join('\n'), 'lagos_urban_heat_20_lgas.csv', 'text/csv');
+        });
+
+        document.getElementById('btn-export-geojson').addEventListener('click', () => {
+            if (!STATE.geojson) return;
+            downloadBlob(JSON.stringify(STATE.geojson, null, 2), 'lagos_urban_heat_20_lgas.geojson', 'application/geo+json');
+        });
+
+        const methodsModal = document.getElementById('methods-modal');
+        document.getElementById('btn-methods').addEventListener('click', () => methodsModal.classList.remove('is-hidden'));
+        document.getElementById('btn-close-methods').addEventListener('click', () => methodsModal.classList.add('is-hidden'));
+        methodsModal.addEventListener('click', e => { if (e.target === methodsModal) methodsModal.classList.add('is-hidden'); });
+
+        const tipEl = document.getElementById('floating-tip');
+        document.querySelectorAll('.tip-btn').forEach(btn => {
+            const show = () => {
+                const r = btn.getBoundingClientRect();
+                tipEl.innerText = btn.getAttribute('data-tip');
+                tipEl.classList.remove('is-hidden');
+                tipEl.style.top = `${Math.max(8, r.top - tipEl.offsetHeight - 8)}px`;
+                tipEl.style.left = `${Math.min(window.innerWidth - 270, Math.max(8, r.left - 110))}px`;
+            };
+            const hide = () => tipEl.classList.add('is-hidden');
+            btn.addEventListener('mouseenter', show);
+            btn.addEventListener('focus', show);
+            btn.addEventListener('mouseleave', hide);
+            btn.addEventListener('blur', hide);
+        });
+
+        /* ==========================================================================
+           Contextual Section-Pointing Spotlight Onboarding Guide
+           ========================================================================== */
+        const TOUR_STEPS = [
+            {
+                target: '#map-stage',
+                title: 'Interactive Lagos Heat Map',
+                desc: 'All 20 LGAs are labeled directly on the map, and the legend sits cleanly underneath so nothing blocks the view. Click any LGA to inspect it without jumping the camera.'
+            },
+            {
+                target: '#card-lga',
+                title: '01 · Selected LGA & Comfort Guide',
+                desc: 'This section combines the selected LGA’s temperature, population density, and a plain-English Residential Comfort Guide showing which areas are cooler to live in vs. where planners should plant trees.'
+            },
+            {
+                target: '#card-scenario',
+                title: '02 · Tree-Planting Scenario Explorer',
+                desc: 'Drag this slider to test what happens when we add more green cover (+NDVI) across Lagos. Watch the map and temperature numbers cool down in real time.'
+            },
+            {
+                target: '#card-benchmark',
+                title: '03 · Side-by-Side LGA Benchmark',
+                desc: 'Compare any two Local Government Areas head-to-head across temperature, heat clustering, green cover, and population density.'
+            },
+            {
+                target: '#card-dataset',
+                title: '04 · Complete Dataset & Exports',
+                desc: 'Click any row in this ranking table to inspect that LGA, or use the Export buttons above to download the full CSV or GeoJSON dataset.'
+            }
+        ];
+
+        let tourIdx = 0;
+        const tourLayer = document.getElementById('tour-layer');
+        const tourSpot = document.getElementById('tour-spotlight');
+        const tourTip = document.getElementById('tour-tooltip');
+
+        function positionTourStep() {
+            const step = TOUR_STEPS[tourIdx];
+            const el = document.querySelector(step.target);
+            if (!el) return;
+
+            // Scroll sidebar element into view first if inside the sidebar
+            if (el.closest('#sidebar-scroll')) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            setTimeout(() => {
+                const r = el.getBoundingClientRect();
+                const pad = 6;
+                tourSpot.style.top = `${Math.max(4, r.top - pad)}px`;
+                tourSpot.style.left = `${Math.max(4, r.left - pad)}px`;
+                tourSpot.style.width = `${Math.min(window.innerWidth - 8, r.width + pad * 2)}px`;
+                tourSpot.style.height = `${Math.min(window.innerHeight - 8, r.height + pad * 2)}px`;
+
+                setTxt('tour-step-num', `Step ${tourIdx + 1} of ${TOUR_STEPS.length}`);
+                setTxt('tour-title', step.title);
+                setTxt('tour-desc', step.desc);
+                setTxt('tour-dots', TOUR_STEPS.map((_, i) =>
+                    `<span class="tour-dot ${i === tourIdx ? 'active' : ''}"></span>`
+                ).join(''), true);
+
+                document.getElementById('tour-prev').style.visibility = tourIdx === 0 ? 'hidden' : 'visible';
+                setTxt('tour-next', tourIdx === TOUR_STEPS.length - 1 ? 'Done' : 'Next →');
+
+                // Position tooltip cleanly beside the highlighted element
+                const tipW = 340;
+                const tipH = tourTip.offsetHeight || 195;
+                let leftPos = r.left - tipW - 18;
+                let topPos = r.top + 12;
+
+                // If highlighting the map on the left, place tooltip inside/right of map
+                if (r.left < 380) {
+                    leftPos = Math.min(window.innerWidth - tipW - 20, r.left + 24);
+                    topPos = Math.max(80, r.top + 24);
+                }
+
+                // Clamp within viewport
+                topPos = Math.max(16, Math.min(window.innerHeight - tipH - 16, topPos));
+                leftPos = Math.max(16, Math.min(window.innerWidth - tipW - 16, leftPos));
+
+                tourTip.style.top = `${topPos}px`;
+                tourTip.style.left = `${leftPos}px`;
+            }, 220);
+        }
+
+        function openTour() {
+            tourIdx = 0;
+            tourLayer.classList.remove('is-hidden');
+            positionTourStep();
+        }
+
+        function closeTour() {
+            tourLayer.classList.add('is-hidden');
+            try { localStorage.setItem('lagos_uhi_tour_v5', '1'); } catch (e) {}
+        }
+
+        function initTourIfFirstVisit() {
+            try {
+                if (!localStorage.getItem('lagos_uhi_tour_v5')) {
+                    setTimeout(openTour, 400);
+                }
+            } catch (e) {}
+        }
+
+        document.getElementById('btn-tour').addEventListener('click', openTour);
+        document.getElementById('tour-close').addEventListener('click', closeTour);
+        document.getElementById('tour-prev').addEventListener('click', () => {
+            if (tourIdx > 0) { tourIdx--; positionTourStep(); }
+        });
+        document.getElementById('tour-next').addEventListener('click', () => {
+            if (tourIdx < TOUR_STEPS.length - 1) { tourIdx++; positionTourStep(); }
+            else closeTour();
+        });
+
+        window.addEventListener('resize', () => {
+            if (!tourLayer.classList.contains('is-hidden')) positionTourStep();
+        });
+    })();
+    </script>
 </body>
 </html>
