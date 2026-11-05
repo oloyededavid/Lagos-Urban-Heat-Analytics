@@ -1,0 +1,375 @@
+pass_id,date,season,sensor,wrs_path,frames,ref_lst,ref_cover,cold_share,lgas_observed,used,reason
+L5_190_19841211,1984-12-11,1985,Landsat 5,190,2,26.11,0.647,0.0,0,no,no LGA at least half clear
+L5_191_19841218,1984-12-18,1985,Landsat 5,191,2,26.72,0.784,0.0021,19,yes,
+L5_191_19860106,1986-01-06,1986,Landsat 5,191,2,25.74,0.06,0.0774,0,no,cold anomaly (cloud or fog)
+L5_190_19860115,1986-01-15,1986,Landsat 5,190,2,25.25,0.935,0.0,0,no,no LGA at least half clear
+L5_191_19860122,1986-01-22,1986,Landsat 5,191,1,37.41,0.0,,0,no,reference mostly cloudy
+L5_190_19860131,1986-01-31,1986,Landsat 5,190,1,29.77,0.004,0.0,0,no,reference mostly cloudy
+L5_190_19860216,1986-02-16,1986,Landsat 5,190,2,30.66,0.017,0.0024,0,no,reference mostly cloudy
+L5_191_19860311,1986-03-11,1986,Landsat 5,191,1,38.76,0.002,,0,no,reference mostly cloudy
+L5_190_19861201,1986-12-01,1987,Landsat 5,190,1,30.43,0.006,0.0,0,no,reference mostly cloudy
+L5_190_19861217,1986-12-17,1987,Landsat 5,190,2,27.42,0.922,0.0,0,no,no LGA at least half clear
+L5_191_19870109,1987-01-09,1987,Landsat 5,191,2,26.57,0.599,0.1054,0,no,cold anomaly (cloud or fog)
+L5_191_19870226,1987-02-26,1987,Landsat 5,191,2,32.65,0.198,0.2285,0,no,cold anomaly (cloud or fog)
+L5_191_19870314,1987-03-14,1987,Landsat 5,191,1,22.24,0.042,0.0,0,no,reference mostly cloudy
+L4_192_19880212,1988-02-12,1988,Landsat 4,192,1,29.09,5.333,,0,no,reference mostly cloudy
+L4_191_19880221,1988-02-21,1988,Landsat 4,191,2,35.7,0.0,0.0,0,no,reference mostly cloudy
+L4_190_19901220,1990-12-20,1991,Landsat 4,190,1,34.17,0.026,0.0,0,no,reference mostly cloudy
+L4_191_19901227,1990-12-27,1991,Landsat 4,191,2,31.58,0.252,0.0007,4,yes,
+L4_190_19910105,1991-01-05,1991,Landsat 4,190,2,28.45,0.644,0.0,0,no,no LGA at least half clear
+L5_191_19990211,1999-02-11,1999,Landsat 5,191,2,37.68,0.0,0.1522,0,no,reference mostly cloudy
+L7_190_19991213,1999-12-13,2000,Landsat 7,190,2,32.08,0.289,0.0,0,no,no LGA at least half clear
+L7_191_20000206,2000-02-06,2000,Landsat 7,191,1,33.11,0.108,0.0002,4,yes,
+L7_190_20000215,2000-02-15,2000,Landsat 7,190,1,31.23,0.358,0.0024,0,no,no LGA at least half clear
+L7_191_20001222,2000-12-22,2001,Landsat 7,191,1,31.23,0.008,0.0029,0,no,reference mostly cloudy
+L7_191_20010123,2001-01-23,2001,Landsat 7,191,2,32.82,0.341,0.0331,14,yes,
+L7_191_20010208,2001-02-08,2001,Landsat 7,191,1,37.73,0.0,0.7333,0,no,reference mostly cloudy
+L7_190_20010321,2001-03-21,2001,Landsat 7,190,1,30.35,0.017,0.0,0,no,reference mostly cloudy
+L7_191_20011209,2001-12-09,2002,Landsat 7,191,2,31.14,0.652,0.0383,18,yes,
+L7_190_20011218,2001-12-18,2002,Landsat 7,190,2,33.65,0.003,0.0307,0,no,reference mostly cloudy
+L7_190_20020103,2002-01-03,2002,Landsat 7,190,2,29.0,0.944,0.0151,0,no,no LGA at least half clear
+L7_190_20020220,2002-02-20,2002,Landsat 7,190,2,34.44,0.005,0.0112,0,no,reference mostly cloudy
+L7_191_20020331,2002-03-31,2002,Landsat 7,191,2,39.45,0.003,0.2566,0,no,reference mostly cloudy
+L7_191_20021212,2002-12-12,2003,Landsat 7,191,2,36.12,0.001,0.0037,0,no,reference mostly cloudy
+L7_190_20021221,2002-12-21,2003,Landsat 7,190,2,31.1,0.287,0.0003,0,no,no LGA at least half clear
+L7_191_20021228,2002-12-28,2003,Landsat 7,191,2,29.48,0.939,0.084,0,no,cold anomaly (cloud or fog)
+L7_192_20030104,2003-01-04,2003,Landsat 7,192,2,30.31,0.115,,0,no,reference mostly cloudy
+L7_191_20030129,2003-01-29,2003,Landsat 7,191,2,28.53,0.197,0.0229,10,yes,
+L7_191_20030302,2003-03-02,2003,Landsat 7,191,2,33.88,0.037,0.1252,0,no,cold anomaly (cloud or fog)
+L7_190_20030311,2003-03-11,2003,Landsat 7,190,1,25.72,0.581,0.2477,0,no,cold anomaly (cloud or fog)
+L7_190_20031208,2003-12-08,2004,Landsat 7,190,1,21.32,0.001,,0,no,reference mostly cloudy
+L7_190_20031224,2003-12-24,2004,Landsat 7,190,2,30.83,0.679,0.0005,0,no,no LGA at least half clear
+L7_190_20040125,2004-01-25,2004,Landsat 7,190,1,24.56,0.125,0.0321,0,no,no LGA at least half clear
+L7_190_20041210,2004-12-10,2005,Landsat 7,190,2,30.39,0.0,0.0,0,no,reference mostly cloudy
+L7_191_20041217,2004-12-17,2005,Landsat 7,191,2,27.32,0.164,0.1651,0,no,cold anomaly (cloud or fog)
+L7_190_20041226,2004-12-26,2005,Landsat 7,190,1,22.29,0.203,0.3468,0,no,cold anomaly (cloud or fog)
+L7_191_20050102,2005-01-02,2005,Landsat 7,191,2,24.7,0.284,0.025,6,yes,
+L7_190_20050127,2005-01-27,2005,Landsat 7,190,1,22.83,0.0,,0,no,reference mostly cloudy
+L7_191_20050203,2005-02-03,2005,Landsat 7,191,2,29.88,0.002,0.0021,0,no,reference mostly cloudy
+L7_190_20050316,2005-03-16,2005,Landsat 7,190,1,31.44,0.005,0.0,0,no,reference mostly cloudy
+L7_191_20051204,2005-12-04,2006,Landsat 7,191,2,34.57,0.006,0.1297,0,no,reference mostly cloudy
+L7_190_20051213,2005-12-13,2006,Landsat 7,190,2,31.09,0.012,0.0,0,no,reference mostly cloudy
+L7_191_20051220,2005-12-20,2006,Landsat 7,191,2,35.16,0.004,0.0575,0,no,reference mostly cloudy
+L7_190_20051229,2005-12-29,2006,Landsat 7,190,2,27.64,0.786,0.1045,0,no,cold anomaly (cloud or fog)
+L7_191_20060121,2006-01-21,2006,Landsat 7,191,2,29.48,0.231,0.1755,0,no,cold anomaly (cloud or fog)
+L7_191_20061207,2006-12-07,2007,Landsat 7,191,2,33.46,0.692,0.0135,17,yes,
+L7_191_20061223,2006-12-23,2007,Landsat 7,191,2,33.67,0.011,0.0289,0,no,reference mostly cloudy
+L7_190_20070101,2007-01-01,2007,Landsat 7,190,1,29.03,0.261,0.0057,0,no,no LGA at least half clear
+L7_190_20070117,2007-01-17,2007,Landsat 7,190,2,27.26,0.518,0.0183,0,no,no LGA at least half clear
+L7_190_20070202,2007-02-02,2007,Landsat 7,190,2,33.99,0.005,0.3238,0,no,reference mostly cloudy
+L7_190_20070218,2007-02-18,2007,Landsat 7,190,1,33.14,0.0,,0,no,reference mostly cloudy
+L7_191_20071210,2007-12-10,2008,Landsat 7,191,2,32.32,0.01,0.0011,0,no,reference mostly cloudy
+L7_190_20071219,2007-12-19,2008,Landsat 7,190,1,22.59,0.037,0.0085,0,no,reference mostly cloudy
+L7_191_20071226,2007-12-26,2008,Landsat 7,191,2,27.63,0.11,0.0,0,no,no LGA at least half clear
+L7_190_20080104,2008-01-04,2008,Landsat 7,190,1,27.44,0.454,0.0022,0,no,no LGA at least half clear
+L7_191_20080111,2008-01-11,2008,Landsat 7,191,2,27.78,0.84,0.0008,19,yes,
+L7_190_20080120,2008-01-20,2008,Landsat 7,190,2,28.74,0.731,0.076,0,no,cold anomaly (cloud or fog)
+L7_191_20080127,2008-01-27,2008,Landsat 7,191,2,26.74,0.352,0.0586,0,no,cold anomaly (cloud or fog)
+L7_190_20080205,2008-02-05,2008,Landsat 7,190,2,28.71,0.004,0.0,0,no,reference mostly cloudy
+L7_191_20080212,2008-02-12,2008,Landsat 7,191,2,33.66,0.009,0.0372,0,no,reference mostly cloudy
+L7_191_20080331,2008-03-31,2008,Landsat 7,191,1,30.12,0.002,0.0,0,no,reference mostly cloudy
+L7_191_20081212,2008-12-12,2009,Landsat 7,191,2,32.97,0.009,0.0912,0,no,reference mostly cloudy
+L7_192_20081219,2008-12-19,2009,Landsat 7,192,2,30.07,0.003,,0,no,reference mostly cloudy
+L7_190_20081221,2008-12-21,2009,Landsat 7,190,2,27.12,0.014,0.0081,0,no,reference mostly cloudy
+L7_191_20081228,2008-12-28,2009,Landsat 7,191,2,28.9,0.32,0.0581,0,no,cold anomaly (cloud or fog)
+L7_192_20090104,2009-01-04,2009,Landsat 7,192,2,27.2,0.286,,0,no,reference mostly cloudy
+L7_191_20090113,2009-01-13,2009,Landsat 7,191,2,28.28,0.044,0.0002,1,yes,
+L7_190_20090207,2009-02-07,2009,Landsat 7,190,2,37.41,0.007,0.1774,0,no,reference mostly cloudy
+L7_190_20090223,2009-02-23,2009,Landsat 7,190,2,29.74,0.001,0.0,0,no,reference mostly cloudy
+L7_190_20090311,2009-03-11,2009,Landsat 7,190,1,13.82,0.151,0.2482,0,no,cold anomaly (cloud or fog)
+L7_191_20090318,2009-03-18,2009,Landsat 7,191,2,35.25,0.009,0.1375,0,no,reference mostly cloudy
+L7_192_20091206,2009-12-06,2010,Landsat 7,192,2,31.87,0.066,,0,no,reference mostly cloudy
+L7_191_20091215,2009-12-15,2010,Landsat 7,191,2,35.4,0.005,0.1515,0,no,reference mostly cloudy
+L7_190_20091224,2009-12-24,2010,Landsat 7,190,2,31.28,0.02,0.0018,0,no,reference mostly cloudy
+L7_191_20091231,2009-12-31,2010,Landsat 7,191,2,28.16,0.285,0.1099,0,no,cold anomaly (cloud or fog)
+L7_191_20100116,2010-01-16,2010,Landsat 7,191,2,31.24,0.135,0.0076,1,yes,
+L7_190_20100125,2010-01-25,2010,Landsat 7,190,2,29.13,0.048,0.0336,0,no,reference mostly cloudy
+L7_191_20100201,2010-02-01,2010,Landsat 7,191,2,28.04,0.273,0.146,0,no,cold anomaly (cloud or fog)
+L7_190_20100210,2010-02-10,2010,Landsat 7,190,1,30.23,0.002,0.0,0,no,reference mostly cloudy
+L7_191_20100217,2010-02-17,2010,Landsat 7,191,2,36.7,0.004,0.2843,0,no,reference mostly cloudy
+L7_190_20100226,2010-02-26,2010,Landsat 7,190,2,34.54,0.018,0.0981,0,no,reference mostly cloudy
+L7_191_20101202,2010-12-02,2011,Landsat 7,191,2,34.26,0.003,0.048,0,no,reference mostly cloudy
+L7_190_20101211,2010-12-11,2011,Landsat 7,190,2,29.31,0.042,,0,no,reference mostly cloudy
+L7_192_20101225,2010-12-25,2011,Landsat 7,192,2,32.09,0.086,,0,no,reference mostly cloudy
+L7_190_20101227,2010-12-27,2011,Landsat 7,190,1,31.56,0.003,0.0,0,no,reference mostly cloudy
+L7_191_20110103,2011-01-03,2011,Landsat 7,191,2,26.19,0.343,0.0136,16,yes,
+L7_190_20110112,2011-01-12,2011,Landsat 7,190,1,27.05,0.227,0.0,0,no,no LGA at least half clear
+L7_191_20110119,2011-01-19,2011,Landsat 7,191,1,31.95,0.006,0.0001,0,no,reference mostly cloudy
+L7_191_20111205,2011-12-05,2012,Landsat 7,191,2,32.71,0.003,0.0,0,no,reference mostly cloudy
+L7_192_20111212,2011-12-12,2012,Landsat 7,192,1,29.74,0.04,,0,no,reference mostly cloudy
+L7_190_20111214,2011-12-14,2012,Landsat 7,190,2,28.79,0.697,0.0009,0,no,no LGA at least half clear
+L7_191_20111221,2011-12-21,2012,Landsat 7,191,2,24.95,0.117,0.0476,1,yes,
+L7_190_20111230,2011-12-30,2012,Landsat 7,190,2,32.28,0.019,0.0493,0,no,reference mostly cloudy
+L7_191_20120106,2012-01-06,2012,Landsat 7,191,1,24.51,0.224,0.007,0,no,no LGA at least half clear
+L7_192_20120129,2012-01-29,2012,Landsat 7,192,2,28.95,0.23,,0,no,reference mostly cloudy
+L7_191_20120207,2012-02-07,2012,Landsat 7,191,1,13.22,0.462,0.2992,0,no,cold anomaly (cloud or fog)
+L7_191_20121207,2012-12-07,2013,Landsat 7,191,1,33.34,0.0,0.0,0,no,reference mostly cloudy
+L7_190_20121216,2012-12-16,2013,Landsat 7,190,2,29.9,0.0,0.0,0,no,reference mostly cloudy
+L7_191_20121223,2012-12-23,2013,Landsat 7,191,2,30.93,0.095,0.0,0,no,no LGA at least half clear
+L7_192_20121230,2012-12-30,2013,Landsat 7,192,2,30.6,0.18,,0,no,reference mostly cloudy
+L7_190_20130101,2013-01-01,2013,Landsat 7,190,2,28.03,0.827,0.0083,0,no,no LGA at least half clear
+L7_192_20130131,2013-01-31,2013,Landsat 7,192,2,33.77,0.062,,0,no,reference mostly cloudy
+L7_192_20130216,2013-02-16,2013,Landsat 7,192,1,41.61,0.001,,0,no,reference mostly cloudy
+L7_190_20130306,2013-03-06,2013,Landsat 7,190,2,32.62,0.001,0.3169,0,no,reference mostly cloudy
+L8_191_20131202,2013-12-02,2014,Landsat 8,191,1,33.46,0.002,0.0,0,no,reference mostly cloudy
+L8_190_20131211,2013-12-11,2014,Landsat 8,190,1,30.86,0.011,0.0714,0,no,reference mostly cloudy
+L8_191_20131218,2013-12-18,2014,Landsat 8,191,2,30.24,0.948,0.0008,20,yes,
+L8_190_20131227,2013-12-27,2014,Landsat 8,190,2,25.8,0.018,0.101,0,no,reference mostly cloudy
+L8_191_20140103,2014-01-03,2014,Landsat 8,191,2,28.15,0.054,0.0563,0,no,cold anomaly (cloud or fog)
+L8_192_20140110,2014-01-10,2014,Landsat 8,192,2,33.56,0.442,,0,no,reference mostly cloudy
+L8_190_20140112,2014-01-12,2014,Landsat 8,190,1,28.73,0.055,0.0,0,no,reference mostly cloudy
+L8_191_20140119,2014-01-19,2014,Landsat 8,191,2,30.14,0.344,0.1029,0,no,cold anomaly (cloud or fog)
+L8_190_20140128,2014-01-28,2014,Landsat 8,190,2,32.06,0.035,0.0043,0,no,reference mostly cloudy
+L8_191_20140204,2014-02-04,2014,Landsat 8,191,2,32.55,0.303,0.0471,0,no,no LGA at least half clear
+L8_190_20140213,2014-02-13,2014,Landsat 8,190,2,25.87,0.0,1.0,0,no,reference mostly cloudy
+L8_191_20140220,2014-02-20,2014,Landsat 8,191,1,33.02,0.007,1.0,0,no,reference mostly cloudy
+L8_192_20140227,2014-02-27,2014,Landsat 8,192,2,30.29,0.08,,0,no,reference mostly cloudy
+L8_190_20140301,2014-03-01,2014,Landsat 8,190,1,31.93,0.01,0.1064,0,no,reference mostly cloudy
+L8_191_20140308,2014-03-08,2014,Landsat 8,191,2,41.71,0.003,0.2685,0,no,reference mostly cloudy
+L8_192_20140315,2014-03-15,2014,Landsat 8,192,2,34.62,0.619,,0,no,reference mostly cloudy
+L8_191_20141205,2014-12-05,2015,Landsat 8,191,2,39.78,0.028,0.0754,0,no,cold anomaly (cloud or fog)
+L8_190_20141214,2014-12-14,2015,Landsat 8,190,2,25.39,0.848,0.1109,0,no,cold anomaly (cloud or fog)
+L8_191_20141221,2014-12-21,2015,Landsat 8,191,1,33.39,0.024,0.1067,0,no,reference mostly cloudy
+L8_190_20141230,2014-12-30,2015,Landsat 8,190,2,29.63,0.885,0.0246,0,no,no LGA at least half clear
+L8_191_20150106,2015-01-06,2015,Landsat 8,191,2,28.29,0.128,0.0,7,yes,
+L8_192_20150113,2015-01-13,2015,Landsat 8,192,1,30.06,0.036,,0,no,reference mostly cloudy
+L8_190_20150115,2015-01-15,2015,Landsat 8,190,2,29.57,0.833,0.0419,0,no,no LGA at least half clear
+L8_191_20150122,2015-01-22,2015,Landsat 8,191,2,31.29,0.012,0.001,0,no,reference mostly cloudy
+L8_192_20150129,2015-01-29,2015,Landsat 8,192,2,31.43,0.001,,0,no,reference mostly cloudy
+L8_190_20150131,2015-01-31,2015,Landsat 8,190,2,34.2,0.037,0.0,0,no,reference mostly cloudy
+L8_191_20150207,2015-02-07,2015,Landsat 8,191,1,32.32,0.107,0.1186,0,no,cold anomaly (cloud or fog)
+L8_190_20150216,2015-02-16,2015,Landsat 8,190,1,27.74,0.0,0.0,0,no,reference mostly cloudy
+L8_191_20150311,2015-03-11,2015,Landsat 8,191,2,23.59,0.285,0.2367,0,no,cold anomaly (cloud or fog)
+L8_190_20151201,2015-12-01,2016,Landsat 8,190,2,33.74,0.006,0.0,0,no,reference mostly cloudy
+L8_191_20151208,2015-12-08,2016,Landsat 8,191,2,31.04,0.913,0.0056,20,yes,
+L8_192_20151215,2015-12-15,2016,Landsat 8,192,2,30.01,0.384,,0,no,reference mostly cloudy
+L8_190_20151217,2015-12-17,2016,Landsat 8,190,2,30.58,0.945,0.0955,0,no,cold anomaly (cloud or fog)
+L8_191_20151224,2015-12-24,2016,Landsat 8,191,2,30.55,0.743,0.0637,0,no,cold anomaly (cloud or fog)
+L8_192_20151231,2015-12-31,2016,Landsat 8,192,2,31.73,0.297,,0,no,reference mostly cloudy
+L8_190_20160102,2016-01-02,2016,Landsat 8,190,2,31.33,0.916,0.1476,0,no,cold anomaly (cloud or fog)
+L8_191_20160109,2016-01-09,2016,Landsat 8,191,2,32.98,0.038,0.0499,0,no,no LGA at least half clear
+L8_191_20160125,2016-01-25,2016,Landsat 8,191,2,31.18,0.169,0.0033,13,yes,
+L8_190_20160203,2016-02-03,2016,Landsat 8,190,2,33.98,0.006,0.0099,0,no,reference mostly cloudy
+L8_191_20160210,2016-02-10,2016,Landsat 8,191,1,33.02,0.877,0.168,0,no,cold anomaly (cloud or fog)
+L8_190_20160219,2016-02-19,2016,Landsat 8,190,2,34.32,0.052,0.1229,0,no,cold anomaly (cloud or fog)
+L8_191_20160226,2016-02-26,2016,Landsat 8,191,1,19.63,0.207,0.5081,0,no,cold anomaly (cloud or fog)
+L8_190_20160322,2016-03-22,2016,Landsat 8,190,2,29.03,0.355,0.1024,0,no,cold anomaly (cloud or fog)
+L8_191_20160329,2016-03-29,2016,Landsat 8,191,1,36.76,0.007,0.0027,0,no,reference mostly cloudy
+L8_192_20161201,2016-12-01,2017,Landsat 8,192,2,33.46,0.19,,0,no,reference mostly cloudy
+L8_191_20161210,2016-12-10,2017,Landsat 8,191,2,36.41,0.012,0.1336,0,no,reference mostly cloudy
+L8_192_20161217,2016-12-17,2017,Landsat 8,192,2,31.47,0.133,,0,no,reference mostly cloudy
+L8_190_20161219,2016-12-19,2017,Landsat 8,190,2,32.14,0.033,0.0,0,no,reference mostly cloudy
+L8_191_20161226,2016-12-26,2017,Landsat 8,191,2,31.09,0.914,0.1715,0,no,cold anomaly (cloud or fog)
+L8_192_20170102,2017-01-02,2017,Landsat 8,192,1,28.19,0.144,,0,no,reference mostly cloudy
+L8_190_20170104,2017-01-04,2017,Landsat 8,190,2,31.7,0.931,0.0615,0,no,cold anomaly (cloud or fog)
+L8_191_20170111,2017-01-11,2017,Landsat 8,191,2,33.24,0.108,0.0436,1,yes,
+L8_192_20170118,2017-01-18,2017,Landsat 8,192,2,31.64,0.392,,0,no,reference mostly cloudy
+L8_191_20170127,2017-01-27,2017,Landsat 8,191,2,36.53,0.127,0.1575,0,no,cold anomaly (cloud or fog)
+L8_190_20170205,2017-02-05,2017,Landsat 8,190,2,27.14,0.725,0.2308,0,no,cold anomaly (cloud or fog)
+L8_192_20170219,2017-02-19,2017,Landsat 8,192,1,33.74,0.031,,0,no,reference mostly cloudy
+L8_190_20170221,2017-02-21,2017,Landsat 8,190,2,34.17,0.001,0.0,0,no,reference mostly cloudy
+L8_191_20170228,2017-02-28,2017,Landsat 8,191,1,33.16,0.0,0.0,0,no,reference mostly cloudy
+L8_190_20170309,2017-03-09,2017,Landsat 8,190,1,17.51,0.437,0.2001,0,no,cold anomaly (cloud or fog)
+L8_191_20170316,2017-03-16,2017,Landsat 8,191,2,35.82,0.012,0.0977,0,no,reference mostly cloudy
+L8_192_20170323,2017-03-23,2017,Landsat 8,192,2,32.24,0.447,,0,no,reference mostly cloudy
+L8_190_20170325,2017-03-25,2017,Landsat 8,190,2,34.09,0.011,0.2254,0,no,reference mostly cloudy
+L8_192_20171204,2017-12-04,2018,Landsat 8,192,2,34.35,0.027,,0,no,reference mostly cloudy
+L8_190_20171206,2017-12-06,2018,Landsat 8,190,2,33.03,0.019,0.0,0,no,reference mostly cloudy
+L8_192_20180105,2018-01-05,2018,Landsat 8,192,1,31.8,0.01,,0,no,reference mostly cloudy
+L8_190_20180107,2018-01-07,2018,Landsat 8,190,2,28.46,0.519,0.0,0,no,no LGA at least half clear
+L8_191_20180114,2018-01-14,2018,Landsat 8,191,2,31.62,0.3,0.028,4,yes,
+L8_190_20180123,2018-01-23,2018,Landsat 8,190,1,31.35,0.195,0.0554,0,no,cold anomaly (cloud or fog)
+L8_191_20180130,2018-01-30,2018,Landsat 8,191,2,31.07,0.358,0.0929,0,no,cold anomaly (cloud or fog)
+L8_192_20180222,2018-02-22,2018,Landsat 8,192,2,34.31,0.087,,0,no,reference mostly cloudy
+L8_191_20180303,2018-03-03,2018,Landsat 8,191,2,33.72,0.054,0.1314,0,no,cold anomaly (cloud or fog)
+L8_192_20180310,2018-03-10,2018,Landsat 8,192,2,30.89,0.187,,0,no,reference mostly cloudy
+L8_190_20180312,2018-03-12,2018,Landsat 8,190,2,36.04,0.023,0.1581,0,no,reference mostly cloudy
+L8_191_20180319,2018-03-19,2018,Landsat 8,191,2,39.54,0.009,0.1622,0,no,reference mostly cloudy
+L8_190_20181209,2018-12-09,2019,Landsat 8,190,1,18.66,0.398,0.3899,0,no,cold anomaly (cloud or fog)
+L8_191_20181216,2018-12-16,2019,Landsat 8,191,2,34.9,0.133,0.0337,2,yes,
+L8_192_20181223,2018-12-23,2019,Landsat 8,192,2,31.52,0.206,,0,no,reference mostly cloudy
+L8_190_20181225,2018-12-25,2019,Landsat 8,190,2,30.2,0.81,0.0313,0,no,no LGA at least half clear
+L8_191_20190101,2019-01-01,2019,Landsat 8,191,2,33.77,0.808,0.0946,0,no,cold anomaly (cloud or fog)
+L8_192_20190108,2019-01-08,2019,Landsat 8,192,2,34.24,0.288,,0,no,reference mostly cloudy
+L8_190_20190110,2019-01-10,2019,Landsat 8,190,2,30.8,0.532,0.0317,0,no,no LGA at least half clear
+L8_191_20190117,2019-01-17,2019,Landsat 8,191,2,35.79,0.006,0.1845,0,no,reference mostly cloudy
+L8_190_20190126,2019-01-26,2019,Landsat 8,190,2,30.17,0.205,0.0737,0,no,cold anomaly (cloud or fog)
+L8_190_20190211,2019-02-11,2019,Landsat 8,190,1,33.21,0.069,,0,no,cold anomaly (cloud or fog)
+L8_192_20190313,2019-03-13,2019,Landsat 8,192,2,39.1,0.005,,0,no,reference mostly cloudy
+L8_190_20190331,2019-03-31,2019,Landsat 8,190,2,39.62,0.062,0.0816,0,no,cold anomaly (cloud or fog)
+L8_191_20191203,2019-12-03,2020,Landsat 8,191,2,33.67,0.043,0.1014,0,no,cold anomaly (cloud or fog)
+L8_192_20191210,2019-12-10,2020,Landsat 8,192,2,33.42,0.16,,0,no,reference mostly cloudy
+L8_190_20191212,2019-12-12,2020,Landsat 8,190,2,29.87,0.004,0.0,0,no,reference mostly cloudy
+L8_191_20191219,2019-12-19,2020,Landsat 8,191,2,35.96,0.035,0.1045,0,no,cold anomaly (cloud or fog)
+L8_192_20191226,2019-12-26,2020,Landsat 8,192,2,32.3,0.605,,0,no,reference mostly cloudy
+L8_190_20191228,2019-12-28,2020,Landsat 8,190,2,31.68,0.918,0.0142,0,no,no LGA at least half clear
+L8_191_20200104,2020-01-04,2020,Landsat 8,191,2,28.01,0.444,0.0259,15,yes,
+L8_190_20200113,2020-01-13,2020,Landsat 8,190,1,31.78,0.001,0.0,0,no,reference mostly cloudy
+L8_191_20200120,2020-01-20,2020,Landsat 8,191,1,31.47,0.315,0.0026,10,yes,
+L8_192_20200127,2020-01-27,2020,Landsat 8,192,2,29.03,0.427,,0,no,reference mostly cloudy
+L8_190_20200129,2020-01-29,2020,Landsat 8,190,2,30.49,0.023,0.0,0,no,reference mostly cloudy
+L8_191_20200205,2020-02-05,2020,Landsat 8,191,2,31.51,0.422,0.0059,9,yes,
+L8_192_20200212,2020-02-12,2020,Landsat 8,192,1,31.92,0.039,,0,no,reference mostly cloudy
+L8_190_20200214,2020-02-14,2020,Landsat 8,190,2,31.54,0.857,0.1262,0,no,cold anomaly (cloud or fog)
+L8_191_20200221,2020-02-21,2020,Landsat 8,191,2,35.87,0.057,0.1118,0,no,cold anomaly (cloud or fog)
+L8_191_20200308,2020-03-08,2020,Landsat 8,191,1,36.03,0.002,0.0,0,no,reference mostly cloudy
+L8_191_20201205,2020-12-05,2021,Landsat 8,191,2,36.74,0.042,0.1101,0,no,cold anomaly (cloud or fog)
+L8_192_20201212,2020-12-12,2021,Landsat 8,192,2,31.95,0.03,,0,no,reference mostly cloudy
+L8_190_20201214,2020-12-14,2021,Landsat 8,190,2,37.31,0.01,0.0736,0,no,reference mostly cloudy
+L8_191_20201221,2020-12-21,2021,Landsat 8,191,2,28.69,0.003,0.0,0,no,reference mostly cloudy
+L8_191_20210106,2021-01-06,2021,Landsat 8,191,2,32.65,0.127,0.0701,0,no,cold anomaly (cloud or fog)
+L8_192_20210113,2021-01-13,2021,Landsat 8,192,2,32.42,0.031,,0,no,reference mostly cloudy
+L8_190_20210115,2021-01-15,2021,Landsat 8,190,2,33.99,0.159,0.1921,0,no,cold anomaly (cloud or fog)
+L8_191_20210122,2021-01-22,2021,Landsat 8,191,2,32.45,0.095,0.1748,0,no,cold anomaly (cloud or fog)
+L8_190_20210131,2021-01-31,2021,Landsat 8,190,2,32.24,0.002,0.0,0,no,reference mostly cloudy
+L8_191_20210207,2021-02-07,2021,Landsat 8,191,2,34.7,0.123,0.231,0,no,cold anomaly (cloud or fog)
+L8_191_20210223,2021-02-23,2021,Landsat 8,191,1,34.05,0.014,0.0543,0,no,reference mostly cloudy
+L8_192_20210302,2021-03-02,2021,Landsat 8,192,2,30.92,0.051,,0,no,reference mostly cloudy
+L8_190_20210304,2021-03-04,2021,Landsat 8,190,2,36.45,0.016,0.362,0,no,reference mostly cloudy
+L8_190_20211201,2021-12-01,2022,Landsat 8,190,2,34.17,0.005,0.0043,0,no,reference mostly cloudy
+L8_191_20211208,2021-12-08,2022,Landsat 8,191,2,24.57,0.245,0.283,0,no,cold anomaly (cloud or fog)
+L9_190_20211209,2021-12-09,2022,Landsat 9,190,2,30.14,0.025,0.0,0,no,reference mostly cloudy
+L9_191_20211216,2021-12-16,2022,Landsat 9,191,2,27.39,0.011,0.1783,0,no,reference mostly cloudy
+L8_190_20211217,2021-12-17,2022,Landsat 8,190,2,28.94,0.129,0.0048,0,no,no LGA at least half clear
+L9_192_20211223,2021-12-23,2022,Landsat 9,192,1,35.56,0.022,,0,no,reference mostly cloudy
+L8_191_20211224,2021-12-24,2022,Landsat 8,191,2,30.56,0.187,0.0046,0,no,no LGA at least half clear
+L9_190_20211225,2021-12-25,2022,Landsat 9,190,2,32.57,0.83,0.008,0,no,no LGA at least half clear
+L9_191_20220101,2022-01-01,2022,Landsat 9,191,2,31.17,0.002,0.0406,0,no,reference mostly cloudy
+L8_190_20220102,2022-01-02,2022,Landsat 8,190,2,27.2,0.892,0.0613,0,no,cold anomaly (cloud or fog)
+L8_191_20220109,2022-01-09,2022,Landsat 8,191,2,36.02,0.476,0.1028,0,no,cold anomaly (cloud or fog)
+L9_190_20220110,2022-01-10,2022,Landsat 9,190,2,22.87,0.261,0.0648,0,no,cold anomaly (cloud or fog)
+L8_192_20220116,2022-01-16,2022,Landsat 8,192,2,28.87,0.135,,0,no,reference mostly cloudy
+L9_191_20220117,2022-01-17,2022,Landsat 9,191,2,32.64,0.058,0.0874,0,no,cold anomaly (cloud or fog)
+L9_192_20220124,2022-01-24,2022,Landsat 9,192,2,31.66,0.256,,0,no,reference mostly cloudy
+L8_191_20220125,2022-01-25,2022,Landsat 8,191,2,32.21,0.728,0.07,0,no,cold anomaly (cloud or fog)
+L9_190_20220126,2022-01-26,2022,Landsat 9,190,2,31.75,0.874,0.1483,0,no,cold anomaly (cloud or fog)
+L8_192_20220201,2022-02-01,2022,Landsat 8,192,1,36.77,0.058,,0,no,reference mostly cloudy
+L9_191_20220202,2022-02-02,2022,Landsat 9,191,2,33.26,0.643,0.1057,0,no,cold anomaly (cloud or fog)
+L8_190_20220203,2022-02-03,2022,Landsat 8,190,2,31.14,0.641,0.0669,0,no,cold anomaly (cloud or fog)
+L9_192_20220209,2022-02-09,2022,Landsat 9,192,1,29.52,0.176,,0,no,reference mostly cloudy
+L8_191_20220210,2022-02-10,2022,Landsat 8,191,1,37.37,0.134,0.0922,0,no,cold anomaly (cloud or fog)
+L9_190_20220211,2022-02-11,2022,Landsat 9,190,2,33.92,0.047,0.1102,0,no,cold anomaly (cloud or fog)
+L8_192_20220217,2022-02-17,2022,Landsat 8,192,2,33.92,0.301,,0,no,reference mostly cloudy
+L9_191_20220218,2022-02-18,2022,Landsat 9,191,1,38.68,0.015,0.5207,0,no,reference mostly cloudy
+L8_190_20220219,2022-02-19,2022,Landsat 8,190,2,24.88,0.008,0.0197,0,no,reference mostly cloudy
+L9_192_20220225,2022-02-25,2022,Landsat 9,192,2,33.0,0.004,,0,no,reference mostly cloudy
+L8_191_20220226,2022-02-26,2022,Landsat 8,191,2,35.85,0.098,0.2174,0,no,cold anomaly (cloud or fog)
+L9_190_20220227,2022-02-27,2022,Landsat 9,190,2,30.87,0.001,,0,no,reference mostly cloudy
+L8_192_20220305,2022-03-05,2022,Landsat 8,192,2,33.37,0.065,,0,no,reference mostly cloudy
+L8_190_20220307,2022-03-07,2022,Landsat 8,190,2,34.23,0.07,0.0707,0,no,cold anomaly (cloud or fog)
+L8_192_20220321,2022-03-21,2022,Landsat 8,192,2,33.98,0.035,,0,no,reference mostly cloudy
+L9_192_20220329,2022-03-29,2022,Landsat 9,192,2,32.75,0.097,,0,no,reference mostly cloudy
+L8_191_20220330,2022-03-30,2022,Landsat 8,191,2,36.28,0.009,0.2086,0,no,reference mostly cloudy
+L9_190_20220331,2022-03-31,2022,Landsat 9,190,2,34.65,0.016,0.0089,0,no,reference mostly cloudy
+L9_191_20221203,2022-12-03,2023,Landsat 9,191,2,27.57,0.218,0.3295,0,no,cold anomaly (cloud or fog)
+L8_190_20221204,2022-12-04,2023,Landsat 8,190,2,32.39,0.026,0.0008,0,no,reference mostly cloudy
+L8_191_20221211,2022-12-11,2023,Landsat 8,191,2,34.21,0.271,0.0914,0,no,cold anomaly (cloud or fog)
+L9_190_20221212,2022-12-12,2023,Landsat 9,190,2,32.02,0.036,0.2059,0,no,reference mostly cloudy
+L9_191_20221219,2022-12-19,2023,Landsat 9,191,2,34.5,0.97,0.1047,0,no,cold anomaly (cloud or fog)
+L8_190_20221220,2022-12-20,2023,Landsat 8,190,2,32.33,0.917,0.0658,0,no,cold anomaly (cloud or fog)
+L9_192_20221226,2022-12-26,2023,Landsat 9,192,2,31.14,0.52,,0,no,reference mostly cloudy
+L8_191_20221227,2022-12-27,2023,Landsat 8,191,2,32.29,0.926,0.0625,0,no,cold anomaly (cloud or fog)
+L9_190_20221228,2022-12-28,2023,Landsat 9,190,2,33.21,0.944,0.179,0,no,cold anomaly (cloud or fog)
+L8_192_20230103,2023-01-03,2023,Landsat 8,192,2,33.35,0.022,,0,no,reference mostly cloudy
+L9_191_20230104,2023-01-04,2023,Landsat 9,191,1,32.26,0.46,0.0667,0,no,cold anomaly (cloud or fog)
+L8_190_20230105,2023-01-05,2023,Landsat 8,190,2,31.22,0.353,0.0063,0,no,no LGA at least half clear
+L9_192_20230111,2023-01-11,2023,Landsat 9,192,2,34.54,0.007,,0,no,reference mostly cloudy
+L8_191_20230112,2023-01-12,2023,Landsat 8,191,2,32.2,0.717,0.0743,0,no,cold anomaly (cloud or fog)
+L9_190_20230113,2023-01-13,2023,Landsat 9,190,2,31.79,0.425,0.1384,0,no,cold anomaly (cloud or fog)
+L9_191_20230120,2023-01-20,2023,Landsat 9,191,1,33.14,0.0,,0,no,reference mostly cloudy
+L8_190_20230121,2023-01-21,2023,Landsat 8,190,1,29.34,0.02,0.0,0,no,reference mostly cloudy
+L9_192_20230127,2023-01-27,2023,Landsat 9,192,2,36.32,1.098,,0,no,reference mostly cloudy
+L9_190_20230129,2023-01-29,2023,Landsat 9,190,2,34.6,0.032,0.5543,0,no,reference mostly cloudy
+L9_191_20230205,2023-02-05,2023,Landsat 9,191,2,35.19,0.017,0.1635,0,no,reference mostly cloudy
+L8_190_20230206,2023-02-06,2023,Landsat 8,190,2,30.57,0.161,0.3083,0,no,cold anomaly (cloud or fog)
+L8_191_20230213,2023-02-13,2023,Landsat 8,191,2,33.7,0.133,0.1335,0,no,cold anomaly (cloud or fog)
+L9_190_20230214,2023-02-14,2023,Landsat 9,190,2,34.53,0.107,0.2927,0,no,cold anomaly (cloud or fog)
+L9_191_20230221,2023-02-21,2023,Landsat 9,191,2,34.02,0.087,0.1075,0,no,cold anomaly (cloud or fog)
+L8_190_20230222,2023-02-22,2023,Landsat 8,190,2,35.25,0.004,0.0,0,no,reference mostly cloudy
+L8_191_20230301,2023-03-01,2023,Landsat 8,191,2,34.33,0.373,0.0797,0,no,cold anomaly (cloud or fog)
+L9_191_20230309,2023-03-09,2023,Landsat 9,191,2,35.31,0.009,0.498,0,no,reference mostly cloudy
+L8_190_20230310,2023-03-10,2023,Landsat 8,190,2,36.63,0.136,0.2895,0,no,cold anomaly (cloud or fog)
+L9_192_20230316,2023-03-16,2023,Landsat 9,192,2,36.95,0.191,,0,no,reference mostly cloudy
+L8_191_20230317,2023-03-17,2023,Landsat 8,191,2,35.47,0.061,0.145,0,no,cold anomaly (cloud or fog)
+L8_192_20231205,2023-12-05,2024,Landsat 8,192,2,31.84,0.106,,0,no,reference mostly cloudy
+L9_191_20231206,2023-12-06,2024,Landsat 9,191,2,34.08,0.029,0.007,0,no,no LGA at least half clear
+L8_190_20231207,2023-12-07,2024,Landsat 8,190,2,31.5,0.035,0.0233,0,no,reference mostly cloudy
+L9_192_20231213,2023-12-13,2024,Landsat 9,192,2,28.27,1.141,,0,no,reference mostly cloudy
+L8_191_20231214,2023-12-14,2024,Landsat 8,191,2,32.0,0.937,0.0108,20,yes,
+L9_190_20231215,2023-12-15,2024,Landsat 9,190,2,30.7,0.92,0.0027,0,no,no LGA at least half clear
+L8_192_20231221,2023-12-21,2024,Landsat 8,192,2,29.91,1.0,,0,no,reference mostly cloudy
+L9_191_20231222,2023-12-22,2024,Landsat 9,191,2,34.71,0.484,0.0527,0,no,cold anomaly (cloud or fog)
+L8_190_20231223,2023-12-23,2024,Landsat 8,190,2,31.56,0.929,0.0291,0,no,no LGA at least half clear
+L9_192_20231229,2023-12-29,2024,Landsat 9,192,2,30.28,0.19,,0,no,reference mostly cloudy
+L8_191_20231230,2023-12-30,2024,Landsat 8,191,2,28.9,0.139,0.0046,0,no,no LGA at least half clear
+L9_190_20231231,2023-12-31,2024,Landsat 9,190,2,33.21,0.137,0.1152,0,no,cold anomaly (cloud or fog)
+L8_192_20240106,2024-01-06,2024,Landsat 8,192,2,31.84,0.023,,0,no,reference mostly cloudy
+L9_191_20240107,2024-01-07,2024,Landsat 9,191,2,32.23,0.103,0.0358,1,yes,
+L8_190_20240108,2024-01-08,2024,Landsat 8,190,2,34.44,0.012,0.0,0,no,reference mostly cloudy
+L9_192_20240114,2024-01-14,2024,Landsat 9,192,2,34.18,0.151,,0,no,reference mostly cloudy
+L8_191_20240115,2024-01-15,2024,Landsat 8,191,2,23.56,0.39,0.2511,0,no,cold anomaly (cloud or fog)
+L9_190_20240116,2024-01-16,2024,Landsat 9,190,2,30.94,0.56,0.0032,0,no,no LGA at least half clear
+L8_192_20240122,2024-01-22,2024,Landsat 8,192,2,32.03,0.251,,0,no,reference mostly cloudy
+L9_191_20240123,2024-01-23,2024,Landsat 9,191,2,33.35,0.13,0.0788,0,no,cold anomaly (cloud or fog)
+L8_190_20240124,2024-01-24,2024,Landsat 8,190,1,32.3,0.003,,0,no,reference mostly cloudy
+L8_191_20240131,2024-01-31,2024,Landsat 8,191,1,33.37,0.011,0.0,0,no,reference mostly cloudy
+L9_190_20240201,2024-02-01,2024,Landsat 9,190,2,22.12,0.679,0.335,0,no,cold anomaly (cloud or fog)
+L9_191_20240208,2024-02-08,2024,Landsat 9,191,2,32.58,0.694,0.1197,0,no,cold anomaly (cloud or fog)
+L8_190_20240209,2024-02-09,2024,Landsat 8,190,2,30.51,0.56,0.0002,0,no,no LGA at least half clear
+L9_190_20240217,2024-02-17,2024,Landsat 9,190,1,30.38,0.022,0.0068,0,no,reference mostly cloudy
+L9_191_20240224,2024-02-24,2024,Landsat 9,191,1,38.03,0.025,,0,no,cold anomaly (cloud or fog)
+L8_192_20240310,2024-03-10,2024,Landsat 8,192,2,22.94,1.0,,0,no,reference mostly cloudy
+L9_191_20240311,2024-03-11,2024,Landsat 9,191,1,38.91,0.001,0.0096,0,no,reference mostly cloudy
+L8_192_20240326,2024-03-26,2024,Landsat 8,192,2,35.55,0.439,,0,no,reference mostly cloudy
+L9_191_20240327,2024-03-27,2024,Landsat 9,191,2,36.07,0.079,0.1426,0,no,cold anomaly (cloud or fog)
+L8_190_20240328,2024-03-28,2024,Landsat 8,190,2,25.39,0.001,0.0,0,no,reference mostly cloudy
+L9_190_20241201,2024-12-01,2025,Landsat 9,190,2,33.52,0.931,0.0893,0,no,cold anomaly (cloud or fog)
+L9_191_20241208,2024-12-08,2025,Landsat 9,191,2,35.61,0.936,0.1426,0,no,cold anomaly (cloud or fog)
+L8_190_20241209,2024-12-09,2025,Landsat 8,190,1,30.74,0.214,0.0,0,no,no LGA at least half clear
+L9_192_20241215,2024-12-15,2025,Landsat 9,192,2,32.06,0.01,,0,no,reference mostly cloudy
+L8_191_20241216,2024-12-16,2025,Landsat 8,191,2,33.9,0.2,0.0137,1,yes,
+L9_190_20241217,2024-12-17,2025,Landsat 9,190,2,31.87,0.218,0.0127,0,no,no LGA at least half clear
+L8_192_20241223,2024-12-23,2025,Landsat 8,192,1,33.14,0.04,,0,no,reference mostly cloudy
+L9_191_20241224,2024-12-24,2025,Landsat 9,191,2,33.19,0.431,0.0823,0,no,cold anomaly (cloud or fog)
+L8_190_20241225,2024-12-25,2025,Landsat 8,190,2,31.45,0.79,0.0156,0,no,no LGA at least half clear
+L8_191_20250101,2025-01-01,2025,Landsat 8,191,2,32.55,0.043,0.1531,0,no,cold anomaly (cloud or fog)
+L9_190_20250102,2025-01-02,2025,Landsat 9,190,2,30.93,0.039,0.1789,0,no,reference mostly cloudy
+L8_192_20250108,2025-01-08,2025,Landsat 8,192,2,33.22,0.07,,0,no,reference mostly cloudy
+L9_191_20250109,2025-01-09,2025,Landsat 9,191,2,34.14,0.223,0.1188,0,no,cold anomaly (cloud or fog)
+L8_190_20250110,2025-01-10,2025,Landsat 8,190,2,32.87,0.862,0.1066,0,no,cold anomaly (cloud or fog)
+L8_191_20250117,2025-01-17,2025,Landsat 8,191,2,39.02,0.1,0.2207,0,no,cold anomaly (cloud or fog)
+L8_192_20250124,2025-01-24,2025,Landsat 8,192,2,38.64,0.038,,0,no,reference mostly cloudy
+L9_191_20250125,2025-01-25,2025,Landsat 9,191,2,32.41,0.019,0.0346,0,no,reference mostly cloudy
+L8_190_20250126,2025-01-26,2025,Landsat 8,190,2,36.0,0.061,0.0,0,no,no LGA at least half clear
+L8_191_20250202,2025-02-02,2025,Landsat 8,191,1,33.33,0.046,0.0737,0,no,cold anomaly (cloud or fog)
+L9_190_20250203,2025-02-03,2025,Landsat 9,190,2,32.3,0.054,0.0257,0,no,no LGA at least half clear
+L9_191_20250210,2025-02-10,2025,Landsat 9,191,2,36.13,0.0,0.0,0,no,reference mostly cloudy
+L8_190_20250211,2025-02-11,2025,Landsat 8,190,2,33.93,0.051,0.2874,0,no,cold anomaly (cloud or fog)
+L9_190_20250219,2025-02-19,2025,Landsat 9,190,1,32.61,0.002,0.8019,0,no,reference mostly cloudy
+L8_192_20250225,2025-02-25,2025,Landsat 8,192,2,29.87,0.293,,0,no,reference mostly cloudy
+L9_190_20250307,2025-03-07,2025,Landsat 9,190,1,3.95,0.002,,0,no,reference mostly cloudy
+L9_191_20250314,2025-03-14,2025,Landsat 9,191,2,37.71,0.058,0.1787,0,no,cold anomaly (cloud or fog)
+L8_192_20250329,2025-03-29,2025,Landsat 8,192,2,25.38,0.189,,0,no,reference mostly cloudy
+L9_192_20251202,2025-12-02,2026,Landsat 9,192,2,34.04,0.156,,0,no,reference mostly cloudy
+L8_192_20251210,2025-12-10,2026,Landsat 8,192,2,32.13,1.188,,0,no,reference mostly cloudy
+L9_192_20251218,2025-12-18,2026,Landsat 9,192,2,32.23,0.608,,0,no,reference mostly cloudy
+L8_191_20251219,2025-12-19,2026,Landsat 8,191,2,33.72,0.045,0.0465,1,yes,
+L8_191_20260104,2026-01-04,2026,Landsat 8,191,2,33.42,0.011,0.2686,0,no,reference mostly cloudy
+L9_190_20260105,2026-01-05,2026,Landsat 9,190,2,33.22,0.017,0.0518,0,no,reference mostly cloudy
+L8_192_20260111,2026-01-11,2026,Landsat 8,192,2,27.01,0.004,,0,no,reference mostly cloudy
+L9_191_20260112,2026-01-12,2026,Landsat 9,191,2,31.93,0.102,0.0047,1,yes,
+L8_191_20260120,2026-01-20,2026,Landsat 8,191,1,27.68,0.025,1.0,0,no,cold anomaly (cloud or fog)
+L9_190_20260121,2026-01-21,2026,Landsat 9,190,2,27.39,0.0,0.0,0,no,reference mostly cloudy
+L9_191_20260128,2026-01-28,2026,Landsat 9,191,2,34.17,0.191,0.3424,0,no,cold anomaly (cloud or fog)
+L8_190_20260129,2026-01-29,2026,Landsat 8,190,2,29.4,0.516,0.0384,0,no,no LGA at least half clear
+L9_192_20260204,2026-02-04,2026,Landsat 9,192,2,33.16,0.727,,0,no,reference mostly cloudy
+L8_191_20260205,2026-02-05,2026,Landsat 8,191,2,34.47,0.061,0.0548,0,no,cold anomaly (cloud or fog)
+L9_190_20260206,2026-02-06,2026,Landsat 9,190,2,34.1,0.062,0.201,0,no,cold anomaly (cloud or fog)
+L9_191_20260213,2026-02-13,2026,Landsat 9,191,2,24.69,0.406,0.1729,0,no,cold anomaly (cloud or fog)
+L8_191_20260221,2026-02-21,2026,Landsat 8,191,1,33.09,0.002,0.0,0,no,reference mostly cloudy
+L9_191_20260301,2026-03-01,2026,Landsat 9,191,2,28.28,0.001,0.0,0,no,reference mostly cloudy
+L8_190_20260302,2026-03-02,2026,Landsat 8,190,2,34.85,0.059,0.3212,0,no,cold anomaly (cloud or fog)
+L9_192_20260308,2026-03-08,2026,Landsat 9,192,2,31.04,0.027,,0,no,reference mostly cloudy
+L9_190_20260310,2026-03-10,2026,Landsat 9,190,2,32.24,0.078,0.1544,0,no,cold anomaly (cloud or fog)
+L8_190_20260318,2026-03-18,2026,Landsat 8,190,2,38.49,0.033,0.4064,0,no,reference mostly cloudy
+L8_191_20260325,2026-03-25,2026,Landsat 8,191,1,39.43,0.0,,0,no,reference mostly cloudy

@@ -1,0 +1,140 @@
+{
+ "script": "scripts/extract_change_gee.py",
+ "script_version": "1.0.0",
+ "export_utc": "2026-11-05T12:41:23Z",
+ "method": {
+  "scale_m": 90,
+  "reference_buffer_m": 20000,
+  "reference_ghsl2020_built_max_m2_per_ha": 100,
+  "max_st_uncertainty_k": 4.0,
+  "ref_min_cover": 0.0,
+  "ref_min_pixels": 3000,
+  "unit": "pass (frames of one orbit on one day, mosaicked)",
+  "max_cold_share": 0.05,
+  "cold_threshold_c": 3.0,
+  "lga_min_cover": 0.5
+ },
+ "periods": [
+  {
+   "label": "1985-2003",
+   "seasons": [
+    1985,
+    1986,
+    1987,
+    1988,
+    1989,
+    1990,
+    1991,
+    1992,
+    1993,
+    1994,
+    1995,
+    1996,
+    1997,
+    1998,
+    1999,
+    2000,
+    2001,
+    2002,
+    2003
+   ],
+   "ghsl_year": 1995,
+   "n_scenes": 6,
+   "file": "maps/suhi_1985-2003.png",
+   "pixels_observed": 362526,
+   "pixel_median_c": 0.6,
+   "share_above_3c": 0.2612,
+   "share_above_6c": 0.081
+  },
+  {
+   "label": "2004-2013",
+   "seasons": [
+    2004,
+    2005,
+    2006,
+    2007,
+    2008,
+    2009,
+    2010,
+    2011,
+    2012,
+    2013
+   ],
+   "ghsl_year": 2010,
+   "n_scenes": 7,
+   "file": "maps/suhi_2004-2013.png",
+   "pixels_observed": 335333,
+   "pixel_median_c": 1.59,
+   "share_above_3c": 0.3888,
+   "share_above_6c": 0.1976
+  },
+  {
+   "label": "2014-2026",
+   "seasons": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "ghsl_year": 2020,
+   "n_scenes": 15,
+   "file": "maps/suhi_2014-2026.png",
+   "pixels_observed": 362534,
+   "pixel_median_c": 1.58,
+   "share_above_3c": 0.4193,
+   "share_above_6c": 0.2111
+  }
+ ],
+ "map": {
+  "bounds": [
+   [
+    6.3712,
+    2.7056
+   ],
+   [
+    6.7088,
+    4.348
+   ]
+  ],
+  "pixel_deg": 0.0008,
+  "stops": [
+   [
+    -2.0,
+    "#86b6ef"
+   ],
+   [
+    0.0,
+    "#f1eee6"
+   ],
+   [
+    2.0,
+    "#f9a05a"
+   ],
+   [
+    4.0,
+    "#f2711c"
+   ],
+   [
+    6.0,
+    "#d9500b"
+   ],
+   [
+    8.0,
+    "#a93a08"
+   ],
+   [
+    10.0,
+    "#6b2406"
+   ]
+  ]
+ }
+}
