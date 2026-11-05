@@ -29,3 +29,11 @@ def test_knn_weights_neighbour_count(analyze):
     pts = np.array([[0, 0], [1, 0], [0, 1], [5, 5], [6, 5]], dtype=float)
     w = analyze.knn_weights(pts, 2)
     assert all(len(v) == 2 for v in w.neighbors.values())
+
+
+def test_change_bootstrap_median_is_reproducible():
+    from conftest import load
+    change = load("analyze_change")
+    a = change.boot_median([1, 2, 3, 4, 5], np.random.default_rng(7), b=200)
+    b = change.boot_median([1, 2, 3, 4, 5], np.random.default_rng(7), b=200)
+    assert np.array_equal(a, b) and a.min() >= 1 and a.max() <= 5
