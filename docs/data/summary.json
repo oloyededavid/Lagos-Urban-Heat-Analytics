@@ -1,0 +1,255 @@
+{
+  "provenance": {
+    "status": "GEE_EXPORT",
+    "is_verified_export": true,
+    "gee_script_version": "2.0.0",
+    "gee_export_utc": "2026-11-05T03:35:57Z",
+    "period": "2022-12-01/2024-04-01",
+    "landsat_scenes": 113,
+    "s2_scenes": 150,
+    "modis_images": 32,
+    "base_checksum": "16f2ca59bb10e386ad2bbe5a7d9a1c426add9a08ea03a4084cb5e687a4558aec"
+  },
+  "n_units": 20,
+  "lst": {
+    "mean": 37.42,
+    "min": 31.77,
+    "max": 40.14,
+    "range": 8.37,
+    "hottest": "Ajeromi/Ifelodun",
+    "coolest": "Epe"
+  },
+  "spatial_autocorrelation": {
+    "queen": {
+      "I": 0.5272,
+      "z": 4.1293,
+      "p_norm": 3.6e-05,
+      "p_perm": 0.002,
+      "n_fdr_hot": 0,
+      "n_fdr_cold": 0
+    },
+    "knn": {
+      "k_3": {
+        "I": 0.4294,
+        "z": 3.3915,
+        "p_norm": 0.000695,
+        "p_perm": 0.004,
+        "n_fdr_hot": 0,
+        "n_fdr_cold": 0
+      },
+      "k_5": {
+        "I": 0.3656,
+        "z": 4.197,
+        "p_norm": 2.7e-05,
+        "p_perm": 0.002,
+        "n_fdr_hot": 0,
+        "n_fdr_cold": 0
+      },
+      "k_8": {
+        "I": 0.2001,
+        "z": 4.1371,
+        "p_norm": 3.5e-05,
+        "p_perm": 0.002,
+        "n_fdr_hot": 0,
+        "n_fdr_cold": 0
+      }
+    }
+  },
+  "heat_exposure": {
+    "method": "minmax(LST) x minmax(log1p(pop_density))",
+    "top5": [
+      "Ajeromi/Ifelodun",
+      "Mushin",
+      "Agege",
+      "Shomolu",
+      "Surulere"
+    ],
+    "spearman_minmax_vs_rank": 0.9921,
+    "p_value": 0.0
+  },
+  "regression": {
+    "lst_on_ndvi": {
+      "n": 20,
+      "r2": 0.9443,
+      "coefficients": {
+        "intercept": {
+          "beta": 41.9518,
+          "se": 0.2939,
+          "ci95": [
+            41.3345,
+            42.5692
+          ],
+          "p_value": 0.0
+        },
+        "ndvi": {
+          "beta": -17.3976,
+          "se": 0.9963,
+          "ci95": [
+            -19.4907,
+            -15.3046
+          ],
+          "p_value": 0.0
+        }
+      }
+    },
+    "lst_on_ndbi": {
+      "n": 20,
+      "r2": 0.98,
+      "coefficients": {
+        "intercept": {
+          "beta": 36.132,
+          "se": 0.0933,
+          "ci95": [
+            35.936,
+            36.328
+          ],
+          "p_value": 0.0
+        },
+        "ndbi": {
+          "beta": 26.5578,
+          "se": 0.8935,
+          "ci95": [
+            24.6806,
+            28.435
+          ],
+          "p_value": 0.0
+        }
+      }
+    },
+    "lst_on_ndvi_ndbi": {
+      "n": 20,
+      "r2": 0.9832,
+      "coefficients": {
+        "intercept": {
+          "beta": 37.4433,
+          "se": 0.7371,
+          "ci95": [
+            35.8882,
+            38.9984
+          ],
+          "p_value": 0.0
+        },
+        "ndvi": {
+          "beta": -3.9644,
+          "se": 2.2125,
+          "ci95": [
+            -8.6324,
+            0.7036
+          ],
+          "p_value": 0.090978
+        },
+        "ndbi": {
+          "beta": 20.8128,
+          "se": 3.3152,
+          "ci95": [
+            13.8183,
+            27.8073
+          ],
+          "p_value": 8e-06
+        }
+      },
+      "residual_moran": {
+        "I": 0.0946,
+        "z": 1.4777,
+        "p_norm": 0.139485,
+        "p_perm": 0.071
+      },
+      "standardised": {
+        "ndvi": -0.2214,
+        "ndbi": 0.7758
+      }
+    },
+    "collinearity": {
+      "r_ndvi_ndbi": -0.9671,
+      "vif": 15.4572
+    },
+    "leave_one_out_ndvi_beta": {
+      "min": -5.7482,
+      "max": -3.0634
+    }
+  },
+  "sensor_agreement": {
+    "n": 20,
+    "spearman_rho": 0.9729,
+    "spearman_p": 0.0,
+    "pearson_r": 0.9805,
+    "pearson_p": 0.0,
+    "mean_difference_c": 5.4006,
+    "rmse_c": 5.442
+  },
+  "key_findings": [
+    {
+      "id": "clustering",
+      "title": "Heat clusters across neighbouring LGAs",
+      "verdict": "Significant",
+      "stats": {
+        "I": 0.3656,
+        "p_perm": 0.002,
+        "k": 5
+      }
+    },
+    {
+      "id": "hotspots",
+      "title": "Individual hot and cold spots",
+      "verdict": "No link",
+      "stats": {
+        "n_hot": 0,
+        "n_cold": 0
+      }
+    },
+    {
+      "id": "vegetation",
+      "title": "Greener LGAs are cooler",
+      "verdict": "Significant",
+      "stats": {
+        "beta": -17.3976,
+        "ci95": [
+          -19.4907,
+          -15.3046
+        ],
+        "r2": 0.9443,
+        "p_value": 0.0
+      }
+    },
+    {
+      "id": "builtup",
+      "title": "Trees or concrete? The data cannot separate them",
+      "verdict": "Not robust",
+      "stats": {
+        "vif": 15.4572,
+        "beta_ndvi": -3.9644,
+        "ci95_ndvi": [
+          -8.6324,
+          0.7036
+        ],
+        "p_ndvi": 0.090978,
+        "beta_ndbi": 20.8128,
+        "p_ndbi": 8e-06
+      }
+    },
+    {
+      "id": "sensors",
+      "title": "Two satellites agree on the pattern",
+      "verdict": "Significant",
+      "stats": {
+        "rho": 0.9729,
+        "mean_difference_c": 5.4006
+      }
+    },
+    {
+      "id": "exposure",
+      "title": "Where heat meets the most people",
+      "verdict": "Ranking",
+      "stats": {
+        "top5": [
+          "Ajeromi/Ifelodun",
+          "Mushin",
+          "Agege",
+          "Shomolu",
+          "Surulere"
+        ],
+        "rank_agreement": 0.9921
+      }
+    }
+  ]
+}
