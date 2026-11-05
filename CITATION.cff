@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this analysis or its data, please cite it as below."
+title: "Lagos Urban Heat & Population Exposure Analytics"
+type: software
+license:
+  - MIT
+  - CC-BY-4.0
+authors:
+  - given-names: David
+    family-names: Oloyede
+    alias: oloyededavid
+repository-code: "https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics"
+url: "https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/"
+keywords:
+  - Lagos
+  - urban heat island
+  - land surface temperature
+  - Landsat
+  - MODIS
+  - Sentinel-2
+  - Getis-Ord Gi*
+  - heat exposure
+  - Google Earth Engine
