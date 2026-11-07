@@ -130,7 +130,7 @@ def run(data_dir: Path = DATA, out_path: Path | None = None) -> dict:
 
     # Lagos State: land-area-weighted SUHI per period. The interval resamples whole passes
     # (a cluster bootstrap), because one clear morning covers many LGAs at once.
-    def weighted(passes, members):
+    def weighted(passes, members, lab):
         vals = defaultdict(list)
         for pid in passes:
             for n, v in by_pass[lab][pid].items():
@@ -144,17 +144,17 @@ def run(data_dir: Path = DATA, out_path: Path | None = None) -> dict:
 
     state = {}
     draws_for = {}
-    both = [n for n in lgas if all(lgas[n]["periods"][p]["enough"] for p in periods)]
+    both = [n for n in lgas if all(lgas[n]["periods"][label]["enough"] for label in labels)]
     for lab in labels:
         pids = sorted(by_pass[lab])
         members = [n for n in lgas if lgas[n]["periods"][lab]["n"]]
-        point = weighted(pids, members)
-        draws = np.array([weighted(list(rng.choice(pids, len(pids))), members) for _ in range(B)]) if pids else np.array([np.nan])
-        same = np.array([weighted(list(rng.choice(pids, len(pids))), both) for _ in range(B)]) if pids else np.array([np.nan])
+        point = weighted(pids, members, lab)
+        draws = np.array([weighted(list(rng.choice(pids, len(pids))), members, lab) for _ in range(B)]) if pids else np.array([np.nan])
+        same = np.array([weighted(list(rng.choice(pids, len(pids))), both, lab) for _ in range(B)]) if pids else np.array([np.nan])
         draws_for[lab] = same
-        # "common": the same LGAs in every period (those with enough passes first and last),
-        # so a large LGA missing from one period cannot shift the average.
-        state[lab] = {"weighted_suhi": r(weighted(pids, both)),
+        # "common": the same LGAs in every period, so a large LGA missing from one period
+        # cannot shift the average.
+        state[lab] = {"weighted_suhi": r(weighted(pids, both, lab)),
                       "ci95": [r(np.nanpercentile(same, 2.5)), r(np.nanpercentile(same, 97.5))],
                       "lgas": len(both), "passes": len(pids),
                       "all_observed": {"weighted_suhi": r(point), "lgas": len(members),
