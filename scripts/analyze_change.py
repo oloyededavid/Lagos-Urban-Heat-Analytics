@@ -144,6 +144,8 @@ def run(data_dir: Path = DATA, out_path: Path | None = None) -> dict:
 
     state = {}
     draws_for = {}
+    # The common group must be eligible in every period, not just the first and last,
+    # so a change from one period to the next is never measured on a shifting footprint.
     both = [n for n in lgas if all(lgas[n]["periods"][label]["enough"] for label in labels)]
     for lab in labels:
         pids = sorted(by_pass[lab])

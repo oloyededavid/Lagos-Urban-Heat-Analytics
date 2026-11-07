@@ -719,7 +719,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>Landsat 8 &amp; 9</strong><br>Collection 2 Level-2</td>
+                            <td><strong>Landsat 8 &amp; 9</strong><br>Collection 2 Level-2<br><code class="geo-asset">LANDSAT/{LC08,LC09}/C02/T1_L2</code></td>
                             <td>USGS / NASA</td>
                             <td><code>ST_B10</code> (Surface Temperature)</td>
                             <td>30 m grid (100 m native TIRS)</td>
@@ -727,7 +727,7 @@
                             <td>QA_PIXEL cloud, cloud-shadow &amp; dilated-cloud masking; land-only dry-season median composite for Component A <var>LST</var>.</td>
                         </tr>
                         <tr>
-                            <td><strong>Sentinel-2 MSI</strong><br>Level-2A Surface Reflectance</td>
+                            <td><strong>Sentinel-2 MSI</strong><br>Level-2A Surface Reflectance<br><code class="geo-asset">COPERNICUS/S2_SR_HARMONIZED</code></td>
                             <td>ESA / Copernicus</td>
                             <td><code>B3, B4, B8, B11</code>, <code>SCL</code></td>
                             <td>10 m – 20 m</td>
@@ -735,7 +735,7 @@
                             <td>Scene Classification Layer (SCL) cloud masking; dry-season median <var>NDVI</var>, <var>NDBI</var>, and <var>MNDWI</var> water mask.</td>
                         </tr>
                         <tr>
-                            <td><strong>MODIS Terra</strong><br><code>MOD11A2</code> v061</td>
+                            <td><strong>MODIS Terra</strong><br><code>MOD11A2</code> v061<br><code class="geo-asset">MODIS/061/MOD11A2</code></td>
                             <td>NASA LP DAAC</td>
                             <td><code>LST_Day_1km</code></td>
                             <td>1 km</td>
@@ -743,7 +743,7 @@
                             <td>8-day daytime thermal composite used for cross-sensor ranking and bias evaluation against Landsat 8/9.</td>
                         </tr>
                         <tr>
-                            <td><strong>WorldPop</strong><br>Population Counts</td>
+                            <td><strong>WorldPop</strong><br>Population Counts<br><code class="geo-asset">WorldPop/GP/100m/pop</code></td>
                             <td>WorldPop</td>
                             <td>Residential Population</td>
                             <td>100 m</td>
@@ -751,7 +751,7 @@
                             <td>Summed over LGA land area (<code>MNDWI</code> at most 0) to compute population density (people per km² of land).</td>
                         </tr>
                         <tr>
-                            <td><strong>Copernicus DEM</strong><br><code>GLO-30</code></td>
+                            <td><strong>Copernicus DEM</strong><br><code>GLO-30</code><br><code class="geo-asset">COPERNICUS/DEM/GLO30_2024_1</code></td>
                             <td>ESA / Airbus</td>
                             <td>Elevation &amp; Slope</td>
                             <td>30 m</td>
@@ -759,7 +759,7 @@
                             <td>LGA-level topographic elevation (m) and slope (degrees) characterization.</td>
                         </tr>
                         <tr>
-                            <td><strong>FAO GAUL</strong><br>Level-2 Boundaries</td>
+                            <td><strong>FAO GAUL</strong><br>Level-2 Boundaries<br><code class="geo-asset">FAO/GAUL_SIMPLIFIED_500m/2015/level2</code></td>
                             <td>FAO</td>
                             <td>20 Lagos LGA Polygons</td>
                             <td>Vector administrative</td>
@@ -767,7 +767,7 @@
                             <td>Cleaned of stray line fragments during ingestion to ensure valid topological contiguity weights.</td>
                         </tr>
                         <tr>
-                            <td><strong>Landsat 4, 5, 7, 8, 9</strong><br>Collection 2 Level-2 Archive</td>
+                            <td><strong>Landsat 4, 5, 7, 8, 9</strong><br>Collection 2 Level-2 Archive<br><code class="geo-asset">LANDSAT/{LT04,LT05,LE07,LC08,LC09}/C02/T1_L2</code></td>
                             <td>USGS / NASA</td>
                             <td><code>ST_B6</code> (TM/ETM+), <code>ST_B10</code> (TIRS)</td>
                             <td>30 m grid (60–120 m native thermal)</td>
@@ -775,7 +775,7 @@
                             <td>Same-day orbit frames mosaicked into passes; screened for rural reference cloud cover, cold anomalies, and LGA clear fraction.</td>
                         </tr>
                         <tr>
-                            <td><strong>EU GHSL</strong><br>Built-Up Surface Grid</td>
+                            <td><strong>EU GHSL</strong><br>Built-Up Surface Grid<br><code class="geo-asset">JRC/GHSL/P2023A/GHS_BUILT_S</code></td>
                             <td>EC JRC</td>
                             <td>Built-up share</td>
                             <td>100 m</td>
@@ -821,12 +821,12 @@
             <span class="section-num">Section 06 · Component A Results</span>
             <h2>Contemporary Urban Heat &amp; Exposure Findings (2022/23–2023/24)</h2>
 
-            <h3>7.1 LGA Temperature Distribution</h3>
+            <h3>6.1 LGA Temperature Distribution</h3>
             <p>
                 Across the 20 LGAs of Lagos State, the unweighted mean of the 20 LGA-level mean daytime surface temperatures is <strong>37.42°C</strong> (note: this figure represents the unweighted arithmetic mean across the 20 LGA means, not an area-weighted or population-weighted statewide mean). LGA-level mean <var>LST</var> spans an 8.37°C range from a minimum of <strong>31.77°C in Epe</strong> (characterised by extensive eastern forest and agricultural cover) to a maximum of <strong>40.14°C in Ajeromi/Ifelodun</strong> within the densely built mainland core.
             </p>
 
-            <h3>7.2 Global Spatial Autocorrelation vs. Local Getis-Ord <var>G</var><sub><var>i</var></sub><sup>*</sup> Clustering</h3>
+            <h3>6.2 Global Spatial Autocorrelation vs. Local Getis-Ord <var>G</var><sub><var>i</var></sub><sup>*</sup> Clustering</h3>
             <p>
                 Global Moran's <var>I</var> permutation testing (999 permutations) confirms statistically significant positive global spatial autocorrelation across all four spatial weight specifications. However, when testing individual LGAs using two-sided local Getis-Ord <var>G</var><sub><var>i</var></sub><sup>*</sup> (<var>k</var> = 5 nearest neighbours) with Benjamini–Hochberg False Discovery Rate (FDR) control at &alpha; = 0.05 across the 20 tests, <strong>no individual LGA local hot or cold spot remains statistically significant after FDR correction</strong>. These two findings are statistically consistent: with <var>n</var> = 20 spatial units, the global thermal gradient from the hot mainland core to the cooler eastern/western peripheries is strong enough to establish overall clustering, whereas individual local <var>z</var>-scores do not clear the multiple-testing threshold.
             </p>
@@ -853,8 +853,8 @@
                         <tr>
                             <td><strong><var>k</var>-Nearest Neighbours (<var>k</var> = 3)</strong></td>
                             <td class="num">0.4294</td>
-                            <td class="num">—</td>
-                            <td class="num">0.002</td>
+                            <td class="num">3.3915</td>
+                            <td class="num">0.004</td>
                             <td>0 hot / 0 cold after Benjamini–Hochberg FDR</td>
                         </tr>
                         <tr>
@@ -867,7 +867,7 @@
                         <tr>
                             <td><strong><var>k</var>-Nearest Neighbours (<var>k</var> = 8)</strong></td>
                             <td class="num">0.2001</td>
-                            <td class="num">—</td>
+                            <td class="num">4.1371</td>
                             <td class="num">0.002</td>
                             <td>0 hot / 0 cold after Benjamini–Hochberg FDR</td>
                         </tr>
@@ -875,7 +875,7 @@
                 </table>
             </div>
 
-            <h3>7.3 Population-Weighted Heat Exposure Screening Rankings</h3>
+            <h3>6.3 Population-Weighted Heat Exposure Screening Rankings</h3>
             <p>
                 Combining min-max scaled <var>LST</var> with min-max scaled log-transformed population density identifies five contiguous mainland LGAs at the top of the relative heat exposure screening distribution: <strong>1. Ajeromi/Ifelodun</strong>, <strong>2. Mushin</strong>, <strong>3. Agege</strong>, <strong>4. Shomolu</strong>, and <strong>5. Surulere</strong>. A rank-based formulation of the exposure index yields a Spearman rank correlation of <strong>&rho; = 0.9921</strong> against the min-max index, demonstrating strong internal ranking consistency across scaling choices (while remaining a relative spatial screening construct rather than a direct health measurement).
             </p>
@@ -889,7 +889,7 @@
                 </figcaption>
             </figure>
 
-            <h3>7.4 Biophysical Regression Models &amp; Multicollinearity Audit</h3>
+            <h3>6.4 Biophysical Regression Models &amp; Multicollinearity Audit</h3>
             <p>
                 Ordinary Least Squares (OLS) regression across the 20 LGAs shows strong bivariate associations between daytime <var>LST</var> and vegetation (<var>NDVI</var>-only model: &beta; = &minus;17.3976°C per unit <var>NDVI</var>, or &minus;1.74°C per +0.1 <var>NDVI</var>; <var>R</var><sup>2</sup> = 0.9443) and between <var>LST</var> and built-up density (<var>NDBI</var>-only model: &beta; = +26.5578°C per unit <var>NDBI</var>, or +2.66°C per +0.1 <var>NDBI</var>; <var>R</var><sup>2</sup> = 0.9800).
             </p>
@@ -949,7 +949,7 @@
                 </table>
             </div>
 
-            <h3>7.5 Thermal Cross-Sensor Comparison (Landsat 8/9 vs. MODIS Terra)</h3>
+            <h3>6.5 Thermal Cross-Sensor Comparison (Landsat 8/9 vs. MODIS Terra)</h3>
             <p>
                 Comparing LGA-level daytime <var>LST</var> from Landsat 8/9 (30 m grid / 100 m native thermal) against MODIS Terra <code>MOD11A2</code> (1 km) yields strong spatial rank and linear agreement across the 20 LGAs (Spearman <strong>&rho; = 0.9729</strong>, Pearson <strong><var>r</var> = 0.9805</strong>). However, defining the difference as <var>Landsat LST &minus; MODIS LST</var> reveals a systematic positive mean difference of <strong>+5.4006°C</strong> (<strong>RMSE = 5.442°C</strong>). MODIS Terra reads approximately 5.4°C cooler on average than Landsat 8/9 across Lagos LGAs due to coarse 1 km pixel mixing across water/vegetation margins and differences in retrieval emissivity and viewing geometry. High spatial correlation therefore confirms consistency in relative LGA ordering, not absolute temperature interchangeability.
             </p>
@@ -959,7 +959,7 @@
             <span class="section-num">Section 07 · Component B Results</span>
             <h2>Historical Surface Urban Heat-Island Findings (1985–2026)</h2>
 
-            <h3>8.1 Observation Screening Funnel &amp; Uneven Temporal Support</h3>
+            <h3>7.1 Observation Screening Funnel &amp; Uneven Temporal Support</h3>
             <p>
                 Persistent cloud cover, coastal fog, and the 1992–1999 West African downlink gap in the historical Landsat archive severely restrict clear-sky thermal observations over coastal Nigeria. Out of <strong>374 dry-season satellite passes considered</strong> across Landsat 4, 5, 7, 8, and 9 between 1985 and 2026, rigorous quality screening accepted <strong>28 passes</strong>:
             </p>
@@ -973,7 +973,339 @@
                 <strong>Acquisition Date Precision for the 2025/26 Dry Season:</strong> Historical period labels correspond to December–March dry-season groups rather than single calendar years. Specifically, the dry season labelled <code>2026</code> contains two accepted LGA-level records—<strong>Eti-Osa</strong> and <strong>Lagos Island</strong>—derived from satellite passes acquired on <strong>19 December 2025</strong> and <strong>12 January 2026</strong>. Not all 20 LGAs were observed in 2026.
             </div>
 
-            <h3>8.2 Period-Level SUHI Intensification Across the 17 Common LGAs</h3>
+            <h3>Table 2. Accepted acquisitions by dry season</h3>
+            <p>
+                Season labels follow the December&ndash;March grouping used throughout this study; a label is not a calendar year. The 1985 season, for example, was acquired on 18 December 1984, and the 2026 season on 19 December 2025 and 12 January 2026. Read individual acquisitions from this table, not from the label.
+            </p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Season label</th><th>Actual acquisition date(s)</th><th>Sensor</th><th class="num">Accepted passes</th><th class="num">LGAs observed</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1985</td>
+                            <td>18 Dec 1984</td>
+                            <td>Landsat 5</td>
+                            <td class="num">1</td>
+                            <td class="num">19</td>
+                        </tr>
+                        <tr>
+                            <td>1991</td>
+                            <td>27 Dec 1990</td>
+                            <td>Landsat 4</td>
+                            <td class="num">1</td>
+                            <td class="num">4</td>
+                        </tr>
+                        <tr>
+                            <td>2000</td>
+                            <td>6 Feb 2000</td>
+                            <td>Landsat 7</td>
+                            <td class="num">1</td>
+                            <td class="num">4</td>
+                        </tr>
+                        <tr>
+                            <td>2001</td>
+                            <td>23 Jan 2001</td>
+                            <td>Landsat 7</td>
+                            <td class="num">1</td>
+                            <td class="num">14</td>
+                        </tr>
+                        <tr>
+                            <td>2002</td>
+                            <td>9 Dec 2001</td>
+                            <td>Landsat 7</td>
+                            <td class="num">1</td>
+                            <td class="num">18</td>
+                        </tr>
+                        <tr>
+                            <td>2003</td>
+                            <td>29 Jan 2003</td>
+                            <td>Landsat 7</td>
+                            <td class="num">1</td>
+                            <td class="num">10</td>
+                        </tr>
+                        <tr>
+                            <td>2005</td>
+                            <td>2 Jan 2005</td>
+                            <td>Landsat 7</td>
+                            <td class="num">1</td>
+                            <td class="num">6</td>
+                        </tr>
+                        <tr>
+                            <td>2007</td>
+                            <td>7 Dec 2006</td>
+                            <td>Landsat 7</td>
+                            <td class="num">1</td>
+                            <td class="num">17</td>
+                        </tr>
+                        <tr>
+                            <td>2008</td>
+                            <td>11 Jan 2008</td>
+                            <td>Landsat 7</td>
+                            <td class="num">1</td>
+                            <td class="num">19</td>
+                        </tr>
+                        <tr>
+                            <td>2009</td>
+                            <td>13 Jan 2009</td>
+                            <td>Landsat 7</td>
+                            <td class="num">1</td>
+                            <td class="num">1</td>
+                        </tr>
+                        <tr>
+                            <td>2010</td>
+                            <td>16 Jan 2010</td>
+                            <td>Landsat 7</td>
+                            <td class="num">1</td>
+                            <td class="num">1</td>
+                        </tr>
+                        <tr>
+                            <td>2011</td>
+                            <td>3 Jan 2011</td>
+                            <td>Landsat 7</td>
+                            <td class="num">1</td>
+                            <td class="num">16</td>
+                        </tr>
+                        <tr>
+                            <td>2012</td>
+                            <td>21 Dec 2011</td>
+                            <td>Landsat 7</td>
+                            <td class="num">1</td>
+                            <td class="num">1</td>
+                        </tr>
+                        <tr>
+                            <td>2014</td>
+                            <td>18 Dec 2013</td>
+                            <td>Landsat 8</td>
+                            <td class="num">1</td>
+                            <td class="num">20</td>
+                        </tr>
+                        <tr>
+                            <td>2015</td>
+                            <td>6 Jan 2015</td>
+                            <td>Landsat 8</td>
+                            <td class="num">1</td>
+                            <td class="num">7</td>
+                        </tr>
+                        <tr>
+                            <td>2016</td>
+                            <td>8 Dec 2015 and 25 Jan 2016</td>
+                            <td>Landsat 8</td>
+                            <td class="num">2</td>
+                            <td class="num">20</td>
+                        </tr>
+                        <tr>
+                            <td>2017</td>
+                            <td>11 Jan 2017</td>
+                            <td>Landsat 8</td>
+                            <td class="num">1</td>
+                            <td class="num">1</td>
+                        </tr>
+                        <tr>
+                            <td>2018</td>
+                            <td>14 Jan 2018</td>
+                            <td>Landsat 8</td>
+                            <td class="num">1</td>
+                            <td class="num">4</td>
+                        </tr>
+                        <tr>
+                            <td>2019</td>
+                            <td>16 Dec 2018</td>
+                            <td>Landsat 8</td>
+                            <td class="num">1</td>
+                            <td class="num">2</td>
+                        </tr>
+                        <tr>
+                            <td>2020</td>
+                            <td>4 Jan 2020 and 20 Jan 2020 and 5 Feb 2020</td>
+                            <td>Landsat 8</td>
+                            <td class="num">3</td>
+                            <td class="num">17</td>
+                        </tr>
+                        <tr>
+                            <td>2024</td>
+                            <td>14 Dec 2023 and 7 Jan 2024</td>
+                            <td>Landsat 8, Landsat 9</td>
+                            <td class="num">2</td>
+                            <td class="num">20</td>
+                        </tr>
+                        <tr>
+                            <td>2025</td>
+                            <td>16 Dec 2024</td>
+                            <td>Landsat 8</td>
+                            <td class="num">1</td>
+                            <td class="num">1</td>
+                        </tr>
+                        <tr>
+                            <td>2026</td>
+                            <td>19 Dec 2025 and 12 Jan 2026</td>
+                            <td>Landsat 8, Landsat 9</td>
+                            <td class="num">2</td>
+                            <td class="num">2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Table 3. Observation coverage per LGA and period</h3>
+            <p>
+                Each cell is the number of accepted passes in which that LGA had at least half of its land clear. Darker cells rest on more mornings. &dagger; marks an LGA with fewer than three accepted passes, which is shown but given no interval or verdict.
+            </p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>LGA</th><th class="num">1985-2003</th><th class="num">2004-2013</th><th class="num">2014-2026</th><th>Trend test</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Agege</strong></td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Agege, 1985-2003: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Agege, 2004-2013: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.40);" title="Agege, 2014-2026: 8 accepted passes">8</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ajeromi/Ifelodun</strong></td>
+                            <td style="background: rgba(180,83,9,0.20);" title="Ajeromi/Ifelodun, 1985-2003: 4 accepted passes">4</td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Ajeromi/Ifelodun, 2004-2013: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.40);" title="Ajeromi/Ifelodun, 2014-2026: 8 accepted passes">8</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Alimosho</strong></td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Alimosho, 1985-2003: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Alimosho, 2004-2013: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.35);" title="Alimosho, 2014-2026: 7 accepted passes">7</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Amuwo Odofin</strong></td>
+                            <td style="background: rgba(180,83,9,0.20);" title="Amuwo Odofin, 1985-2003: 4 accepted passes">4</td>
+                            <td style="background: rgba(180,83,9,0.20);" title="Amuwo Odofin, 2004-2013: 4 accepted passes">4</td>
+                            <td style="background: rgba(180,83,9,0.25);" title="Amuwo Odofin, 2014-2026: 5 accepted passes">5</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Apapa</strong></td>
+                            <td style="background: rgba(180,83,9,0.20);" title="Apapa, 1985-2003: 4 accepted passes">4</td>
+                            <td style="background: rgba(180,83,9,0.20);" title="Apapa, 2004-2013: 4 accepted passes">4</td>
+                            <td style="background: rgba(180,83,9,0.20);" title="Apapa, 2014-2026: 4 accepted passes">4</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Badagry</strong></td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Badagry, 1985-2003: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Badagry, 2004-2013: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.25);" title="Badagry, 2014-2026: 5 accepted passes">5</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Epe</strong></td>
+                            <td style="background: rgba(180,83,9,0.05);" title="Epe, 1985-2003: 1 accepted passes">1&dagger;</td>
+                            <td style="background: rgba(180,83,9,0.03); color: var(--text-muted);">0</td>
+                            <td style="background: rgba(180,83,9,0.20);" title="Epe, 2014-2026: 4 accepted passes">4</td>
+                            <td>Not testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Eti-Osa</strong></td>
+                            <td style="background: rgba(180,83,9,0.20);" title="Eti-Osa, 1985-2003: 4 accepted passes">4</td>
+                            <td style="background: rgba(180,83,9,0.30);" title="Eti-Osa, 2004-2013: 6 accepted passes">6</td>
+                            <td style="background: rgba(180,83,9,0.40);" title="Eti-Osa, 2014-2026: 8 accepted passes">8</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ibeju Lekki</strong></td>
+                            <td style="background: rgba(180,83,9,0.10);" title="Ibeju Lekki, 1985-2003: 2 accepted passes">2&dagger;</td>
+                            <td style="background: rgba(180,83,9,0.05);" title="Ibeju Lekki, 2004-2013: 1 accepted passes">1&dagger;</td>
+                            <td style="background: rgba(180,83,9,0.20);" title="Ibeju Lekki, 2014-2026: 4 accepted passes">4</td>
+                            <td>Not testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ifako/Ijaye</strong></td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Ifako/Ijaye, 1985-2003: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Ifako/Ijaye, 2004-2013: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.40);" title="Ifako/Ijaye, 2014-2026: 8 accepted passes">8</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ikeja</strong></td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Ikeja, 1985-2003: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Ikeja, 2004-2013: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.35);" title="Ikeja, 2014-2026: 7 accepted passes">7</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ikorodu</strong></td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Ikorodu, 1985-2003: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Ikorodu, 2004-2013: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.30);" title="Ikorodu, 2014-2026: 6 accepted passes">6</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kosofe</strong></td>
+                            <td style="background: rgba(180,83,9,0.10);" title="Kosofe, 1985-2003: 2 accepted passes">2&dagger;</td>
+                            <td style="background: rgba(180,83,9,0.05);" title="Kosofe, 2004-2013: 1 accepted passes">1&dagger;</td>
+                            <td style="background: rgba(180,83,9,0.30);" title="Kosofe, 2014-2026: 6 accepted passes">6</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lagos Island</strong></td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Lagos Island, 1985-2003: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Lagos Island, 2004-2013: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.25);" title="Lagos Island, 2014-2026: 5 accepted passes">5</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lagos Mainland</strong></td>
+                            <td style="background: rgba(180,83,9,0.20);" title="Lagos Mainland, 1985-2003: 4 accepted passes">4</td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Lagos Mainland, 2004-2013: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.30);" title="Lagos Mainland, 2014-2026: 6 accepted passes">6</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mushin</strong></td>
+                            <td style="background: rgba(180,83,9,0.25);" title="Mushin, 1985-2003: 5 accepted passes">5</td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Mushin, 2004-2013: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.40);" title="Mushin, 2014-2026: 8 accepted passes">8</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ojo</strong></td>
+                            <td style="background: rgba(180,83,9,0.20);" title="Ojo, 1985-2003: 4 accepted passes">4</td>
+                            <td style="background: rgba(180,83,9,0.20);" title="Ojo, 2004-2013: 4 accepted passes">4</td>
+                            <td style="background: rgba(180,83,9,0.20);" title="Ojo, 2014-2026: 4 accepted passes">4</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Oshodi/Isolo</strong></td>
+                            <td style="background: rgba(180,83,9,0.25);" title="Oshodi/Isolo, 1985-2003: 5 accepted passes">5</td>
+                            <td style="background: rgba(180,83,9,0.20);" title="Oshodi/Isolo, 2004-2013: 4 accepted passes">4</td>
+                            <td style="background: rgba(180,83,9,0.35);" title="Oshodi/Isolo, 2014-2026: 7 accepted passes">7</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Shomolu</strong></td>
+                            <td style="background: rgba(180,83,9,0.20);" title="Shomolu, 1985-2003: 4 accepted passes">4</td>
+                            <td style="background: rgba(180,83,9,0.20);" title="Shomolu, 2004-2013: 4 accepted passes">4</td>
+                            <td style="background: rgba(180,83,9,0.35);" title="Shomolu, 2014-2026: 7 accepted passes">7</td>
+                            <td>Testable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Surulere</strong></td>
+                            <td style="background: rgba(180,83,9,0.25);" title="Surulere, 1985-2003: 5 accepted passes">5</td>
+                            <td style="background: rgba(180,83,9,0.15);" title="Surulere, 2004-2013: 3 accepted passes">3</td>
+                            <td style="background: rgba(180,83,9,0.40);" title="Surulere, 2014-2026: 8 accepted passes">8</td>
+                            <td>Testable</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.75rem;">
+                17 of 20 LGAs meet the threshold in all three periods; the state-wide comparison and the built-up association use those 17. Two LGAs (Epe and Ibeju Lekki) have too few observed dry seasons for a trend test.
+            </p>
+
+            <h3>7.2 Period-Level SUHI Intensification Across the 17 Common LGAs</h3>
             <p>
                 To compare periods on a consistent spatial footprint, period-level area-weighted <var>SUHI</var> medians and bootstrap 95% confidence intervals are computed across the <strong>17 common LGAs</strong> that meet the minimum clear-land eligibility threshold in every historical period (<code>1985–2003</code>, <code>2004–2013</code>, and <code>2014–2026</code>). Across these 17 LGAs, the area-weighted surface urban heat island increased from <strong>+2.13°C</strong> in 1985–2003 to <strong>+3.66°C</strong> in 2004–2013 and <strong>+3.87°C</strong> in 2014–2026—representing a first-to-last period increase of <strong>+1.74°C (95% CI: +0.62 to +2.53°C)</strong>. Across Lagos State, the share of land experiencing surface temperatures more than 3°C above the rural reference rose from <strong>26.12%</strong> (1985–2003) to <strong>38.88%</strong> (2004–2013) and <strong>41.93%</strong> (2014–2026).
             </p>
@@ -1059,7 +1391,7 @@
                 </figcaption>
             </figure>
 
-            <h3>8.3 Dry-Season Trend Eligibility &amp; Built-Up Expansion Association</h3>
+            <h3>7.3 Dry-Season Trend Eligibility &amp; Built-Up Expansion Association</h3>
             <p>
                 Non-parametric Theil–Sen slope estimation and Mann–Kendall trend testing are restricted strictly to LGAs with <strong>at least 8 observed dry seasons</strong>. In the published archive, <strong>18 LGAs meet this eligibility threshold</strong> and are testable, while <strong>2 LGAs have insufficient dry-season observations and are reported as not testable</strong>. Benjamini–Hochberg FDR correction is applied across the 18 testable LGAs.
             </p>
@@ -1078,6 +1410,81 @@
                 <li><strong>Core Consolidation vs. Peripheral Expansion:</strong> High contemporary surface temperatures and top-ranked heat exposure screening scores cluster tightly in older, high-density mainland LGAs (Ajeromi/Ifelodun, Mushin, Agege, Shomolu, Surulere) where impervious cover is nearly saturated and remaining vegetative canopy is minimal. Meanwhile, the four-decade historical record shows the spatial footprint of land more than 3°C warmer than the countryside expanding outward from 26.12% in 1985–2003 to 41.93% in 2014–2026 as peri-urban corridors urbanised.</li>
                 <li><strong>Why Statistical Discipline Matters at the LGA Scale:</strong> Aggregating pixel-level measurements into 20 administrative polygons introduces strong inverse coupling between <var>NDVI</var> and <var>NDBI</var> (<var>r</var> = &minus;0.9671) and limits statistical power for local hotspot testing after multiple-testing control. Reporting both the significant global Moran's <var>I</var> (<var>p</var> = 0.002) and the null FDR-adjusted local <var>G</var><sub><var>i</var></sub><sup>*</sup> outcome—as well as reporting both OLS (<var>p</var> = 0.0088) and Spearman (&rho; = 0.355, <var>p</var> = 0.162) for built-up change—prevents over-interpreting administrative aggregates.</li>
             </ol>
+
+            <h3>Evidence summary: what each finding establishes</h3>
+            <p>
+                Each row names the test behind the finding and what that test can support. &ldquo;Significant&rdquo; refers to that test at &alpha; = 0.05, not to causation, and where a second, more robust test disagrees both results are shown.
+            </p>
+            <div class="table-wrap">
+                <table>
+                    <caption style="caption-side: top; text-align: left; padding: 10px 12px; color: var(--text-muted); font-size: 0.875rem;">Component A and Component B measure different quantities over different periods and are not comparable with each other.</caption>
+                    <thead>
+                        <tr><th>Comp.</th><th>Finding</th><th>Result (as published)</th><th>Verdict</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>A</td>
+                            <td><strong>Heat clusters across neighbouring LGAs</strong></td>
+                            <td>Moran&rsquo;s <var>I</var> = 0.3656 (5 nearest neighbours), permutation <var>p</var> = 0.002</td>
+                            <td>Significant</td>
+                        </tr>
+                        <tr>
+                            <td>A</td>
+                            <td><strong>Individual hot and cold spots</strong></td>
+                            <td>0 hot and 0 cold LGAs significant after FDR correction across 20 tests</td>
+                            <td>No evidence</td>
+                        </tr>
+                        <tr>
+                            <td>A</td>
+                            <td><strong>Greener LGAs are cooler</strong></td>
+                            <td>&beta; = &minus;17.3976 &deg;C per unit <var>NDVI</var> (&minus;1.74 &deg;C per +0.1), <var>R</var><sup>2</sup> = 0.9443</td>
+                            <td>Significant</td>
+                        </tr>
+                        <tr>
+                            <td>A</td>
+                            <td><strong>Trees or concrete? The data cannot separate them</strong></td>
+                            <td>&beta; <var>NDVI</var> = &minus;3.9644 &deg;C (95% CI &minus;8.6324 to +0.7036), <var>p</var> = 0.090978; VIF = 15.4572</td>
+                            <td>Not separable</td>
+                        </tr>
+                        <tr>
+                            <td>A</td>
+                            <td><strong>Two satellites agree on the pattern</strong></td>
+                            <td>Spearman &rho; = 0.9729, Pearson <var>r</var> = 0.9805; mean Landsat &minus; MODIS = +5.4006 &deg;C, RMSE = 5.442 &deg;C</td>
+                            <td>Significant ranking, not absolute agreement</td>
+                        </tr>
+                        <tr>
+                            <td>A</td>
+                            <td><strong>Where heat meets the most people</strong></td>
+                            <td>Top five: Ajeromi/Ifelodun, Mushin, Agege, Shomolu, Surulere; &rho; = 0.9921 between the min&ndash;max and rank forms</td>
+                            <td>Descriptive ranking</td>
+                        </tr>
+                        <tr>
+                            <td>B</td>
+                            <td><strong>Lagos's heat island has grown</strong></td>
+                            <td>+2.13 &rarr; +3.87 &deg;C; &Delta; = +1.74 &deg;C (95% CI +0.62 to +2.53); 17 common LGAs</td>
+                            <td>Significant</td>
+                        </tr>
+                        <tr>
+                            <td>B</td>
+                            <td><strong>Where the heat island grew</strong></td>
+                            <td>4 of the 17 LGAs with a computable first&ndash;last change warmed; 1 of the 18 trend-testable LGAs has an FDR-significant upward slope</td>
+                            <td>Significant</td>
+                        </tr>
+                        <tr>
+                            <td>B</td>
+                            <td><strong>More of Lagos now runs hot</strong></td>
+                            <td>26.12% &rarr; 41.93% of Lagos land more than 3 &deg;C above the rural reference</td>
+                            <td>Descriptive ranking</td>
+                        </tr>
+                        <tr>
+                            <td>B</td>
+                            <td><strong>LGAs that urbanised most warmed most</strong></td>
+                            <td>+1.232 &deg;C per 10 pp built-up change (95% CI +0.359 to +2.106), <var>p</var> = 0.008831, <var>R</var><sup>2</sup> = 0.376; rank test &rho; = 0.355, <var>p</var> = 0.162</td>
+                            <td>Significant OLS; rank test not significant</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
 
         <section id="limitations" class="pub-section">
@@ -1329,9 +1736,17 @@
                     const mapEl = document.getElementById('study-area-map');
                     if (mapEl && window.L) {
                         const map = L.map(mapEl, { scrollWheelZoom: false }).setView([6.52, 3.55], 10);
-                        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                            attribution: '&copy; OpenStreetMap &copy; CARTO'
-                        }).addTo(map);
+                        L.layerGroup([
+                            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+                                maxNativeZoom: 16,
+                                maxZoom: 19,
+                                attribution: 'Basemap &copy; Esri'
+                            }),
+                            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+                                maxNativeZoom: 16,
+                                maxZoom: 19
+                            })
+                        ]).addTo(map);
 
                         const layer = L.geoJSON(geojson, {
                             style: function (feature) {

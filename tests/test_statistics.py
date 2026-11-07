@@ -37,3 +37,19 @@ def test_change_bootstrap_median_is_reproducible():
     a = change.boot_median([1, 2, 3, 4, 5], np.random.default_rng(7), b=200)
     b = change.boot_median([1, 2, 3, 4, 5], np.random.default_rng(7), b=200)
     assert np.array_equal(a, b) and a.min() >= 1 and a.max() <= 5
+
+
+def test_common_group_requires_eligibility_in_every_period(tmp_path):
+    """The comparable group must be clear in all three periods, not just first and last."""
+    from pathlib import Path
+    from conftest import load
+    change = load("analyze_change")
+    data = Path(__file__).resolve().parents[1] / "docs" / "data"
+    summary = change.run(data, tmp_path / "change.json")
+    labels = [p["label"] for p in summary["periods"]]
+    eligible = [{n for n, l in summary["lgas"].items() if l["periods"][lab]["enough"]} for lab in labels]
+    common = set.intersection(*eligible)
+    assert len(common) == 17
+    for lab in labels:
+        assert summary["state"][lab]["lgas"] == len(common)
+    assert summary["state_change"]["lgas"] == len(common)
