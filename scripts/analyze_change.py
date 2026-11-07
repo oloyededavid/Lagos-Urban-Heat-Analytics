@@ -142,7 +142,10 @@ def run(data_dir: Path = DATA, out_path: Path | None = None) -> dict:
         w = np.array([land[n] for n in have])
         return float(np.sum([np.median(vals[n]) * wi for n, wi in zip(have, w)]) / w.sum())
 
-    both = [n for n in lgas if lgas[n]["periods"][first]["enough"] and lgas[n]["periods"][last]["enough"]]
+both = [
+    n for n in lgas
+    if all(lgas[n]["periods"][p]["enough"] for p in periods)
+]
     state, draws_for = {}, {}
     for lab in labels:
         pids = sorted(by_pass[lab])
