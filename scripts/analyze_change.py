@@ -142,7 +142,9 @@ def run(data_dir: Path = DATA, out_path: Path | None = None) -> dict:
         w = np.array([land[n] for n in have])
         return float(np.sum([np.median(vals[n]) * wi for n, wi in zip(have, w)]) / w.sum())
 
-both = [n for n in lgas if all(lgas[n]["periods"][p]["enough"] for p in periods)]
+    state = {}
+    draws_for = {}
+    both = [n for n in lgas if all(lgas[n]["periods"][p]["enough"] for p in periods)]
     for lab in labels:
         pids = sorted(by_pass[lab])
         members = [n for n in lgas if lgas[n]["periods"][lab]["n"]]
@@ -179,7 +181,7 @@ both = [n for n in lgas if all(lgas[n]["periods"][p]["enough"] for p in periods)
     ref_by_period = defaultdict(list)
     for s in used:
         if int(s["season"]) in period_of:
-            ref_by_period[period_of[int(s["season"])]].append(float(s["ref_lst"]))
+            ref_by_period[period_of[int(s["season"])]] .append(float(s["ref_lst"]))
     for p in periods:
         p["ref_lst_median"] = r(np.median(ref_by_period[p["label"]])) if ref_by_period[p["label"]] else None
 
