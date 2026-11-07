@@ -485,6 +485,38 @@
             color: var(--text-main);
             font-weight: 600;
         }
+        .table-caption {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin: 1.5rem 0 0.5rem 0;
+        }
+        .table-caption strong { color: var(--text-main); }
+        .summary-lead { font-size: 1.125rem; }
+        ol.takeaways { padding-left: 1.35rem; }
+        ol.takeaways li { margin-bottom: 0.9rem; }
+        .citation-block {
+            background-color: var(--bg-subtle);
+            border: 1px solid var(--border-subtle);
+            border-left: 4px solid var(--accent-thermal);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            margin: 1.25rem 0;
+        }
+        .citation-text { font-size: 0.95rem; line-height: 1.6; }
+        .citation-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.5rem;
+        }
+        #copy-status { font-size: 0.875rem; color: var(--text-muted); }
+        .citation-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0; }
+        ol.ref-list { padding-left: 1.35rem; font-size: 0.9rem; }
+        ol.ref-list li { margin-bottom: 0.75rem; line-height: 1.55; }
+        ol.ref-list a { word-break: break-word; }
+        .feedback-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+        .feedback-note { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0; }
     </style>
 </head>
 <body>
@@ -494,13 +526,13 @@
         <div class="top-nav-inner">
             <a href="index.html" class="brand">Lagos Urban Heat Observatory</a>
             <ul class="nav-links">
-                <li><a href="#at-a-glance">Overview</a></li>
-                <li><a href="#study-area">Study Area</a></li>
-                <li><a href="#methodology">Methodology</a></li>
-                <li><a href="#contemporary-findings">Contemporary (2022–24)</a></li>
-                <li><a href="#historical-findings">Historical (1985–2026)</a></li>
-                <li><a href="#limitations">Limitations</a></li>
-                <li><a href="#reproducibility">Data &amp; Code</a></li>
+                <li><a href="#summary">Summary</a></li>
+                <li><a href="#background">Why</a></li>
+                <li><a href="#study-area">Study area</a></li>
+                <li><a href="#methodology">Method</a></li>
+                <li><a href="#contemporary-findings">Results</a></li>
+                <li><a href="#discussion">Meaning</a></li>
+                <li><a href="#limitations">Limits</a></li>
             </ul>
             <div class="nav-controls">
                 <button type="button" id="theme-toggle" class="btn btn-secondary" aria-label="Toggle dark or light color theme">Theme</button>
@@ -537,7 +569,7 @@
             </div>
 
             <div class="hero-actions">
-                <a href="#at-a-glance" class="btn btn-primary">Read the Research Report ↓</a>
+                <a href="#summary" class="btn btn-primary">Read the Research Report ↓</a>
                 <a href="explore.html" class="btn btn-secondary">Open Interactive WebGIS Explorer →</a>
                 <a href="#reproducibility" class="btn btn-secondary">Download Datasets &amp; Scripts</a>
             </div>
@@ -546,11 +578,36 @@
 
     <main id="main-content">
 
-        <section id="at-a-glance" class="pub-section">
-            <span class="section-num">Section 01</span>
-            <h2>Research at a Glance: Two Analytically Distinct Components</h2>
+        <section id="summary" class="pub-section">
+            <span class="section-num">Overview</span>
+            <h2>Summary</h2>
+            <p class="summary-lead">
+                Lagos runs hotter than the land around it, and the gap has widened over four decades. This page asks two questions of the same free satellite record: how hot the 20 Local Government Areas run in the dry season today, and how much further their heat island has grown since the mid-1980s. Everything below is surface temperature &mdash; the temperature of roofs, roads and canopy tops &mdash; not the air temperature people breathe.
+            </p>
+
+            <div class="grid-3">
+                <div class="stat-cell">
+                    <span class="stat-val">+1.74&deg;C</span>
+                    <span class="stat-label">Heat-island growth from 1985&ndash;2003 to 2014&ndash;2026 across the 17 LGAs clear in every period (95% CI +0.62 to +2.53&deg;C)</span>
+                </div>
+                <div class="stat-cell">
+                    <span class="stat-val">41.93%</span>
+                    <span class="stat-label">Lagos land more than 3&deg;C above the countryside in 2014&ndash;2026, up from 26.12% in 1985&ndash;2003</span>
+                </div>
+                <div class="stat-cell">
+                    <span class="stat-val">0 of 20</span>
+                    <span class="stat-label">LGAs whose local hot or cold spot survives false-discovery-rate correction, despite significant global clustering</span>
+                </div>
+            </div>
+
+            <ol class="takeaways">
+                <li><strong>The heat island grew, and its footprint spread.</strong> Across the 17 LGAs clear in every period, the area-weighted heat-island intensity rose from +2.13&deg;C to +3.87&deg;C, and the share of Lagos land more than 3&deg;C hotter than the countryside rose from 26.12% to 41.93%. Four LGAs warmed by more than chance allows, and one upward trend survives correction across the 18 LGAs with enough dry seasons to test.</li>
+                <li><strong>Lagos&rsquo;s heat is a gradient, not a list of hotspots.</strong> Global clustering is significant (Moran&rsquo;s <var>I</var> = 0.3656 at <var>k</var> = 5 nearest neighbours, permutation <var>p</var> = 0.002), but no individual LGA remains significant as a local hot or cold spot once 20 simultaneous tests are corrected. The hot mainland core and the cooler eastern and western peripheries are real; naming single LGAs as hotspots is not supported by these data.</li>
+                <li><strong>Surface temperature is not air temperature, and the exposure index is a screening tool.</strong> Landsat reads surfaces at about 10:30, not the air pedestrians breathe. MODIS ranks the LGAs almost identically (&rho; = 0.9729) while reading 5.40&deg;C cooler in absolute terms, so only the ordering transfers between sensors, and the heat exposure index ranks places rather than measuring health risk.</li>
+            </ol>
+
             <p>
-                This observatory integrates two complementary but methodologically distinct Earth observation analyses. <strong>Component A</strong> evaluates contemporary daytime Land Surface Temperature (<var>LST</var>), spectral surface properties, and population-weighted thermal screening across all 20 Local Government Areas (LGAs). <strong>Component B</strong> evaluates multi-decadal Surface Urban Heat Island (<var>SUHI</var>) intensification relative to an unbuilt rural reference zone across three historical period groups. Because the two components cover different temporal windows and measure different physical quantities, their observation counts and metrics are strictly separated below.
+                The two analyses are reported separately because they answer different questions over different periods. <strong>Component A</strong> is a single contemporary dry-season composite (2022/23&ndash;2023/24) across all 20 LGAs. <strong>Component B</strong> is a screened archive of 28 accepted Landsat passes from 1985 to 2026, grouped into three periods. Their counts and metrics are never pooled.
             </p>
 
             <div class="grid-2">
@@ -621,8 +678,8 @@
         </section>
 
         <section id="background" class="pub-section">
-            <span class="section-num">Section 02</span>
-            <h2>Research Background &amp; Scientific Motivation</h2>
+            <span class="section-num">Motivation</span>
+            <h2>1 Why measure a city&rsquo;s heat from space?</h2>
             <p>
                 Rapid demographic expansion and physical urbanisation across Lagos State have transformed coastal wetlands, secondary forests, and agricultural peri-urban corridors into dense, impervious built environments. Replacing transpiring vegetation and moist soils with concrete, asphalt, and corrugated metal roofing alters the surface energy balance by reducing latent heat flux (evapotranspiration) and increasing sensible heat storage and daytime thermal emission.
             </p>
@@ -632,11 +689,7 @@
             <p>
                 Evaluating thermal maps in isolation, however, tells only half of the planning story. An industrial or bare-soil district may exhibit high surface temperature alongside relatively sparse residential density, whereas densely populated mainland LGAs combine elevated surface temperatures with high residential concentrations. Combining scaled <var>LST</var> with log-transformed population density provides a transparent <strong>spatial screening indicator</strong> to highlight where intense surface heat overlaps large residential populations. Simultaneously, comparing LGA temperatures against a fixed unbuilt rural reference within the same satellite pass cancels day-to-day atmospheric water vapour, haze, and seasonal drift, allowing historical surface urban heat-island (<var>SUHI</var>) change to be tracked across four decades of Landsat observations.
             </p>
-        </section>
-
-        <section id="objectives" class="pub-section">
-            <span class="section-num">Section 03</span>
-            <h2>Research Objectives &amp; Analytical Questions</h2>
+            <h3>What this study asks</h3>
             <p>To prevent temporal or methodological conflation, the study addresses two separate sets of research questions:</p>
 
             <div class="table-wrap">
@@ -680,8 +733,8 @@
         </section>
 
         <section id="study-area" class="pub-section">
-            <span class="section-num">Section 04</span>
-            <h2>Study Area &amp; Spatial Analytical Framework</h2>
+            <span class="section-num">Study area</span>
+            <h2>2 Study area and spatial framework</h2>
             <p>
                 Lagos State is situated along the low-lying southwestern coastal plain of Nigeria bordering the Gulf of Guinea. The administrative framework comprises <strong>20 Local Government Areas (LGAs)</strong> defined by the FAO Global Administrative Unit Layers (GAUL 2015, Level 2). Stray topological line fragments present in the simplified GAUL polygons are removed during ingestion (<code>scripts/ingest_gee_export.py</code>) so Queen contiguity weights reflect true boundary sharing.
             </p>
@@ -698,13 +751,13 @@
         </section>
 
         <section id="methodology" class="pub-section">
-            <span class="section-num">Section 05</span>
-            <h2>Dataset Provenance &amp; Analytical Methodology</h2>
+            <span class="section-num">Method</span>
+            <h2>3 Data and method</h2>
             <p>
                 All satellite extractions are reproducible via documented Google Earth Engine scripts (<code>scripts/extract_data_gee.js</code> and <code>scripts/extract_change_gee.py</code>) and processed into verified statistical summaries via Python (<code>scripts/analyze_uhi.py</code> and <code>scripts/analyze_change.py</code>).
             </p>
 
-            <h3>Table 1. Complete Dataset Inventory and Processing Lineage</h3>
+            <p class="table-caption"><strong>Table 1.</strong> Data used, with the Earth Engine collection each extraction script calls.</p>
             <div class="table-wrap">
                 <table>
                     <thead>
@@ -815,18 +868,22 @@
             <div class="callout">
                 <strong>Methodological Distinction — Spatial Heat Exposure Index:</strong> Equation (3) is a constructed spatial screening index combining min-max scaled <var>LST</var> with min-max scaled log-transformed population density (with a rank-based check). It is designed solely to identify administrative units where elevated surface heat coincides with high residential density. It is <strong>not</strong> a direct measurement of individual human thermal exposure, physiological heat stress, morbidity, or mortality risk.
             </div>
+
+            <p style="margin-top: 1.5rem;">
+                The spatial statistics follow Moran (1950) and Getis and Ord (1992), with false-discovery-rate control after Benjamini and Hochberg (1995); local association follows Anselin (1995). Trends use the Theil&ndash;Sen estimator (Sen, 1968) with the Mann&ndash;Kendall test (Mann, 1945). Extractions and composites run in Google Earth Engine (Gorelick et al., 2017). Land surface temperature is the radiometric skin temperature of the surface, not the 2&nbsp;m air temperature (Voogt and Oke, 2003; Weng, 2009), and the surface energy-balance reasoning behind the urban heat island is that of Oke (1982). Full entries are in the <a href="#references">reference list</a>.
+            </p>
         </section>
 
         <section id="contemporary-findings" class="pub-section">
-            <span class="section-num">Section 06 · Component A Results</span>
-            <h2>Contemporary Urban Heat &amp; Exposure Findings (2022/23–2023/24)</h2>
+            <span class="section-num">Results &middot; Component A</span>
+            <h2>4 Results: contemporary heat and exposure (2022/23&ndash;2023/24)</h2>
 
-            <h3>6.1 LGA Temperature Distribution</h3>
+            <h3>4.1 LGA Temperature Distribution</h3>
             <p>
                 Across the 20 LGAs of Lagos State, the unweighted mean of the 20 LGA-level mean daytime surface temperatures is <strong>37.42°C</strong> (note: this figure represents the unweighted arithmetic mean across the 20 LGA means, not an area-weighted or population-weighted statewide mean). LGA-level mean <var>LST</var> spans an 8.37°C range from a minimum of <strong>31.77°C in Epe</strong> (characterised by extensive eastern forest and agricultural cover) to a maximum of <strong>40.14°C in Ajeromi/Ifelodun</strong> within the densely built mainland core.
             </p>
 
-            <h3>6.2 Global Spatial Autocorrelation vs. Local Getis-Ord <var>G</var><sub><var>i</var></sub><sup>*</sup> Clustering</h3>
+            <h3>4.2 Global Spatial Autocorrelation vs. Local Getis-Ord <var>G</var><sub><var>i</var></sub><sup>*</sup> Clustering</h3>
             <p>
                 Global Moran's <var>I</var> permutation testing (999 permutations) confirms statistically significant positive global spatial autocorrelation across all four spatial weight specifications. However, when testing individual LGAs using two-sided local Getis-Ord <var>G</var><sub><var>i</var></sub><sup>*</sup> (<var>k</var> = 5 nearest neighbours) with Benjamini–Hochberg False Discovery Rate (FDR) control at &alpha; = 0.05 across the 20 tests, <strong>no individual LGA local hot or cold spot remains statistically significant after FDR correction</strong>. These two findings are statistically consistent: with <var>n</var> = 20 spatial units, the global thermal gradient from the hot mainland core to the cooler eastern/western peripheries is strong enough to establish overall clustering, whereas individual local <var>z</var>-scores do not clear the multiple-testing threshold.
             </p>
@@ -875,7 +932,7 @@
                 </table>
             </div>
 
-            <h3>6.3 Population-Weighted Heat Exposure Screening Rankings</h3>
+            <h3>4.3 Population-Weighted Heat Exposure Screening Rankings</h3>
             <p>
                 Combining min-max scaled <var>LST</var> with min-max scaled log-transformed population density identifies five contiguous mainland LGAs at the top of the relative heat exposure screening distribution: <strong>1. Ajeromi/Ifelodun</strong>, <strong>2. Mushin</strong>, <strong>3. Agege</strong>, <strong>4. Shomolu</strong>, and <strong>5. Surulere</strong>. A rank-based formulation of the exposure index yields a Spearman rank correlation of <strong>&rho; = 0.9921</strong> against the min-max index, demonstrating strong internal ranking consistency across scaling choices (while remaining a relative spatial screening construct rather than a direct health measurement).
             </p>
@@ -889,7 +946,7 @@
                 </figcaption>
             </figure>
 
-            <h3>6.4 Biophysical Regression Models &amp; Multicollinearity Audit</h3>
+            <h3>4.4 Biophysical Regression Models &amp; Multicollinearity Audit</h3>
             <p>
                 Ordinary Least Squares (OLS) regression across the 20 LGAs shows strong bivariate associations between daytime <var>LST</var> and vegetation (<var>NDVI</var>-only model: &beta; = &minus;17.3976°C per unit <var>NDVI</var>, or &minus;1.74°C per +0.1 <var>NDVI</var>; <var>R</var><sup>2</sup> = 0.9443) and between <var>LST</var> and built-up density (<var>NDBI</var>-only model: &beta; = +26.5578°C per unit <var>NDBI</var>, or +2.66°C per +0.1 <var>NDBI</var>; <var>R</var><sup>2</sup> = 0.9800).
             </p>
@@ -949,17 +1006,17 @@
                 </table>
             </div>
 
-            <h3>6.5 Thermal Cross-Sensor Comparison (Landsat 8/9 vs. MODIS Terra)</h3>
+            <h3>4.5 Thermal Cross-Sensor Comparison (Landsat 8/9 vs. MODIS Terra)</h3>
             <p>
                 Comparing LGA-level daytime <var>LST</var> from Landsat 8/9 (30 m grid / 100 m native thermal) against MODIS Terra <code>MOD11A2</code> (1 km) yields strong spatial rank and linear agreement across the 20 LGAs (Spearman <strong>&rho; = 0.9729</strong>, Pearson <strong><var>r</var> = 0.9805</strong>). However, defining the difference as <var>Landsat LST &minus; MODIS LST</var> reveals a systematic positive mean difference of <strong>+5.4006°C</strong> (<strong>RMSE = 5.442°C</strong>). MODIS Terra reads approximately 5.4°C cooler on average than Landsat 8/9 across Lagos LGAs due to coarse 1 km pixel mixing across water/vegetation margins and differences in retrieval emissivity and viewing geometry. High spatial correlation therefore confirms consistency in relative LGA ordering, not absolute temperature interchangeability.
             </p>
         </section>
 
         <section id="historical-findings" class="pub-section">
-            <span class="section-num">Section 07 · Component B Results</span>
-            <h2>Historical Surface Urban Heat-Island Findings (1985–2026)</h2>
+            <span class="section-num">Results &middot; Component B</span>
+            <h2>5 Results: four decades of change (1985&ndash;2026)</h2>
 
-            <h3>7.1 Observation Screening Funnel &amp; Uneven Temporal Support</h3>
+            <h3>5.1 Observation Screening Funnel &amp; Uneven Temporal Support</h3>
             <p>
                 Persistent cloud cover, coastal fog, and the 1992–1999 West African downlink gap in the historical Landsat archive severely restrict clear-sky thermal observations over coastal Nigeria. Out of <strong>374 dry-season satellite passes considered</strong> across Landsat 4, 5, 7, 8, and 9 between 1985 and 2026, rigorous quality screening accepted <strong>28 passes</strong>:
             </p>
@@ -973,7 +1030,7 @@
                 <strong>Acquisition Date Precision for the 2025/26 Dry Season:</strong> Historical period labels correspond to December–March dry-season groups rather than single calendar years. Specifically, the dry season labelled <code>2026</code> contains two accepted LGA-level records—<strong>Eti-Osa</strong> and <strong>Lagos Island</strong>—derived from satellite passes acquired on <strong>19 December 2025</strong> and <strong>12 January 2026</strong>. Not all 20 LGAs were observed in 2026.
             </div>
 
-            <h3>Table 2. Accepted acquisitions by dry season</h3>
+            <p class="table-caption"><strong>Table 2.</strong> Accepted acquisitions by dry season.</p>
             <p>
                 Season labels follow the December&ndash;March grouping used throughout this study; a label is not a calendar year. The 1985 season, for example, was acquired on 18 December 1984, and the 2026 season on 19 December 2025 and 12 January 2026. Read individual acquisitions from this table, not from the label.
             </p>
@@ -1148,7 +1205,7 @@
                 </table>
             </div>
 
-            <h3>Table 3. Observation coverage per LGA and period</h3>
+            <p class="table-caption"><strong>Table 3.</strong> Observation coverage per LGA and period. Each cell is the number of accepted passes in which that LGA had at least half of its land clear; darker cells rest on more mornings, and &dagger; marks fewer than three passes.</p>
             <p>
                 Each cell is the number of accepted passes in which that LGA had at least half of its land clear. Darker cells rest on more mornings. &dagger; marks an LGA with fewer than three accepted passes, which is shown but given no interval or verdict.
             </p>
@@ -1305,7 +1362,7 @@
                 17 of 20 LGAs meet the threshold in all three periods; the state-wide comparison and the built-up association use those 17. Two LGAs (Epe and Ibeju Lekki) have too few observed dry seasons for a trend test.
             </p>
 
-            <h3>7.2 Period-Level SUHI Intensification Across the 17 Common LGAs</h3>
+            <h3>5.2 Period-Level SUHI Intensification Across the 17 Common LGAs</h3>
             <p>
                 To compare periods on a consistent spatial footprint, period-level area-weighted <var>SUHI</var> medians and bootstrap 95% confidence intervals are computed across the <strong>17 common LGAs</strong> that meet the minimum clear-land eligibility threshold in every historical period (<code>1985–2003</code>, <code>2004–2013</code>, and <code>2014–2026</code>). Across these 17 LGAs, the area-weighted surface urban heat island increased from <strong>+2.13°C</strong> in 1985–2003 to <strong>+3.66°C</strong> in 2004–2013 and <strong>+3.87°C</strong> in 2014–2026—representing a first-to-last period increase of <strong>+1.74°C (95% CI: +0.62 to +2.53°C)</strong>. Across Lagos State, the share of land experiencing surface temperatures more than 3°C above the rural reference rose from <strong>26.12%</strong> (1985–2003) to <strong>38.88%</strong> (2004–2013) and <strong>41.93%</strong> (2014–2026).
             </p>
@@ -1391,7 +1448,7 @@
                 </figcaption>
             </figure>
 
-            <h3>7.3 Dry-Season Trend Eligibility &amp; Built-Up Expansion Association</h3>
+            <h3>5.3 Dry-Season Trend Eligibility &amp; Built-Up Expansion Association</h3>
             <p>
                 Non-parametric Theil–Sen slope estimation and Mann–Kendall trend testing are restricted strictly to LGAs with <strong>at least 8 observed dry seasons</strong>. In the published archive, <strong>18 LGAs meet this eligibility threshold</strong> and are testable, while <strong>2 LGAs have insufficient dry-season observations and are reported as not testable</strong>. Benjamini–Hochberg FDR correction is applied across the 18 testable LGAs.
             </p>
@@ -1401,8 +1458,8 @@
         </section>
 
         <section id="discussion" class="pub-section">
-            <span class="section-num">Section 08</span>
-            <h2>Synthesis, Interpretation &amp; Scientific Discussion</h2>
+            <span class="section-num">Synthesis</span>
+            <h2>6 What it means</h2>
             <p>
                 Taken together, the contemporary and historical analyses reveal a coherent two-stage thermal geography across Lagos State:
             </p>
@@ -1411,7 +1468,8 @@
                 <li><strong>Why Statistical Discipline Matters at the LGA Scale:</strong> Aggregating pixel-level measurements into 20 administrative polygons introduces strong inverse coupling between <var>NDVI</var> and <var>NDBI</var> (<var>r</var> = &minus;0.9671) and limits statistical power for local hotspot testing after multiple-testing control. Reporting both the significant global Moran's <var>I</var> (<var>p</var> = 0.002) and the null FDR-adjusted local <var>G</var><sub><var>i</var></sub><sup>*</sup> outcome—as well as reporting both OLS (<var>p</var> = 0.0088) and Spearman (&rho; = 0.355, <var>p</var> = 0.162) for built-up change—prevents over-interpreting administrative aggregates.</li>
             </ol>
 
-            <h3>Evidence summary: what each finding establishes</h3>
+            <h3>What each finding establishes</h3>
+            <p class="table-caption"><strong>Table 4.</strong> Each finding, the test behind it, and the verdict that test supports.</p>
             <p>
                 Each row names the test behind the finding and what that test can support. &ldquo;Significant&rdquo; refers to that test at &alpha; = 0.05, not to causation, and where a second, more robust test disagrees both results are shown.
             </p>
@@ -1485,11 +1543,15 @@
                     </tbody>
                 </table>
             </div>
+
+            <p style="margin-top: 1.5rem;">
+                Two conclusions follow, and neither is a forecast. First, the surface heat island of Lagos grew by about 1.7&deg;C between the mid-1980s and the mid-2020s on a fixed 17-LGA footprint, and the area running more than 3&deg;C hotter than the countryside grew from roughly a quarter to two-fifths of the state. Second, the contemporary geography is a continuous gradient that these data can describe but not decompose: vegetation and built-up cover are so tightly coupled across 20 polygons that no independent cooling effect can be isolated, and no single LGA is statistically separable as a hotspot. What would settle the remaining questions is not a better index but more clear mornings &mdash; the 1992&ndash;1999 archive gap and persistent coastal cloud, rather than the method, are what limit the record.
+            </p>
         </section>
 
         <section id="limitations" class="pub-section">
-            <span class="section-num">Section 09</span>
-            <h2>Methodological Limitations &amp; Uncertainty Register</h2>
+            <span class="section-num">Limits</span>
+            <h2>7 Limits</h2>
             <p>Every empirical finding in this observatory should be interpreted within the following explicit constraints:</p>
 
             <div class="grid-2">
@@ -1526,11 +1588,20 @@
         </section>
 
         <section id="reproducibility" class="pub-section">
-            <span class="section-num">Section 10</span>
-            <h2>Data Provenance, Reproducibility &amp; Downloads</h2>
+            <span class="section-num">Data</span>
+            <h2>Data, code and citation</h2>
             <p>
-                All processed datasets, statistical summaries, pass-screening logs, and processing scripts are openly published in the repository under an MIT code licence and CC BY 4.0 derived-data licence. Every number displayed on this page and inside the interactive explorer can be independently verified from the files below:
+                All processed datasets, statistical summaries, pass-screening logs, and processing scripts are openly published in the repository under an MIT code licence and CC BY 4.0 derived-data licence. Every number displayed on this page and inside the interactive explorer can be independently verified from the files below.
             </p>
+
+            <div class="citation-block">
+                <p class="citation-text" id="citation-text">Oloyede, D. O. (2026). <em>Lagos Urban Heat and Population Exposure Analytics: contemporary dry-season surface temperature and four decades of surface urban heat-island change across 20 Lagos State LGAs, 1985&ndash;2026</em> (Version 2.0) [Software]. https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/</p>
+                <div class="citation-actions">
+                    <button type="button" class="btn btn-secondary" id="copy-citation">Copy citation</button>
+                    <span id="copy-status" role="status" aria-live="polite"></span>
+                </div>
+                <p class="citation-meta">Version 2.0 &middot; last updated 7 November 2026 &middot; code MIT, derived data CC BY 4.0 &middot; machine-readable record in <a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics/blob/main/CITATION.cff">CITATION.cff</a>.</p>
+            </div>
 
             <div class="resource-grid">
                 <a class="resource-link" download href="data/lagos_uhi_processed.geojson">
@@ -1571,8 +1642,8 @@
         </section>
 
         <section id="explorer-launchpad" class="pub-section">
-            <span class="section-num">Section 11</span>
-            <h2>Explore the Interactive WebGIS Application</h2>
+            <span class="section-num">Explorer</span>
+            <h2>Explore every LGA yourself</h2>
             <p>
                 Connect these research findings directly to the spatial data inside the full interactive analytical application (<code>explore.html</code>). The explorer preserves all six analytical tabs and six interactive map layers:
             </p>
@@ -1595,6 +1666,49 @@
             </div>
         </section>
 
+
+        <section id="note" class="pub-section">
+            <h2>A note from me</h2>
+            <p>
+                This page reports what 28 clear mornings can and cannot support. Four decades of Landsat over coastal Nigeria yield very few usable passes: the archive is empty between 1992 and 1999, coastal cloud removes most of the rest, and 346 of the 374 passes considered were rejected for reasons recorded in the screening log. That is why the historical results are period medians rather than a continuous series, why two LGAs have no trend test at all, and why the earliest period carries the widest interval.
+            </p>
+            <p>
+                I have kept the results that did not come out as hoped next to the ones that did. The local hotspot test returning nothing after correction is as much a finding as the global clustering that passed, and the built-up association resting on one test but not the other is stated both ways rather than resolved by choosing the flattering one.
+            </p>
+            <p>
+                If you find an error, or a claim these data do not carry, please <a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics/issues">open an issue on the repository</a>. I would rather correct the page than defend it.
+            </p>
+            <p style="margin-bottom: 0;"><strong>David</strong></p>
+        </section>
+
+        <section id="feedback" class="pub-section">
+            <h2>Was this research useful?</h2>
+            <div class="feedback-row" role="group" aria-label="Feedback on this page">
+                <button type="button" class="btn btn-secondary" data-feedback="useful">Useful</button>
+                <button type="button" class="btn btn-secondary" data-feedback="interesting">Interesting</button>
+                <button type="button" class="btn btn-secondary" data-feedback="needs clarity">Needs clarity</button>
+            </div>
+            <p class="feedback-note" id="feedback-status" role="status" aria-live="polite">
+                This page has no server, so a click is only remembered in this browser and nothing is sent anywhere. To be sure it reaches me, <a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics/issues">open an issue</a>.
+            </p>
+        </section>
+
+        <section id="references" class="pub-section">
+            <h2>References</h2>
+            <ol class="ref-list">
+                <li>Anselin, L. (1995). Local indicators of spatial association&mdash;LISA. <em>Geographical Analysis</em>, 27(2), 93&ndash;115. <a href="https://doi.org/10.1111/j.1538-4632.1995.tb00338.x">doi:10.1111/j.1538-4632.1995.tb00338.x</a></li>
+                <li>Benjamini, Y., &amp; Hochberg, Y. (1995). Controlling the false discovery rate: a practical and powerful approach to multiple testing. <em>Journal of the Royal Statistical Society: Series B</em>, 57(1), 289&ndash;300. <a href="https://doi.org/10.1111/j.2517-6161.1995.tb02031.x">doi:10.1111/j.2517-6161.1995.tb02031.x</a></li>
+                <li>Getis, A., &amp; Ord, J. K. (1992). The analysis of spatial association by use of distance statistics. <em>Geographical Analysis</em>, 24(3), 189&ndash;206. <a href="https://doi.org/10.1111/j.1538-4632.1992.tb00261.x">doi:10.1111/j.1538-4632.1992.tb00261.x</a></li>
+                <li>Gorelick, N., Hancher, M., Dixon, M., Ilyushchenko, S., Thau, D., &amp; Moore, R. (2017). Google Earth Engine: planetary-scale geospatial analysis for everyone. <em>Remote Sensing of Environment</em>, 202, 18&ndash;27. <a href="https://doi.org/10.1016/j.rse.2017.06.031">doi:10.1016/j.rse.2017.06.031</a></li>
+                <li>Mann, H. B. (1945). Nonparametric tests against trend. <em>Econometrica</em>, 13(3), 245&ndash;259. <a href="https://doi.org/10.2307/1907187">doi:10.2307/1907187</a></li>
+                <li>Moran, P. A. P. (1950). Notes on continuous stochastic phenomena. <em>Biometrika</em>, 37(1&ndash;2), 17&ndash;23. <a href="https://doi.org/10.1093/biomet/37.1-2.17">doi:10.1093/biomet/37.1-2.17</a></li>
+                <li>Oke, T. R. (1982). The energetic basis of the urban heat island. <em>Quarterly Journal of the Royal Meteorological Society</em>, 108(455), 1&ndash;24. <a href="https://doi.org/10.1002/qj.49710845502">doi:10.1002/qj.49710845502</a></li>
+                <li>Sen, P. K. (1968). Estimates of the regression coefficient based on Kendall&rsquo;s tau. <em>Journal of the American Statistical Association</em>, 63(324), 1379&ndash;1389. <a href="https://doi.org/10.2307/2285891">doi:10.2307/2285891</a></li>
+                <li>Voogt, J. A., &amp; Oke, T. R. (2003). Thermal remote sensing of urban climates. <em>Remote Sensing of Environment</em>, 86(3), 370&ndash;384. <a href="https://doi.org/10.1016/S0034-4257(03)00079-8">doi:10.1016/S0034-4257(03)00079-8</a></li>
+                <li>Weng, Q. (2009). Thermal infrared remote sensing for urban climate and environmental studies: methods, applications, and trends. <em>ISPRS Journal of Photogrammetry and Remote Sensing</em>, 64(4), 335&ndash;344. <a href="https://doi.org/10.1016/j.isprsjprs.2009.03.007">doi:10.1016/j.isprsjprs.2009.03.007</a></li>
+            </ol>
+        </section>
+
     </main>
 
     <footer class="site-footer">
@@ -1607,8 +1721,14 @@
                 <a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics/blob/main/LICENSE-DATA.md">Licence: Code MIT · Data CC BY 4.0</a>
             </p>
             <p style="margin-top: 0.75rem; font-size: 0.85rem;">
-                Contains modified Copernicus Sentinel data (2022–2024). Landsat data courtesy of the U.S. Geological Survey; MODIS from NASA; population from WorldPop; historical built-up data from the EU Global Human Settlement Layer (EC JRC); administrative boundaries from FAO GAUL (2015).
+                Contains modified Copernicus Sentinel data (2022&ndash;2024). Landsat data courtesy of the U.S. Geological Survey; MODIS from NASA; population from WorldPop; historical built-up data from the EU Global Human Settlement Layer (EC JRC); administrative boundaries from FAO GAUL (2015).
             </p>
+            <p style="margin-top: 0.75rem; font-size: 0.85rem;">
+                <strong>Other studies:</strong>
+                <a href="https://oloyededavid.github.io/Oueme-Ogun-Groundwater-Recharge/">Ou&eacute;m&eacute;&ndash;Ogun groundwater recharge</a> &middot;
+                <a href="https://oloyededavid.github.io/Ogun-Catchment-Coast-Observatory/">Ogun catchment-to-coast observatory</a>
+            </p>
+            <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">Last updated 7 November 2026 &middot; Version 2.0</p>
         </div>
     </footer>
 
@@ -1778,6 +1898,32 @@
                     }
                 })
                 .catch(function () {});
+            const copyBtn = document.getElementById('copy-citation');
+            const copyStatus = document.getElementById('copy-status');
+            if (copyBtn && copyStatus) {
+                copyBtn.addEventListener('click', function () {
+                    const text = document.getElementById('citation-text').textContent.replace(/\s+/g, ' ').trim();
+                    function fallback() { copyStatus.textContent = 'Select the text above and copy it.'; }
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(text).then(function () {
+                            copyStatus.textContent = 'Copied.';
+                        }, fallback);
+                    } else {
+                        fallback();
+                    }
+                });
+            }
+
+            const feedbackStatus = document.getElementById('feedback-status');
+            document.querySelectorAll('[data-feedback]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    const label = btn.getAttribute('data-feedback');
+                    try { localStorage.setItem('lagos_feedback', label); } catch (e) {}
+                    if (feedbackStatus) {
+                        feedbackStatus.textContent = 'Noted in this browser only (' + label + '). Nothing was sent anywhere; open an issue if you want a reply.';
+                    }
+                });
+            });
         })();
     </script>
 </body>
