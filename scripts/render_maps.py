@@ -173,7 +173,7 @@ class Base:
             s.set_color("#9a9a9a"); s.set_linewidth(0.5)
 
     def credit(self, fig, h, source):
-        fig.text(0.04, 0.06 / h, f"Source: {source}  ·  Projection: {CRS_NOTE}  ·  Map: {AUTHOR}, {DATE}", fontsize=7, color=INK2, va="bottom")
+        fig.text(0.04, 0.06 / h, f"Source: {source}  ·  Projection: {CRS_NOTE}", fontsize=7, color=INK2, va="bottom")
 
     def colorbar(self, fig, im, h, label, ticks=None, extend="neither", y=0.42, nodata=True):
         cax = fig.add_axes([0.04, y / h, 0.42, 0.13 / h])
@@ -373,7 +373,7 @@ def chart_exposure(A):
     st = ex["state"]; tot = ex["population_on_land"]
     fig.text(0.04, 0.045, f"Lagos State: {(st['4 to 6'] + st['6 or more']) / tot * 100:.0f}% of {tot / 1e6:.1f} million modelled residents live in cells at least 4 °C warmer than the countryside. "
              "Surface temperature, not air temperature.", fontsize=7.5, color=INK2)
-    fig.text(0.04, 0.012, f"Source: Landsat Collection 2 Level 2 (Planetary Computer); WorldPop 2020 (unconstrained, modelled)  ·  {AUTHOR}, {DATE}", fontsize=7, color=INK2)
+    fig.text(0.04, 0.012, "Source: Landsat Collection 2 Level 2 (Planetary Computer); WorldPop 2020 (unconstrained, modelled)", fontsize=7, color=INK2)
     return save(fig, "m15_exposure")
 
 
