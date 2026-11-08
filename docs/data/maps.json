@@ -1,0 +1,64 @@
+{
+ "built": "8 November 2026",
+ "maps": {
+  "m01_reference": "assets/maps/m01_reference.webp",
+  "m02_landcover": "assets/maps/m02_landcover.webp",
+  "m03_lst": "assets/maps/m03_lst.webp",
+  "m04_suhi": "assets/maps/m04_suhi.webp",
+  "m05_ndvi": "assets/maps/m05_ndvi.webp",
+  "m06_ndbi": "assets/maps/m06_ndbi.webp",
+  "m07_suhi_periods": "assets/maps/m07_suhi_periods.webp",
+  "m08_ndvi_periods": "assets/maps/m08_ndvi_periods.webp",
+  "m09_coverage": "assets/maps/m09_coverage.webp",
+  "m10_change": "assets/maps/m10_change.webp",
+  "m11_uncertainty": "assets/maps/m11_uncertainty.webp",
+  "m12_population": "assets/maps/m12_population.webp",
+  "m16_ndvi_change": "assets/maps/m16_ndvi_change.webp",
+  "m13_hotspots": "assets/maps/m13_hotspots.webp",
+  "m14_ndvi_heat": "assets/maps/m14_ndvi_heat.webp",
+  "m15_exposure": "assets/maps/m15_exposure.webp"
+ },
+ "rasters": {
+  "script": "scripts/pc_build_rasters.py",
+  "source": "Microsoft Planetary Computer, landsat-c2-l2, esa-worldcover (2021)",
+  "crs": "EPSG:32631",
+  "resolution_m": 60.0,
+  "bounds": [
+   447504.00145815685,
+   684431.746579565,
+   669084.0014581569,
+   761485.4082189075
+  ],
+  "periods": {
+   "2000-2012": {
+    "passes": 13,
+    "sensors": [
+     "landsat-7"
+    ]
+   },
+   "2013-2019": {
+    "passes": 14,
+    "sensors": [
+     "landsat-8"
+    ]
+   },
+   "2020-2025": {
+    "passes": 18,
+    "sensors": [
+     "landsat-8",
+     "landsat-9"
+    ]
+   }
+  },
+  "rules": {
+   "max_st_qa_k": 4.0,
+   "ref_min_pixels_60m": 6750,
+   "max_cold_share": 0.05,
+   "cold_c": 3.0,
+   "lga_min_clear": 0.5,
+   "reference": "WorldCover 2021 classes [10, 20, 30, 40, 90, 95] within 20000 m"
+  },
+  "built_utc": "2026-11-08T18:45:26Z"
+ },
+ "worldcover_accuracy_africa_pct": 76.5
+}

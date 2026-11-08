@@ -26,7 +26,7 @@ Static research site (GitHub Pages, `docs/`) on the surface urban heat island of
 | Pixel rasters (Planetary Computer, about 2 hours) | `python scripts/pc_build_rasters.py --workers 8` | `research/rasters/*.tif`, `research/pc_passes.csv`, `research/pc_lga_suhi.csv` |
 | Population on the raster grid | `python scripts/pc_population.py [nga_ppp_2020.tif]` | `research/rasters/population_2020.tif` |
 | Hot spots, bivariate classes, exposure, sensor offset | `python scripts/map_analysis.py` | `research/rasters/hotspots_*.tif`, `research/rasters/bivariate_*.tif`, `docs/data/map_analysis.json` |
-| Printed maps | `python scripts/render_maps.py` | `docs/assets/maps/*.png`, `docs/data/maps.json` |
+| Printed maps | `python scripts/render_maps.py` | `docs/assets/maps/*.webp`, `docs/data/maps.json` |
 | Explorer overlays | `python scripts/web_overlays.py` | `docs/data/maps/suhi_*.png`, `docs/data/overlays.json` |
 | Tests | `pytest` | |
 

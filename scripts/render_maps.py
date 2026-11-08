@@ -5,24 +5,26 @@ arrow, latitude/longitude graticule, LGA and state boundaries, no-data entry, op
 and a credit line with sources, coordinate system, author and date. Maps are drawn in the grid's
 own projection, WGS 84 / UTM zone 31N (EPSG:32631), so the scale bar is exact.
 
-    python scripts/render_maps.py            # writes docs/assets/maps/*.png and docs/data/maps.json
+    python scripts/render_maps.py            # writes docs/assets/maps/*.webp and docs/data/maps.json
 """
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import matplotlib.patheffects as pe
+import matplotlib.pyplot as plt
 import numpy as np
 import rasterio
 from matplotlib import colors as mcolors
-from matplotlib.patches import Patch, Rectangle, Polygon as MplPolygon
 from matplotlib.collections import LineCollection
-from rasterio.warp import transform as tr, transform_geom
+from matplotlib.patches import Patch, Rectangle
+from matplotlib.patches import Polygon as MplPolygon
+from rasterio.warp import transform as tr
+from rasterio.warp import transform_geom
 
 ROOT = Path(__file__).resolve().parents[1]
 RAS = ROOT / "research" / "rasters"
@@ -43,8 +45,10 @@ SUHI_NORM = mcolors.Normalize(-4, 10)
 CHANGE = mcolors.LinearSegmentedColormap.from_list("chg", ["#1c5cab", "#86b6ef", "#f4f3ef", "#f9a05a", "#a93a08"])
 GREEN = mcolors.LinearSegmentedColormap.from_list("ndvi", ["#f3efe2", "#c9e2a8", "#7fc283", "#2f8a3f", "#0b461e"])
 NDBI = mcolors.LinearSegmentedColormap.from_list("ndbi", ["#2f6b4f", "#a9c9a4", "#f2f1ec", "#b9a99a", "#5c4436"])
-COUNT = mcolors.LinearSegmentedColormap.from_list("cnt", ["#f2f1ec", "#c8c6bf", "#8f8d86", "#4d4b46", "#1f1e1b"])
+COUNT = mcolors.LinearSegmentedColormap.from_list("cnt", ["#c9ece6", "#7fcdbb", "#2c9c8f", "#126b63", "#00393a"])   # starts darker than the no-data grey
 POP = mcolors.LinearSegmentedColormap.from_list("pop", ["#f6f1f9", "#d4b9da", "#a678b8", "#6a3d9a", "#2d0f4e"])
+# WorldCover 2021 v200 product validation report v2.0: overall accuracy for Africa
+WC_ACC_AFRICA = 76.5
 WORLDCOVER = [(10, "Tree cover", "#006400"), (20, "Shrubland", "#ffbb22"), (30, "Grassland", "#ffff4c"), (40, "Cropland", "#f096ff"),
               (50, "Built-up", "#fa0000"), (60, "Bare / sparse vegetation", "#b4b4b4"), (80, "Permanent water", "#0064c8"),
               (90, "Herbaceous wetland", "#0096a0"), (95, "Mangroves", "#00cf75")]
@@ -186,9 +190,15 @@ class Base:
 
 def save(fig, name):
     OUT.mkdir(parents=True, exist_ok=True)
-    fig.savefig(OUT / f"{name}.png", dpi=150, facecolor="white")
+    import io
+
+    from PIL import Image
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png", dpi=200, facecolor="white")  # 2200 px wide: sharp at full column width on high-density screens
     plt.close(fig)
-    return f"assets/maps/{name}.png"
+    img = Image.open(buf).convert("RGB")
+    img.save(OUT / f"{name}.webp", quality=90, method=6)   # about a third of a PNG's size, without the banding of a 256-colour palette
+    return f"assets/maps/{name}.webp"
 
 
 # ---------------- maps ----------------
@@ -209,27 +219,27 @@ def period_note(lab):
 
 def map_reference(B):
     fig, (ax,), h = B.figure("Lagos State: local government areas and countryside reference",
-                             "20 LGAs (FAO GAUL 2015) and the rural reference used for the heat island: unbuilt land within 20 km (ESA WorldCover 2021)")
+                             "20 LGAs (FAO GAUL 2015) and the countryside reference: unbuilt land within 20 km, inside the state and around it (ESA WorldCover 2021)")
     ref, _ = load("reference_mask.tif")
-    ax.imshow(np.where(ref > 0, 1.0, np.nan), extent=B.extent, cmap=mcolors.ListedColormap(["#cfe3c2"]), interpolation="nearest", zorder=2)
-    for i, s in enumerate(B.shapes):
-        ax.add_patch(MplPolygon(np.array(s["coordinates"][0]), closed=True, facecolor="#f4f2ec", edgecolor="none", zorder=2.5, alpha=0.85))
+    for s in B.shapes:   # LGA fill first, so the reference inside the state stays visible on top
+        ax.add_patch(MplPolygon(np.array(s["coordinates"][0]), closed=True, facecolor="#f4f2ec", edgecolor="none", zorder=1.5))
+    ax.imshow(np.where(ref > 0, 1.0, np.nan), extent=B.extent, cmap=mcolors.ListedColormap(["#a9cf96"]), interpolation="nearest", zorder=2)
     B.boundaries(ax, lw=0.6)
     for f, s in zip(B.lgas["features"], B.shapes):
         if f["properties"]["land_area_km2"] >= 60:
             ring = np.array(s["coordinates"][0]); ax.text(ring[:, 0].mean(), ring[:, 1].mean(), f["properties"]["lga_name"], fontsize=6.5, ha="center", va="center", color=INK, zorder=7)
     B.scalebar(ax); B.locator(ax)
-    fig.patches.append(Rectangle((0.04, 0.36 / h), 0.018, 0.13 / h, transform=fig.transFigure, facecolor="#cfe3c2", edgecolor="#9a9a9a", lw=0.4))
+    fig.patches.append(Rectangle((0.04, 0.36 / h), 0.018, 0.13 / h, transform=fig.transFigure, facecolor="#a9cf96", edgecolor="#9a9a9a", lw=0.4))
     fig.text(0.063, 0.425 / h, "Countryside reference (unbuilt land within 20 km)", fontsize=7.5, va="center")
     fig.patches.append(Rectangle((0.36, 0.36 / h), 0.018, 0.13 / h, transform=fig.transFigure, facecolor="#f4f2ec", edgecolor="#3a3a3a", lw=0.4))
-    fig.text(0.383, 0.425 / h, "LGA (labels: LGAs over 60 km² of land)", fontsize=7.5, va="center")
+    fig.text(0.383, 0.425 / h, "Built-up land and water inside the LGAs (labels: LGAs over 60 km² of land)", fontsize=7.5, va="center")
     B.credit(fig, h, "FAO GAUL 2015; ESA WorldCover 2021 v200; Natural Earth")
     return save(fig, "m01_reference")
 
 
 def map_landcover(B):
     wc, _ = load("worldcover_2021.tif")
-    fig, (ax,), h = B.figure("Land cover, 2021", "ESA WorldCover 2021 v200, 10 m, shown at 60 m (majority). Overall accuracy 76.5% for Africa (independent validation)")
+    fig, (ax,), h = B.figure("Land cover, 2021", f"ESA WorldCover 2021 v200, 10 m, shown at 60 m (majority). Overall accuracy {WC_ACC_AFRICA}% for Africa (independent validation)")
     codes = [c for c, _, _ in WORLDCOVER]
     idx = np.full(wc.shape, np.nan)
     for i, c in enumerate(codes):
@@ -285,12 +295,13 @@ def map_hotspots(B, A):
     rgba = np.zeros(cls.shape + (4,))
     for k, c in cols.items():
         rgba[cls == k] = mcolors.to_rgba(c)
+    B.raster(ax, np.full(B.shape, np.nan), mcolors.ListedColormap([NODATA]), mcolors.Normalize(0, 1))   # in-state water and no-data underneath
     ax.imshow(rgba, extent=ext, interpolation="nearest", zorder=3)
     B.boundaries(ax); B.labels(ax); B.scalebar(ax); B.locator(ax)
     items = [(cols[3], f"Hot spot ({hs['hot']:,} cells)"), (cols[1], f"Cold spot ({hs['cold']:,} cells)"),
-             (cols[2], f"Not significant ({hs['not_significant']:,} cells)"), ("white", "Too few clear observations or mostly water")]
+             (cols[2], f"Not significant ({hs['not_significant']:,} cells)"), (NODATA, "Too few clear observations"), (WATER, "Water")]
     for k, (c, txt) in enumerate(items):
-        x = 0.04 + k * 0.22
+        x = 0.04 + k * 0.19
         fig.patches.append(Rectangle((x, 0.5 / h), 0.018, 0.13 / h, transform=fig.transFigure, facecolor=c, edgecolor="#9a9a9a", lw=0.4))
         fig.text(x + 0.023, 0.565 / h, txt, fontsize=7.5, va="center")
     fig.text(0.04, 0.30 / h, hs["note"], fontsize=7, color=INK2)
@@ -301,6 +312,7 @@ def map_hotspots(B, A):
 def map_bivariate(B, A):
     bv = A["bivariate"]
     arr, _ = load(f"bivariate_{LATEST}.tif")
+    arr = np.nan_to_num(arr)   # 0 (no class) is stored as nodata
     pal = bivar_colors()
     rgba = np.zeros(arr.shape + (4,))
     for i in range(3):
@@ -326,6 +338,9 @@ def map_bivariate(B, A):
     fig.text(0.16, (ly + 0.60) / h, f"NDVI terciles: below {nt[0]:.2f} · {nt[0]:.2f}–{nt[1]:.2f} · above {nt[1]:.2f}", fontsize=7.5)
     fig.text(0.16, (ly + 0.38) / h, f"Heat island terciles: below {st[0]:.1f} °C · {st[0]:.1f}–{st[1]:.1f} °C · above {st[1]:.1f} °C", fontsize=7.5)
     hot_bare = bv["share_by_class"]["20"] * 100; cool_green = bv["share_by_class"]["02"] * 100
+    for k, (col, txt) in enumerate(((WATER, "Water (not analysed)"), (NODATA, "No clear observation"))):
+        fig.patches.append(Rectangle((0.74, (ly + 0.5 - k * 0.22) / h), 0.018, 0.13 / h, transform=fig.transFigure, facecolor=col, edgecolor="#9a9a9a", lw=0.4))
+        fig.text(0.763, (ly + 0.565 - k * 0.22) / h, txt, fontsize=7, color=INK2, va="center")
     fig.text(0.16, (ly + 0.16) / h, f"Least green and hottest: {hot_bare:.0f}% of cells; greenest and coolest: {cool_green:.0f}%. "
              f"Rank correlation across cells {bv['spearman_ndvi_suhi_cells']:.2f} (cells are not independent).", fontsize=7.5, color=INK2)
     B.credit(fig, h, LS)
@@ -414,7 +429,7 @@ def main():
     built["m14_ndvi_heat"] = map_bivariate(B, A)
     built["m15_exposure"] = chart_exposure(A)
     (OUT.parent.parent / "data").mkdir(exist_ok=True)
-    (ROOT / "docs" / "data" / "maps.json").write_text(json.dumps({"built": DATE, "maps": built, "rasters": meta()}, indent=1) + "\n")
+    (ROOT / "docs" / "data" / "maps.json").write_text(json.dumps({"built": DATE, "maps": built, "rasters": meta(), "worldcover_accuracy_africa_pct": WC_ACC_AFRICA}, indent=1) + "\n")
     print(json.dumps(built, indent=1))
 
 
