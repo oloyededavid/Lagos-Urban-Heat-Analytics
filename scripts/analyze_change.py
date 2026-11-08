@@ -164,7 +164,7 @@ def run(data_dir: Path = DATA, out_path: Path | None = None) -> dict:
     sd = draws_for[last] - draws_for[first]
     s_delta = state[last]["weighted_suhi"] - state[first]["weighted_suhi"]
     state_change = {"delta": r(s_delta), "ci95": [r(np.nanpercentile(sd, 2.5)), r(np.nanpercentile(sd, 97.5))],
-                    "lgas": len(both), "note": "LGAs with enough clear passes in both the first and last period"}
+                    "lgas": len(both), "note": "LGAs with enough clear passes in every period"}
 
     # Urbanisation test across LGAs
     full = both
@@ -178,12 +178,20 @@ def run(data_dir: Path = DATA, out_path: Path | None = None) -> dict:
              "r2": r(lr.rvalue ** 2, 3), "p_value": r(lr.pvalue, 6), "spearman_rho": r(rho, 3),
              "spearman_p": r(rho_p, 6), "ghsl_years": [first_year, last_year],
              "points": [{"lga": n, "built_change_pp": r(xi, 2), "suhi_change": r(yi)} for n, xi, yi in zip(full, x, y)]}
+    # Leverage check: refit without the LGAs that urbanised most, to see whether the link survives them.
+    drop = [full[i] for i in np.argsort(-x)[:3]]
+    keep = np.array([n not in drop for n in full])
+    lk = stats.linregress(x[keep], y[keep])
+    tk = stats.t.ppf(0.975, keep.sum() - 2)
+    urban["without_most_built"] = {"dropped": drop, "n": int(keep.sum()), "slope_c_per_10pp": r(lk.slope * 10, 3),
+                                   "ci95": [r((lk.slope - tk * lk.stderr) * 10, 3), r((lk.slope + tk * lk.stderr) * 10, 3)],
+                                   "p_value": r(lk.pvalue, 6)}
 
     used = [s for s in scenes if s["used"] == "yes"]
     ref_by_period = defaultdict(list)
     for s in used:
         if int(s["season"]) in period_of:
-            ref_by_period[period_of[int(s["season"])]] .append(float(s["ref_lst"]))
+            ref_by_period[period_of[int(s["season"])]].append(float(s["ref_lst"]))
     for p in periods:
         p["ref_lst_median"] = r(np.median(ref_by_period[p["label"]])) if ref_by_period[p["label"]] else None
 
@@ -207,7 +215,8 @@ def run(data_dir: Path = DATA, out_path: Path | None = None) -> dict:
          "stats": {"share_first": hot_first, "share_last": hot_last, "threshold_c": 3}},
         {"id": "urbanisation", "title": "LGAs that urbanised most warmed most",
          "verdict": "Significant" if urban["ci95"][0] > 0 else "Not robust",
-         "stats": {k: urban[k] for k in ("slope_c_per_10pp", "ci95", "r2", "p_value", "spearman_rho", "n")}},
+         "stats": {**{k: urban[k] for k in ("slope_c_per_10pp", "ci95", "r2", "p_value", "spearman_rho", "n")},
+                   "without_most_built": urban["without_most_built"]}},
     ]
     summary = {"script": "scripts/analyze_change.py", "source": meta.get("script"),
                "source_version": meta.get("script_version"), "export_utc": meta.get("export_utc"),

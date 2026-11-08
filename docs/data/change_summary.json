@@ -210,7 +210,7 @@
    2.53
   ],
   "lgas": 17,
-  "note": "LGAs with enough clear passes in both the first and last period"
+  "note": "LGAs with enough clear passes in every period"
  },
  "urbanisation": {
   "n": 17,
@@ -313,7 +313,21 @@
     "built_change_pp": 2.1,
     "suhi_change": 0.33
    }
-  ]
+  ],
+  "without_most_built": {
+   "dropped": [
+    "Alimosho",
+    "Ikorodu",
+    "Eti-Osa"
+   ],
+   "n": 14,
+   "slope_c_per_10pp": -0.574,
+   "ci95": [
+    -3.9,
+    2.752
+   ],
+   "p_value": 0.713612
+  }
  },
  "lgas": {
   "Agege": {
@@ -1879,7 +1893,21 @@
     "r2": 0.376,
     "p_value": 0.008831,
     "spearman_rho": 0.355,
-    "n": 17
+    "n": 17,
+    "without_most_built": {
+     "dropped": [
+      "Alimosho",
+      "Ikorodu",
+      "Eti-Osa"
+     ],
+     "n": 14,
+     "slope_c_per_10pp": -0.574,
+     "ci95": [
+      -3.9,
+      2.752
+     ],
+     "p_value": 0.713612
+    }
    }
   }
  ]
