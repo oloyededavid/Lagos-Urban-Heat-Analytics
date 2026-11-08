@@ -976,7 +976,7 @@
             </div>
             <div class="brand-text">
                 <h1 class="brand-title">Lagos Urban Heat &amp; Exposure Analytics</h1>
-                <p class="brand-sub">Interactive Explorer · Contemporary Exposure (2022/23–2023/24) & Historical Heat Island (1985–2026)</p>
+                <p class="brand-sub">Explorer · 20 LGAs · dry seasons 1985–2026</p>
             </div>
         </div>
 
@@ -986,6 +986,7 @@
         </span>
 
         <div class="appbar-actions">
+            <a class="btn" href="./" style="white-space:nowrap;width:auto;padding:0 10px">The study</a>
             <button type="button" class="btn btn-icon" id="btn-theme" aria-label="Switch theme" title="Switch theme"></button>
             <details class="menu" id="download-menu">
                 <summary class="btn" aria-label="Download data">
@@ -1769,10 +1770,10 @@
         const s = f.stats;
         switch (f.id) {
             case 'state': return [`Averaged over Lagos State, land was ${fmtSigned(s.first, 1)} °C relative to the countryside in ${niceLabel(s.from)} and ${fmtSigned(s.last, 1)} °C in ${niceLabel(s.to)}: a change of ${fmtSigned(s.delta, 1)} °C (95% interval ${fmtSigned(s.ci95[0], 1)} to ${fmtSigned(s.ci95[1], 1)} °C).`, `Δ = ${fmtSigned(s.delta, 2)} °C · 95% interval ${fmtSigned(s.ci95[0], 2)} to ${fmtSigned(s.ci95[1], 2)}`];
-            case 'lgas': return [`The largest increases were on the edges of the city: ${s.top5.slice(0, 4).join(', ')}. Of the ${s.n_testable} LGAs with enough clear mornings to test, ${s.n_warmed} warmed by more than chance allows, and ${s.n_trend_fdr === 1 ? 'one shows' : `${s.n_trend_fdr} show`} a steady upward trend across all dry seasons after correcting for multiple testing across the ${s.n_testable} testable LGAs. The dense core was already hot in the 1980s and 1990s.`, `warmed: ${s.n_warmed}/${s.n_testable} testable · significant trend (FDR): ${s.n_trend_fdr}`];
+            case 'lgas': return [`The largest increases were on the edges of the city: ${s.top5.slice(0, 4).join(', ')}. Of the ${s.n_testable} LGAs with enough clear mornings to test, ${s.n_warmed} warmed by more than chance allows, and ${s.n_trend_fdr === 1 ? 'one shows' : `${s.n_trend_fdr} show`} a steady upward trend across all dry seasons after correcting for multiple testing. The dense core was already hot in the 1980s and 1990s.`, `warmed: ${s.n_warmed}/${s.n_testable} testable · significant trend (FDR): ${s.n_trend_fdr}`];
             case 'hot_area': return [`The share of Lagos land more than ${s.threshold_c} °C hotter than the countryside went from ${pct(s.share_first)} to ${pct(s.share_last)}, as the city spread east along Lekki and north towards Ikorodu.`, `pixels above +${s.threshold_c} °C: ${pct(s.share_first)} → ${pct(s.share_last)}`];
             case 'urbanisation': return [s.ci95[0] > 0
-                ? `LGAs whose built-up share grew most also gained the most heat: about ${fmtSigned(s.slope_c_per_10pp, 1)} °C for every 10 percentage points of land newly built up (95% interval ${fmtSigned(s.ci95[0], 1)} to ${fmtSigned(s.ci95[1], 1)} °C). Unlike the snapshot comparison, this follows the same places through time.`
+                ? `LGAs whose built-up share grew most also gained the most heat: about ${fmtSigned(s.slope_c_per_10pp, 1)} °C for every 10 percentage points of land newly built up (95% interval ${fmtSigned(s.ci95[0], 1)} to ${fmtSigned(s.ci95[1], 1)} °C). Unlike the snapshot comparison, this follows the same places through time.${s.without_most_built ? ` The link rests on ${s.without_most_built.dropped.join(', ')}, the LGAs that urbanised most; without them it disappears (${fmtSigned(s.without_most_built.slope_c_per_10pp, 1)} °C per 10 points, 95% interval ${fmtSigned(s.without_most_built.ci95[0], 1)} to ${fmtSigned(s.without_most_built.ci95[1], 1)} °C).` : ''}`
                 : `The link between new building and new heat is not clear enough across 20 LGAs (about ${fmtSigned(s.slope_c_per_10pp, 1)} °C per 10 percentage points built up, 95% interval ${fmtSigned(s.ci95[0], 1)} to ${fmtSigned(s.ci95[1], 1)} °C).`,
                 `slope ${fmtSigned(s.slope_c_per_10pp, 2)} °C / 10 pp · R² = ${fmt(s.r2, 2)} · Spearman ρ = ${fmt(s.spearman_rho, 2)}`];
             default: return ['', ''];
