@@ -1,0 +1,903 @@
+{
+ "script": "scripts/map_analysis.py",
+ "period": "2020-2025",
+ "hotspots": {
+  "cell_m": 960,
+  "neighbour_radius_m": 1920,
+  "fdr_q": 0.05,
+  "cells": 3043,
+  "hot": 878,
+  "cold": 850,
+  "not_significant": 1315,
+  "note": "Input values are spatially autocorrelated medians, so significance is optimistic; read classes as a pattern, not as independent tests."
+ },
+ "bivariate": {
+  "ndvi_terciles": [
+   0.346,
+   0.612
+  ],
+  "suhi_terciles": [
+   -1.03,
+   4.0
+  ],
+  "share_by_class": {
+   "00": 0.0018,
+   "01": 0.0517,
+   "02": 0.2798,
+   "10": 0.0426,
+   "11": 0.2371,
+   "12": 0.0536,
+   "20": 0.2889,
+   "21": 0.044,
+   "22": 0.0005
+  },
+  "spearman_ndvi_suhi_cells": -0.911,
+  "cells": 752684,
+  "note": "Cell-level rank correlation across one region; neighbouring cells are not independent, so no p value is given."
+ },
+ "exposure": {
+  "source": "WorldPop 2020, 100 m, unconstrained (modelled, not a census)",
+  "classes_c": [
+   "below 0",
+   "0 to 2",
+   "2 to 4",
+   "4 to 6",
+   "6 or more"
+  ],
+  "population_on_land": 13962856,
+  "unobserved": 165088,
+  "state": {
+   "below 0": 778527,
+   "0 to 2": 523399,
+   "2 to 4": 1120394,
+   "4 to 6": 3822727,
+   "6 or more": 7552721
+  },
+  "lga": [
+   {
+    "lga_name": "Agege",
+    "population": 706789,
+    "unobserved": 0,
+    "below 0": 0,
+    "0 to 2": 0,
+    "2 to 4": 11955,
+    "4 to 6": 296331,
+    "6 or more": 398504
+   },
+   {
+    "lga_name": "Ajeromi/Ifelodun",
+    "population": 1044226,
+    "unobserved": 0,
+    "below 0": 0,
+    "0 to 2": 0,
+    "2 to 4": 9801,
+    "4 to 6": 158581,
+    "6 or more": 875844
+   },
+   {
+    "lga_name": "Alimosho",
+    "population": 2014128,
+    "unobserved": 0,
+    "below 0": 59569,
+    "0 to 2": 46393,
+    "2 to 4": 85314,
+    "4 to 6": 501848,
+    "6 or more": 1321004
+   },
+   {
+    "lga_name": "Amuwo Odofin",
+    "population": 500655,
+    "unobserved": 5147,
+    "below 0": 53978,
+    "0 to 2": 46939,
+    "2 to 4": 90011,
+    "4 to 6": 176234,
+    "6 or more": 128345
+   },
+   {
+    "lga_name": "Apapa",
+    "population": 339862,
+    "unobserved": 1878,
+    "below 0": 2503,
+    "0 to 2": 6329,
+    "2 to 4": 14955,
+    "4 to 6": 70396,
+    "6 or more": 243802
+   },
+   {
+    "lga_name": "Badagry",
+    "population": 359746,
+    "unobserved": 3684,
+    "below 0": 120451,
+    "0 to 2": 55197,
+    "2 to 4": 75756,
+    "4 to 6": 69626,
+    "6 or more": 35031
+   },
+   {
+    "lga_name": "Epe",
+    "population": 278140,
+    "unobserved": 41567,
+    "below 0": 119206,
+    "0 to 2": 41320,
+    "2 to 4": 33616,
+    "4 to 6": 25417,
+    "6 or more": 17014
+   },
+   {
+    "lga_name": "Eti-Osa",
+    "population": 425418,
+    "unobserved": 21120,
+    "below 0": 11278,
+    "0 to 2": 24605,
+    "2 to 4": 128854,
+    "4 to 6": 192985,
+    "6 or more": 46576
+   },
+   {
+    "lga_name": "Ibeju Lekki",
+    "population": 178063,
+    "unobserved": 44374,
+    "below 0": 51076,
+    "0 to 2": 20671,
+    "2 to 4": 23398,
+    "4 to 6": 25258,
+    "6 or more": 13286
+   },
+   {
+    "lga_name": "Ifako/Ijaye",
+    "population": 665835,
+    "unobserved": 0,
+    "below 0": 2988,
+    "0 to 2": 5247,
+    "2 to 4": 17098,
+    "4 to 6": 156640,
+    "6 or more": 483861
+   },
+   {
+    "lga_name": "Ikeja",
+    "population": 523823,
+    "unobserved": 0,
+    "below 0": 3516,
+    "0 to 2": 6870,
+    "2 to 4": 13147,
+    "4 to 6": 77546,
+    "6 or more": 422744
+   },
+   {
+    "lga_name": "Ikorodu",
+    "population": 814813,
+    "unobserved": 10605,
+    "below 0": 69910,
+    "0 to 2": 68560,
+    "2 to 4": 133417,
+    "4 to 6": 300127,
+    "6 or more": 232194
+   },
+   {
+    "lga_name": "Kosofe",
+    "population": 1032060,
+    "unobserved": 1400,
+    "below 0": 72167,
+    "0 to 2": 60924,
+    "2 to 4": 122537,
+    "4 to 6": 329706,
+    "6 or more": 445325
+   },
+   {
+    "lga_name": "Lagos Island",
+    "population": 301676,
+    "unobserved": 15298,
+    "below 0": 17157,
+    "0 to 2": 17674,
+    "2 to 4": 48526,
+    "4 to 6": 118234,
+    "6 or more": 84788
+   },
+   {
+    "lga_name": "Lagos Mainland",
+    "population": 511530,
+    "unobserved": 0,
+    "below 0": 2622,
+    "0 to 2": 12251,
+    "2 to 4": 30461,
+    "4 to 6": 152919,
+    "6 or more": 313277
+   },
+   {
+    "lga_name": "Mushin",
+    "population": 959012,
+    "unobserved": 0,
+    "below 0": 0,
+    "0 to 2": 0,
+    "2 to 4": 8129,
+    "4 to 6": 266726,
+    "6 or more": 684157
+   },
+   {
+    "lga_name": "Ojo",
+    "population": 925554,
+    "unobserved": 20015,
+    "below 0": 176871,
+    "0 to 2": 85758,
+    "2 to 4": 168603,
+    "4 to 6": 278939,
+    "6 or more": 195368
+   },
+   {
+    "lga_name": "Oshodi/Isolo",
+    "population": 972572,
+    "unobserved": 0,
+    "below 0": 15096,
+    "0 to 2": 19038,
+    "2 to 4": 53255,
+    "4 to 6": 269715,
+    "6 or more": 615467
+   },
+   {
+    "lga_name": "Shomolu",
+    "population": 626085,
+    "unobserved": 0,
+    "below 0": 140,
+    "0 to 2": 5277,
+    "2 to 4": 34486,
+    "4 to 6": 263662,
+    "6 or more": 322519
+   },
+   {
+    "lga_name": "Surulere",
+    "population": 782869,
+    "unobserved": 0,
+    "below 0": 0,
+    "0 to 2": 345,
+    "2 to 4": 17074,
+    "4 to 6": 91836,
+    "6 or more": 673614
+   }
+  ]
+ },
+ "sensor_offset": {
+  "pairs": 47,
+  "seasons": [
+   "2015",
+   "2016",
+   "2017",
+   "2018",
+   "2019"
+  ],
+  "median_l7_minus_l8": 1.21,
+  "ci95": [
+   -2.58,
+   1.84
+  ],
+  "pairs_detail": [
+   {
+    "lga_name": "Mushin",
+    "season": 2015,
+    "l7_minus_l8": 0.84
+   },
+   {
+    "lga_name": "Oshodi/Isolo",
+    "season": 2015,
+    "l7_minus_l8": 0.53
+   },
+   {
+    "lga_name": "Surulere",
+    "season": 2015,
+    "l7_minus_l8": 0.9
+   },
+   {
+    "lga_name": "Agege",
+    "season": 2015,
+    "l7_minus_l8": -0.09
+   },
+   {
+    "lga_name": "Alimosho",
+    "season": 2015,
+    "l7_minus_l8": -0.29
+   },
+   {
+    "lga_name": "Ifako/Ijaye",
+    "season": 2015,
+    "l7_minus_l8": -0.07
+   },
+   {
+    "lga_name": "Ikeja",
+    "season": 2015,
+    "l7_minus_l8": -0.02
+   },
+   {
+    "lga_name": "Agege",
+    "season": 2016,
+    "l7_minus_l8": 2.3
+   },
+   {
+    "lga_name": "Ajeromi/Ifelodun",
+    "season": 2016,
+    "l7_minus_l8": 3.16
+   },
+   {
+    "lga_name": "Alimosho",
+    "season": 2016,
+    "l7_minus_l8": 1.31
+   },
+   {
+    "lga_name": "Amuwo Odofin",
+    "season": 2016,
+    "l7_minus_l8": 1.27
+   },
+   {
+    "lga_name": "Apapa",
+    "season": 2016,
+    "l7_minus_l8": 2.3
+   },
+   {
+    "lga_name": "Badagry",
+    "season": 2016,
+    "l7_minus_l8": 0.58
+   },
+   {
+    "lga_name": "Eti-Osa",
+    "season": 2016,
+    "l7_minus_l8": 1.93
+   },
+   {
+    "lga_name": "Ifako/Ijaye",
+    "season": 2016,
+    "l7_minus_l8": 2.05
+   },
+   {
+    "lga_name": "Ikeja",
+    "season": 2016,
+    "l7_minus_l8": 2.4
+   },
+   {
+    "lga_name": "Ikorodu",
+    "season": 2016,
+    "l7_minus_l8": 0.21
+   },
+   {
+    "lga_name": "Kosofe",
+    "season": 2016,
+    "l7_minus_l8": 1.47
+   },
+   {
+    "lga_name": "Lagos Island",
+    "season": 2016,
+    "l7_minus_l8": 0.53
+   },
+   {
+    "lga_name": "Lagos Mainland",
+    "season": 2016,
+    "l7_minus_l8": 2.36
+   },
+   {
+    "lga_name": "Mushin",
+    "season": 2016,
+    "l7_minus_l8": 2.14
+   },
+   {
+    "lga_name": "Ojo",
+    "season": 2016,
+    "l7_minus_l8": 1.03
+   },
+   {
+    "lga_name": "Oshodi/Isolo",
+    "season": 2016,
+    "l7_minus_l8": 2.14
+   },
+   {
+    "lga_name": "Shomolu",
+    "season": 2016,
+    "l7_minus_l8": 1.84
+   },
+   {
+    "lga_name": "Surulere",
+    "season": 2016,
+    "l7_minus_l8": 2.14
+   },
+   {
+    "lga_name": "Agege",
+    "season": 2017,
+    "l7_minus_l8": -3.16
+   },
+   {
+    "lga_name": "Alimosho",
+    "season": 2017,
+    "l7_minus_l8": -2.66
+   },
+   {
+    "lga_name": "Ifako/Ijaye",
+    "season": 2017,
+    "l7_minus_l8": -4.31
+   },
+   {
+    "lga_name": "Ikeja",
+    "season": 2017,
+    "l7_minus_l8": -2.51
+   },
+   {
+    "lga_name": "Mushin",
+    "season": 2017,
+    "l7_minus_l8": -6.1
+   },
+   {
+    "lga_name": "Shomolu",
+    "season": 2017,
+    "l7_minus_l8": -2.98
+   },
+   {
+    "lga_name": "Surulere",
+    "season": 2017,
+    "l7_minus_l8": -8.89
+   },
+   {
+    "lga_name": "Agege",
+    "season": 2018,
+    "l7_minus_l8": 1.21
+   },
+   {
+    "lga_name": "Ifako/Ijaye",
+    "season": 2018,
+    "l7_minus_l8": 0.84
+   },
+   {
+    "lga_name": "Ikeja",
+    "season": 2018,
+    "l7_minus_l8": 1.29
+   },
+   {
+    "lga_name": "Ajeromi/Ifelodun",
+    "season": 2018,
+    "l7_minus_l8": 2.54
+   },
+   {
+    "lga_name": "Kosofe",
+    "season": 2018,
+    "l7_minus_l8": 2.83
+   },
+   {
+    "lga_name": "Ikorodu",
+    "season": 2018,
+    "l7_minus_l8": 2.02
+   },
+   {
+    "lga_name": "Agege",
+    "season": 2019,
+    "l7_minus_l8": 1.44
+   },
+   {
+    "lga_name": "Alimosho",
+    "season": 2019,
+    "l7_minus_l8": 0.02
+   },
+   {
+    "lga_name": "Ifako/Ijaye",
+    "season": 2019,
+    "l7_minus_l8": 0.56
+   },
+   {
+    "lga_name": "Ikeja",
+    "season": 2019,
+    "l7_minus_l8": 1.51
+   },
+   {
+    "lga_name": "Mushin",
+    "season": 2019,
+    "l7_minus_l8": 1.38
+   },
+   {
+    "lga_name": "Oshodi/Isolo",
+    "season": 2019,
+    "l7_minus_l8": 1.38
+   },
+   {
+    "lga_name": "Shomolu",
+    "season": 2019,
+    "l7_minus_l8": 2.32
+   },
+   {
+    "lga_name": "Surulere",
+    "season": 2019,
+    "l7_minus_l8": 0.48
+   },
+   {
+    "lga_name": "Kosofe",
+    "season": 2019,
+    "l7_minus_l8": 0.71
+   }
+  ]
+ },
+ "agreement_with_ee": {
+  "pairs": 45,
+  "spearman": 0.914,
+  "mean_pc_minus_ee": -0.45,
+  "rmse": 0.62,
+  "note": "Different reference (WorldCover vs GHSL), grid (60 vs 90 m) and pass selection; agreement in ranking matters more than in level.",
+  "detail": [
+   {
+    "lga_name": "Agege",
+    "period": "2000-2012",
+    "ee": 7.26,
+    "pc": 6.51,
+    "pc_passes": 8
+   },
+   {
+    "lga_name": "Agege",
+    "period": "2013-2019",
+    "ee": 7.62,
+    "pc": 7.82,
+    "pc_passes": 11
+   },
+   {
+    "lga_name": "Agege",
+    "period": "2020-2025",
+    "ee": 6.58,
+    "pc": 5.53,
+    "pc_passes": 15
+   },
+   {
+    "lga_name": "Ajeromi/Ifelodun",
+    "period": "2000-2012",
+    "ee": 7.41,
+    "pc": 6.92,
+    "pc_passes": 6
+   },
+   {
+    "lga_name": "Ajeromi/Ifelodun",
+    "period": "2013-2019",
+    "ee": 7.54,
+    "pc": 6.84,
+    "pc_passes": 7
+   },
+   {
+    "lga_name": "Ajeromi/Ifelodun",
+    "period": "2020-2025",
+    "ee": 6.59,
+    "pc": 7.21,
+    "pc_passes": 12
+   },
+   {
+    "lga_name": "Alimosho",
+    "period": "2000-2012",
+    "ee": 4.0,
+    "pc": 3.65,
+    "pc_passes": 7
+   },
+   {
+    "lga_name": "Alimosho",
+    "period": "2013-2019",
+    "ee": 6.19,
+    "pc": 6.04,
+    "pc_passes": 9
+   },
+   {
+    "lga_name": "Alimosho",
+    "period": "2020-2025",
+    "ee": 6.15,
+    "pc": 5.5,
+    "pc_passes": 11
+   },
+   {
+    "lga_name": "Amuwo Odofin",
+    "period": "2000-2012",
+    "ee": 3.44,
+    "pc": 3.38,
+    "pc_passes": 8
+   },
+   {
+    "lga_name": "Amuwo Odofin",
+    "period": "2013-2019",
+    "ee": 4.13,
+    "pc": 3.64,
+    "pc_passes": 7
+   },
+   {
+    "lga_name": "Apapa",
+    "period": "2000-2012",
+    "ee": 7.06,
+    "pc": 6.71,
+    "pc_passes": 8
+   },
+   {
+    "lga_name": "Badagry",
+    "period": "2000-2012",
+    "ee": 1.48,
+    "pc": 1.35,
+    "pc_passes": 7
+   },
+   {
+    "lga_name": "Badagry",
+    "period": "2020-2025",
+    "ee": 1.59,
+    "pc": 0.92,
+    "pc_passes": 9
+   },
+   {
+    "lga_name": "Eti-Osa",
+    "period": "2000-2012",
+    "ee": 3.89,
+    "pc": 2.87,
+    "pc_passes": 8
+   },
+   {
+    "lga_name": "Eti-Osa",
+    "period": "2013-2019",
+    "ee": 4.25,
+    "pc": 3.84,
+    "pc_passes": 6
+   },
+   {
+    "lga_name": "Ibeju Lekki",
+    "period": "2013-2019",
+    "ee": 0.67,
+    "pc": 0.07,
+    "pc_passes": 5
+   },
+   {
+    "lga_name": "Ifako/Ijaye",
+    "period": "2000-2012",
+    "ee": 6.14,
+    "pc": 5.79,
+    "pc_passes": 7
+   },
+   {
+    "lga_name": "Ifako/Ijaye",
+    "period": "2013-2019",
+    "ee": 7.05,
+    "pc": 7.24,
+    "pc_passes": 9
+   },
+   {
+    "lga_name": "Ifako/Ijaye",
+    "period": "2020-2025",
+    "ee": 6.71,
+    "pc": 6.43,
+    "pc_passes": 13
+   },
+   {
+    "lga_name": "Ikeja",
+    "period": "2000-2012",
+    "ee": 6.91,
+    "pc": 6.52,
+    "pc_passes": 6
+   },
+   {
+    "lga_name": "Ikeja",
+    "period": "2013-2019",
+    "ee": 7.33,
+    "pc": 6.62,
+    "pc_passes": 10
+   },
+   {
+    "lga_name": "Ikeja",
+    "period": "2020-2025",
+    "ee": 6.79,
+    "pc": 6.24,
+    "pc_passes": 12
+   },
+   {
+    "lga_name": "Ikorodu",
+    "period": "2000-2012",
+    "ee": 2.28,
+    "pc": 1.85,
+    "pc_passes": 5
+   },
+   {
+    "lga_name": "Ikorodu",
+    "period": "2020-2025",
+    "ee": 3.65,
+    "pc": 3.2,
+    "pc_passes": 11
+   },
+   {
+    "lga_name": "Kosofe",
+    "period": "2013-2019",
+    "ee": 4.16,
+    "pc": 3.6,
+    "pc_passes": 10
+   },
+   {
+    "lga_name": "Lagos Island",
+    "period": "2000-2012",
+    "ee": 3.51,
+    "pc": 3.12,
+    "pc_passes": 6
+   },
+   {
+    "lga_name": "Lagos Island",
+    "period": "2013-2019",
+    "ee": 4.33,
+    "pc": 4.16,
+    "pc_passes": 4
+   },
+   {
+    "lga_name": "Lagos Mainland",
+    "period": "2000-2012",
+    "ee": 7.02,
+    "pc": 6.55,
+    "pc_passes": 8
+   },
+   {
+    "lga_name": "Lagos Mainland",
+    "period": "2013-2019",
+    "ee": 8.16,
+    "pc": 7.19,
+    "pc_passes": 6
+   },
+   {
+    "lga_name": "Lagos Mainland",
+    "period": "2020-2025",
+    "ee": 6.37,
+    "pc": 6.07,
+    "pc_passes": 12
+   },
+   {
+    "lga_name": "Mushin",
+    "period": "2000-2012",
+    "ee": 7.07,
+    "pc": 5.84,
+    "pc_passes": 10
+   },
+   {
+    "lga_name": "Mushin",
+    "period": "2013-2019",
+    "ee": 7.33,
+    "pc": 7.49,
+    "pc_passes": 8
+   },
+   {
+    "lga_name": "Mushin",
+    "period": "2020-2025",
+    "ee": 7.08,
+    "pc": 6.06,
+    "pc_passes": 13
+   },
+   {
+    "lga_name": "Ojo",
+    "period": "2000-2012",
+    "ee": 2.2,
+    "pc": 2.16,
+    "pc_passes": 8
+   },
+   {
+    "lga_name": "Ojo",
+    "period": "2013-2019",
+    "ee": 2.87,
+    "pc": 2.77,
+    "pc_passes": 7
+   },
+   {
+    "lga_name": "Oshodi/Isolo",
+    "period": "2000-2012",
+    "ee": 5.07,
+    "pc": 4.77,
+    "pc_passes": 9
+   },
+   {
+    "lga_name": "Oshodi/Isolo",
+    "period": "2013-2019",
+    "ee": 6.56,
+    "pc": 6.58,
+    "pc_passes": 8
+   },
+   {
+    "lga_name": "Oshodi/Isolo",
+    "period": "2020-2025",
+    "ee": 6.44,
+    "pc": 5.77,
+    "pc_passes": 11
+   },
+   {
+    "lga_name": "Shomolu",
+    "period": "2000-2012",
+    "ee": 7.12,
+    "pc": 6.06,
+    "pc_passes": 10
+   },
+   {
+    "lga_name": "Shomolu",
+    "period": "2013-2019",
+    "ee": 8.62,
+    "pc": 6.89,
+    "pc_passes": 8
+   },
+   {
+    "lga_name": "Shomolu",
+    "period": "2020-2025",
+    "ee": 6.32,
+    "pc": 5.53,
+    "pc_passes": 15
+   },
+   {
+    "lga_name": "Surulere",
+    "period": "2000-2012",
+    "ee": 7.67,
+    "pc": 7.18,
+    "pc_passes": 8
+   },
+   {
+    "lga_name": "Surulere",
+    "period": "2013-2019",
+    "ee": 7.72,
+    "pc": 7.46,
+    "pc_passes": 8
+   },
+   {
+    "lga_name": "Surulere",
+    "period": "2020-2025",
+    "ee": 6.96,
+    "pc": 7.28,
+    "pc_passes": 12
+   }
+  ],
+  "change": {
+   "lgas": 12,
+   "spearman": 0.69,
+   "same_sign": 9,
+   "rmse": 0.47,
+   "detail": [
+    {
+     "lga_name": "Agege",
+     "ee": -0.68,
+     "pc": -0.98
+    },
+    {
+     "lga_name": "Ajeromi/Ifelodun",
+     "ee": -0.82,
+     "pc": 0.29
+    },
+    {
+     "lga_name": "Alimosho",
+     "ee": 2.15,
+     "pc": 1.85
+    },
+    {
+     "lga_name": "Badagry",
+     "ee": 0.11,
+     "pc": -0.43
+    },
+    {
+     "lga_name": "Ifako/Ijaye",
+     "ee": 0.57,
+     "pc": 0.63
+    },
+    {
+     "lga_name": "Ikeja",
+     "ee": -0.12,
+     "pc": -0.29
+    },
+    {
+     "lga_name": "Ikorodu",
+     "ee": 1.37,
+     "pc": 1.36
+    },
+    {
+     "lga_name": "Lagos Mainland",
+     "ee": -0.65,
+     "pc": -0.48
+    },
+    {
+     "lga_name": "Mushin",
+     "ee": 0.01,
+     "pc": 0.22
+    },
+    {
+     "lga_name": "Oshodi/Isolo",
+     "ee": 1.37,
+     "pc": 1.0
+    },
+    {
+     "lga_name": "Shomolu",
+     "ee": -0.8,
+     "pc": -0.54
+    },
+    {
+     "lga_name": "Surulere",
+     "ee": -0.71,
+     "pc": 0.1
+    }
+   ]
+  }
+ }
+}

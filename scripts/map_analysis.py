@@ -184,6 +184,19 @@ def main():
                                     "mean_pc_minus_ee": round(float((p - e).mean()), 2), "rmse": round(float(np.sqrt(((p - e) ** 2).mean())), 2),
                                     "note": "Different reference (WorldCover vs GHSL), grid (60 vs 90 m) and pass selection; agreement in ranking matters more than in level.",
                                     "detail": comp}
+        # agreement on change (first to last period), the quantity Sections 4.6 and 4.7 rely on
+        first, last = "2000-2012", "2020-2025"
+        ch = []
+        for nm, L in ee["lgas"].items():
+            c = L.get("change")
+            a, b = pcm.get((nm, first)), pcm.get((nm, last))
+            if c and c.get("verdict") != "Too few clear days" and a and b and len(a) >= 3 and len(b) >= 3:
+                ch.append({"lga_name": nm, "ee": c["delta"], "pc": round(float(np.median(b) - np.median(a)), 2)})
+        if ch:
+            e = np.array([c["ee"] for c in ch]); p = np.array([c["pc"] for c in ch])
+            out["agreement_with_ee"]["change"] = {"lgas": len(ch), "spearman": round(float(spearmanr(e, p)[0]), 3),
+                                                  "same_sign": int((np.sign(e) == np.sign(p)).sum()), "rmse": round(float(np.sqrt(((p - e) ** 2).mean())), 2),
+                                                  "detail": ch}
     (ROOT / "docs" / "data" / "map_analysis.json").write_text(json.dumps(out, indent=1) + "\n")
     print(json.dumps({k: v for k, v in out.items() if k not in ("exposure",)}, indent=1)[:3000])
     print("exposure state:", out["exposure"]["state"], "unobserved:", out["exposure"]["unobserved"])
