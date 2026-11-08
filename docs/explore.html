@@ -971,9 +971,6 @@
 <div class="app">
     <header class="appbar">
         <div class="brand">
-            <div class="brand-mark" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/><path d="M12 2v3M12 21v1M4.2 4.2l2.1 2.1M17.7 17.7l1.4 1.4M2 13h3M19 13h3M4.2 21.8l2.1-2.1M17.7 8.3l2.1-2.1"/></svg>
-            </div>
             <div class="brand-text">
                 <h1 class="brand-title">Lagos Urban Heat &amp; Exposure Analytics</h1>
                 <p class="brand-sub">Explorer · 20 LGAs · dry seasons 1985–2026</p>
@@ -1311,7 +1308,7 @@
         <h4>1. Areas</h4>
         <p>The 20 Local Government Areas of Lagos State from FAO GAUL 2015 (level 2). The simplified boundaries contain stray line fragments; these are removed when the export is installed, so contiguity-based statistics work. Each LGA's land area excludes open water (Sentinel-2 <span class="mono">MNDWI &gt; 0</span>), and population density is people per km² of land.</p>
         <h4>2. Surface temperature</h4>
-        <p>Landsat 8 and 9 Collection 2 Level-2 surface temperature (<span class="mono">ST_B10 × 0.00341802 + 149 K</span>), cloud, shadow and dilated-cloud masked, over land only, as the median of all dry-season scenes (December–March of 2022/23 and 2023/24). This is the temperature of the ground and roofs at the morning overpass (about 10:30), not the air temperature people feel. MODIS Terra 8-day daytime LST (1 km) over the same period is an independent cross-check.</p>
+        <p>Landsat 8 and 9 Collection 2 Level-2 surface temperature (<span class="mono">ST_B10 × 0.00341802 + 149 K</span>), cloud, shadow and dilated-cloud masked, over land only, as the median of all dry-season scenes (December–March of 2022/23 and 2023/24). This is the temperature of the ground and roofs at the mid-morning overpass, not the air temperature people feel. MODIS Terra 8-day daytime LST (1 km) over the same period is an independent cross-check.</p>
         <h4>3. Vegetation, built-up density and terrain</h4>
         <p>Sentinel-2 surface reflectance, cloud-masked by the Scene Classification Layer, as the dry-season median: <span class="mono">NDVI = (B8 − B4)/(B8 + B4)</span> and <span class="mono">NDBI = (B11 − B8)/(B11 + B8)</span>, over land only. Elevation and slope from the Copernicus GLO-30 DEM.</p>
         <h4>4. Hot spots and clustering</h4>
@@ -1323,7 +1320,7 @@
         <h4>7. Four decades of change</h4>
         <p>Every Landsat 4, 5, 7, 8 and 9 scene of every dry season from 1985 to 2026 (from 2014, Landsat 8 and 9 only). Frames of the same orbit on the same day are joined into one pass. In each pass, each LGA's <strong>surface urban heat island</strong> is its mean land temperature minus the mean of a fixed rural reference: land within 20 km of Lagos State that the EU Global Human Settlement Layer shows as essentially unbuilt in 2020. Because city and countryside are measured in the same pass, the day's weather, haze and sensor largely cancel. Passes where more than 5% of Lagos land reads over 3 °C colder than the countryside are rejected as cloud or fog the cloud mask missed; a pass must also keep at least 3,000 clear reference pixels (about 100 km²), and an LGA counts in a pass only if half of its land is clear. Each period's value is the median across passes, with a bootstrap 95% interval; trends are Theil–Sen slopes across dry seasons with a Mann–Kendall test, corrected for multiple testing across the LGAs with enough seasons to test. Built-up change comes from GHSL (1995 to 2020). Every pass considered is listed in <span class="mono">lagos_change_scenes.csv</span>.</p>
         <h4>8. Limitations</h4>
-        <p>Twenty large areas give little statistical power and hide variation inside each LGA (the ecological fallacy and the modifiable areal unit problem); the heat-island maps show the detail inside them. Results are associations, not causes or forecasts. Only the dry season is covered. Population is WorldPop 2020 and boundaries date from 2015. For the change analysis: the Landsat archive for West Africa has a gap from 1992 to 1999 and few clear scenes in the late 1980s, so the first period has wide intervals; Landsat 5 and 7 passed over earlier in the morning than Landsat 8 and 9; Landsat 7 has striping after May 2003; the rural reference itself may have changed (farming, forest loss), which would make the heat island look smaller, not larger; and GHSL 2020 stands in for the latest period's built-up area.</p>
+        <p>Twenty large areas give little statistical power and hide variation inside each LGA (the ecological fallacy and the modifiable areal unit problem); the heat-island maps show the detail inside them. Results are associations, not causes or forecasts. Only the dry season is covered. Population is WorldPop 2020 and boundaries date from 2015. For the change analysis: the Landsat archive for West Africa has a gap in dry seasons from 1992 to 1998 and few clear scenes in the late 1980s, so the first period has wide intervals; Landsat 5 and 7 passed over earlier in the morning than Landsat 8 and 9; Landsat 7 has striping after May 2003; the rural reference itself may have changed (farming, forest loss), which would make the heat island look smaller, not larger; and GHSL 2020 stands in for the latest period's built-up area.</p>
     </div>
 </dialog>
 
@@ -1403,6 +1400,7 @@
     const fmt = (v, d = 1, s = '') => isNum(v) ? `${Number(v).toFixed(d)}${s}` : '—';
     const fmtInt = (v, s = '') => isNum(v) ? `${Math.round(v).toLocaleString('en-GB')}${s}` : '—';
     const fmtSigned = (v, d = 1, s = '') => isNum(v) ? `${v >= 0 ? '+' : '−'}${Math.abs(v).toFixed(d)}${s}` : '—';
+    const pEq = v => { const t = fmtP(v); return t.startsWith('<') ? `p ${t}` : `p = ${t}`; };
     const fmtP = v => !isNum(v) ? '—' : (v < 0.000001 ? '< 1e-6' : v < 0.0001 ? Number(v).toExponential(1) : Number(v).toFixed(4));
     const ordinal = n => `${n}${(n % 100 >= 11 && n % 100 <= 13) ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th')}`;
 
@@ -1724,11 +1722,11 @@
     function findingText(f) {
         const s = f.stats;
         switch (f.id) {
-            case 'clustering': return [`Neighbouring LGAs have similar surface temperatures (Moran's I = ${fmt(s.I, 2)}, permutation p = ${fmtP(s.p_perm)}). Heat forms a broad pattern across the mainland core rather than being scattered.`, `I = ${fmt(s.I, 2)} · p = ${fmtP(s.p_perm)} · ${s.k} nearest neighbours`];
+            case 'clustering': return [`Neighbouring LGAs have similar surface temperatures (Moran's I = ${fmt(s.I, 2)}, permutation ${pEq(s.p_perm)}). Heat forms a broad pattern across the mainland core rather than being scattered.`, `I = ${fmt(s.I, 2)} · ${pEq(s.p_perm)} · ${s.k} nearest neighbours`];
             case 'hotspots': return [s.n_hot + s.n_cold ? `${s.n_hot} hot and ${s.n_cold} cold spot(s) survive false-discovery-rate correction.` : 'With only 20 large LGAs, no single LGA is a statistically significant hot or cold spot after correcting for multiple tests. The clustering above is a broad pattern, not isolated hot spots.', `FDR-significant hot: ${s.n_hot} · cold: ${s.n_cold}`];
-            case 'vegetation': return [`Across LGAs, every +0.1 of NDVI goes with surfaces about ${fmt(Math.abs(s.beta) / 10, 1)} °C cooler (95% CI ${fmt(Math.abs(s.ci95[1]) / 10, 1)}–${fmt(Math.abs(s.ci95[0]) / 10, 1)} °C), and vegetation alone accounts for ${fmt(s.r2 * 100, 0)}% of the differences in temperature.`, `β = ${fmt(s.beta, 1)} °C per NDVI · R² = ${fmt(s.r2, 2)} · p = ${fmtP(s.p_value)}`];
-            case 'builtup': return [`Greener LGAs are also far less built-up, so the two can't be told apart (VIF = ${fmt(s.vif, 1)}). Allowing for built-up density, the vegetation effect shrinks to about ${fmt(Math.abs(s.beta_ndvi) / 10, 1)} °C per +0.1 NDVI and its 95% interval includes zero. More trees, less concrete, or both: the data cannot say which.`, `β NDVI = ${fmt(s.beta_ndvi, 1)} (CI ${fmt(s.ci95_ndvi[0], 1)} to ${fmt(s.ci95_ndvi[1], 1)}, p = ${fmtP(s.p_ndvi)}) · β NDBI = ${fmt(s.beta_ndbi, 1)} (p = ${fmtP(s.p_ndbi)})`];
-            case 'sensors': return [`MODIS, a separate satellite at 1 km resolution, ranks the LGAs almost identically (ρ = ${fmt(s.rho, 2)}). It reads about ${fmt(s.mean_difference_c, 1)} °C cooler, as expected from its coarser pixels and different sensor.`, `Spearman ρ = ${fmt(s.rho, 2)} · mean difference ${fmt(s.mean_difference_c, 1)} °C`];
+            case 'vegetation': return [`Across LGAs, every +0.1 of NDVI goes with surfaces about ${fmt(Math.abs(s.beta) / 10, 1)} °C cooler (95% CI ${fmt(Math.abs(s.ci95[1]) / 10, 1)}–${fmt(Math.abs(s.ci95[0]) / 10, 1)} °C), and vegetation alone accounts for ${fmt(s.r2 * 100, 0)}% of the differences in temperature.`, `β = ${fmt(s.beta, 1)} °C per NDVI · R² = ${fmt(s.r2, 2)} · ${pEq(s.p_value)}`];
+            case 'builtup': return [`Greener LGAs are also far less built-up, so the two can't be told apart (VIF = ${fmt(s.vif, 1)}). Allowing for built-up density, the vegetation effect shrinks to about ${fmt(Math.abs(s.beta_ndvi) / 10, 1)} °C per +0.1 NDVI and its 95% interval includes zero. More trees, less concrete, or both: the data cannot say which.`, `β NDVI = ${fmt(s.beta_ndvi, 1)} (CI ${fmt(s.ci95_ndvi[0], 1)} to ${fmt(s.ci95_ndvi[1], 1)}, ${pEq(s.p_ndvi)}) · β NDBI = ${fmt(s.beta_ndbi, 1)} (${pEq(s.p_ndbi)})`];
+            case 'sensors': return [`MODIS, a separate satellite at 1 km resolution, ranks the LGAs almost identically (ρ = ${fmt(s.rho, 2)}). It reads about ${fmt(s.mean_difference_c, 1)} °C cooler.`, `Spearman ρ = ${fmt(s.rho, 2)} · mean difference ${fmt(s.mean_difference_c, 1)} °C`];
             case 'exposure': return [`Heat meets the most people in ${s.top5.slice(0, 3).join(', ')}, then ${s.top5.slice(3).join(' and ')}: dense mainland LGAs that are also among the hottest.`, `Rank-based index agrees: ρ = ${fmt(s.rank_agreement, 2)}`];
             default: return ['', ''];
         }
@@ -1769,7 +1767,7 @@
     function changeFindingText(f) {
         const s = f.stats;
         switch (f.id) {
-            case 'state': return [`Averaged over Lagos State, land was ${fmtSigned(s.first, 1)} °C relative to the countryside in ${niceLabel(s.from)} and ${fmtSigned(s.last, 1)} °C in ${niceLabel(s.to)}: a change of ${fmtSigned(s.delta, 1)} °C (95% interval ${fmtSigned(s.ci95[0], 1)} to ${fmtSigned(s.ci95[1], 1)} °C).`, `Δ = ${fmtSigned(s.delta, 2)} °C · 95% interval ${fmtSigned(s.ci95[0], 2)} to ${fmtSigned(s.ci95[1], 2)}`];
+            case 'state': return [`Averaged over the ${s.lgas} LGAs seen clearly in every period, land was ${fmtSigned(s.first, 1)} °C relative to the countryside in ${niceLabel(s.from)} and ${fmtSigned(s.last, 1)} °C in ${niceLabel(s.to)}: a change of ${fmtSigned(s.delta, 1)} °C (95% interval ${fmtSigned(s.ci95[0], 1)} to ${fmtSigned(s.ci95[1], 1)} °C).`, `Δ = ${fmtSigned(s.delta, 2)} °C · 95% interval ${fmtSigned(s.ci95[0], 2)} to ${fmtSigned(s.ci95[1], 2)}`];
             case 'lgas': return [`The largest increases were on the edges of the city: ${s.top5.slice(0, 4).join(', ')}. Of the ${s.n_testable} LGAs with enough clear mornings to test, ${s.n_warmed} warmed by more than chance allows, and ${s.n_trend_fdr === 1 ? 'one shows' : `${s.n_trend_fdr} show`} a steady upward trend across all dry seasons after correcting for multiple testing. The dense core was already hot in the 1980s and 1990s.`, `warmed: ${s.n_warmed}/${s.n_testable} testable · significant trend (FDR): ${s.n_trend_fdr}`];
             case 'hot_area': return [`The share of Lagos land more than ${s.threshold_c} °C hotter than the countryside went from ${pct(s.share_first)} to ${pct(s.share_last)}, as the city spread east along Lekki and north towards Ikorodu.`, `pixels above +${s.threshold_c} °C: ${pct(s.share_first)} → ${pct(s.share_last)}`];
             case 'urbanisation': return [s.ci95[0] > 0
@@ -1807,7 +1805,7 @@
         const u = c.urbanisation;
         $('urban-caption').textContent = `Each dot is an LGA: the change in its built-up share (GHSL ${u.ghsl_years[0]} to ${u.ghsl_years[1]}) against the change in its heat island (${niceLabel(first)} to ${niceLabel(now)}). Slope ${fmtSigned(u.slope_c_per_10pp, 1)} °C per 10 percentage points (95% interval ${fmtSigned(u.ci95[0], 1)} to ${fmtSigned(u.ci95[1], 1)}), R² = ${fmt(u.r2, 2)}. "ns" in the strip marks changes whose interval includes zero.`;
         const ref = periods().map(p => `${niceLabel(p.label)} ${fmt(p.ref_lst_median, 1)} °C`).join(', ');
-        $('state-caption').textContent = `The countryside itself also read warmer over time (median reference temperature ${ref}), which is why raw temperatures would overstate the city's own change. The first period rests on few passes, hence its wide bar.`;
+        $('state-caption').textContent = `The countryside's own temperature changed from period to period (median ${ref}), which is why the heat island is measured against it on the same morning rather than from raw temperatures. The first period rests on few passes, hence its wide bar.`;
         $('change-note').innerHTML = `<strong>How to read this.</strong> The heat island is measured at the morning satellite overpass in the dry season; it is a surface measure, not air temperature. Earlier satellites passed over a little earlier in the morning, when the heat island is weaker, so part of the change may come from the sensors. See <a href="#" data-open="methods-dialog">Methods</a>.`;
     }
     function buildChangeCharts() {
@@ -1957,7 +1955,7 @@
             }
         });
         const both = reg.lst_on_ndvi_ndbi.coefficients;
-        $('coef-caption').textContent = `Alone, each index looks powerful. Together, vegetation's interval (${fmtSigned(both.ndvi.ci95[0] / 10, 1)} to ${fmtSigned(both.ndvi.ci95[1] / 10, 1)} °C) crosses zero, because NDVI and NDBI move almost perfectly together (r = ${fmt(reg.collinearity.r_ndvi_ndbi, 2)}). Built-up density keeps a clear effect.`;
+        $('coef-caption').textContent = `Alone, each index seems to explain the heat. Together, vegetation's interval (${fmtSigned(both.ndvi.ci95[0] / 10, 1)} to ${fmtSigned(both.ndvi.ci95[1] / 10, 1)} °C) crosses zero, because NDVI and NDBI move almost perfectly together (r = ${fmt(reg.collinearity.r_ndvi_ndbi, 2)}). Built-up density keeps a clear effect.`;
         $('explain-lede').textContent = `Each dot is an LGA. Greener LGAs are cooler and built-up LGAs are hotter, but across Lagos the two are close to mirror images, so this panel shows how much of each survives when both are considered together. These are associations, not predictions of what planting trees would do.`;
         const sens = s.sensor_agreement;
         $('sensor-caption').textContent = `The dashed line is perfect agreement. MODIS reads ${fmt(sens.mean_difference_c, 1)} °C cooler on average but orders the LGAs almost the same way (ρ = ${fmt(sens.spearman_rho, 2)}), which supports the Landsat pattern.`;
@@ -1988,7 +1986,7 @@
         const rrow = (model, term, label, m) => { const c = m.coefficients[term]; return `<tr><td>${model}</td><td><strong>${label}</strong></td><td>${fmtSigned(c.beta / 10, 2, ' °C')}</td><td>${fmtSigned(c.ci95[0] / 10, 2)} to ${fmtSigned(c.ci95[1] / 10, 2)}</td><td class="mono">${fmtP(c.p_value)}</td><td>${fmt(m.r2, 2)}</td></tr>`; };
         $('reg-tbody').innerHTML = [rrow('Vegetation only', 'ndvi', 'NDVI', reg.lst_on_ndvi), rrow('Built-up only', 'ndbi', 'NDBI', reg.lst_on_ndbi), rrow('Both', 'ndvi', 'NDVI', reg.lst_on_ndvi_ndbi), rrow('Both', 'ndbi', 'NDBI', reg.lst_on_ndvi_ndbi)].join('');
         const rm = reg.lst_on_ndvi_ndbi.residual_moran;
-        $('reg-note').innerHTML = `<strong>Collinearity:</strong> NDVI and NDBI correlate at r = ${fmt(reg.collinearity.r_ndvi_ndbi, 2)} (VIF = ${fmt(reg.collinearity.vif, 1)}), so their separate effects are poorly identified. Leaving out any one LGA moves the combined-model NDVI effect between ${fmt(reg.leave_one_out_ndvi_beta.min / 10, 2)} and ${fmt(reg.leave_one_out_ndvi_beta.max / 10, 2)} °C per +0.1. Residual Moran's I = ${fmt(rm.I, 2)} (p = ${fmtP(rm.p_perm)}).`;
+        $('reg-note').innerHTML = `<strong>Collinearity:</strong> NDVI and NDBI correlate at r = ${fmt(reg.collinearity.r_ndvi_ndbi, 2)} (VIF = ${fmt(reg.collinearity.vif, 1)}), so their separate effects are poorly identified. Leaving out any one LGA moves the combined-model NDVI effect between ${fmt(reg.leave_one_out_ndvi_beta.min / 10, 2)} and ${fmt(reg.leave_one_out_ndvi_beta.max / 10, 2)} °C per +0.1. Residual Moran's I = ${fmt(rm.I, 2)} (${pEq(rm.p_perm)}).`;
         const sens = s.sensor_agreement, hei = s.heat_exposure, prov = s.provenance;
         $('check-tbody').innerHTML = [
             ['Landsat vs MODIS (Spearman ρ)', `${fmt(sens.spearman_rho, 3)} (p ${fmtP(sens.spearman_p)}), Pearson r = ${fmt(sens.pearson_r, 3)}`],
@@ -2244,7 +2242,6 @@
             const i = f.indexOf(document.activeElement); e.preventDefault(); f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
         }
     });
-    function offerTour() { let seen = false; try { seen = localStorage.getItem('lagos_tour_seen') === '1'; } catch (e) {} if (!seen) setTimeout(() => { if ($('tour').hidden) $('tour-toast').hidden = false; }, 1200); }
 
     // ================= Provenance =================
     function renderProvenance() {
@@ -2309,7 +2306,7 @@
         setTab(STATE.tab);
         selectLga(STATE.lga, { fly: false });
         requestAnimationFrame(() => { if (STATE.lga === 'ALL') fitAll(false); else selectLga(STATE.lga); });
-        offerTour();
+        
     }).catch(err => fail('Data could not be loaded', `Failed to load files from docs/data/ (${err.message}).`));
 })();
 </script>
