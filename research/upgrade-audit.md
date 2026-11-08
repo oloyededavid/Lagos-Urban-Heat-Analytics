@@ -94,3 +94,16 @@ Same structure, type (Satoshi, Zodiak) and light layout as the Oueme-Ogun paper.
 1. **Earth Engine export:** will you run one script in the Earth Engine Code Editor (about 30-60 minutes of processing, results to Google Drive) so the pixel maps can be made? Without it, the maps stay at LGA level, plus the three historical heat-island maps.
 2. **Land cover:** use ESA WorldCover 2021 as a cited, validated product (yes/no).
 3. **Live site:** what did the data-loading problem look like, or allow `oloyededavid.github.io` for testing.
+
+## 9. Independent review, 8 November 2026
+
+Three reviewers who did not build the page (UI/UX critic, QA agent, cartography and remote sensing reviewer) checked the published version. Fixed without new data: unsupported claims ("inner city changed little", "heat has spread outwards", "too strong to be chance", the policy sentence), the 17-LGA scope of the headline figure, abstract rounding, colour meaning in every caption, hot-spot scale (fixed at +/-2, hot is orange and cool is blue, as in Figure 6), hatching for LGAs that cannot be tested, scale bar and north arrow, labels on large LGAs, "built-up density" renamed built-up index, phone layout for the period maps, header Explorer link, one keyboard stop per map, dark-mode and continuous-coverage wording in the explorer.
+
+Not fixable without new analysis (needs an Earth Engine rerun or new data):
+1. Landsat 7 / Landsat 8 overlap test, and a within-sensor change estimate, to separate city change from sensor change.
+2. Sensitivity of the heat-island result to the cold-anomaly cap (5%), the reference buffer (20 km) and the minimum clear-pass rule; a common-footprint version of the period maps.
+3. The same QA masks (ST_QA, cirrus) in the contemporary temperature map, per-LGA clear-observation counts, and an explanation or bound for the 5.4 C Landsat-MODIS offset.
+4. Population-weighted surface temperature and people above a temperature threshold (needs pixel temperature).
+5. GHSL epoch matched to the temperature epoch; inclusion of Epe, Ibeju Lekki and Kosofe (44% of land) in the change analysis.
+6. Sea and lagoon mask for the LGA polygons used in the maps.
+7. Validation of surface temperature against ground measurements.
