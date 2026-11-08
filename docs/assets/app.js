@@ -1,13 +1,14 @@
 /* Lagos surface heat: study page.
-   Every number and map is drawn from docs/data (summary.json, change_summary.json,
-   change_summary_2000_2025.json, lagos_uhi_processed.geojson, context_countries.geojson). */
+   Every number is drawn from docs/data (summary.json, change_summary_2000_2025.json,
+   lagos_uhi_processed.geojson, context_countries.geojson, map_analysis.json, maps.json);
+   map images come from scripts/render_maps.py. */
 (() => {
     'use strict';
     const $ = (s, el = document) => el.querySelector(s);
     const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
     const NS = 'http://www.w3.org/2000/svg';
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let S, C, GEO, CTRY;
+    let S, C, GEO, CTRY, A, M;
 
     // ---------- formatting ----------
     const f = (x, d = 1) => Number(x).toFixed(d).replace(/^-/, '−');
@@ -26,7 +27,7 @@
         const excl = names.filter(n => !common.includes(n));
         const area = ns => ns.reduce((a, n) => a + L[n].land_km2, 0);
         const warmed = names.filter(n => L[n].change && L[n].change.verdict === 'Warmed').sort((a, b) => L[b].change.delta - L[a].change.delta);
-        const few = names.filter(n => L[n].change && L[n].change.verdict === 'Too few clear days');
+        const few = names.filter(n => !L[n].change || L[n].change.verdict === 'Too few clear days');   // untestable: no change value, or too few clear passes
         const smallest = [...GEO.features].sort((a, b) => a.properties.land_area_km2 - b.properties.land_area_km2)[0].properties;
         const rank = [...GEO.features].map(ft => ft.properties).sort((a, b) => b.hei - a.hei).map(p => p.lga_name);
         const ao = labels.map(l => C.state[l].all_observed.weighted_suhi);
@@ -38,7 +39,7 @@
             dState: sf(C.state_change.delta), dCi: `${sf(C.state_change.ci95[0])} to ${sf(C.state_change.ci95[1])}`,
             ikoDelta: sf(iko.delta), ikoCi: `${sf(iko.ci95[0])} to ${sf(iko.ci95[1])}`,
             commonShare: pct(area(common) / area(names)), nTestable: String(testable.length),
-            nFewWord: WORDS[few.length] || String(few.length),
+            nFewWord: (w => w.charAt(0).toUpperCase() + w.slice(1))(WORDS[few.length] || String(few.length)),
             smallKm: int(smallest.land_area_km2), epeKm: int(prop('Epe').land_area_km2),
             refKm: String(C.method.reference_buffer_m / 1000),
             top3: list(S.heat_exposure.top5.slice(0, 3)), alimRank: String(rank.indexOf('Alimosho') + 1),
@@ -48,6 +49,15 @@
             a1: sf(ao[0]), a3: sf(ao[ao.length - 1]),
             urbDrop: list(C.urbanisation.without_most_built.dropped), pass1: String(P[0].n_scenes),
             modisOff: f(S.sensor_agreement.mean_difference_c),
+            // pixel maps (scripts/map_analysis.py, scripts/render_maps.py)
+            p1: String(M.rasters.periods['2000-2012'].passes), p2: String(M.rasters.periods['2013-2019'].passes), p3: String(M.rasters.periods['2020-2025'].passes),
+            wcAcc: f(M.worldcover_accuracy_africa_pct), hotN: int(A.hotspots.hot), coldN: int(A.hotspots.cold), giCells: int(A.hotspots.cells),
+            bivRho: f(A.bivariate.spearman_ndvi_suhi_cells, 2), bivHot: pct(A.bivariate.share_by_class['20']), bivCool: pct(A.bivariate.share_by_class['02']),
+            popM: f(A.exposure.population_on_land / 1e6), exp4: pct((A.exposure.state['4 to 6'] + A.exposure.state['6 or more']) / A.exposure.population_on_land),
+            agreeRho: f(A.agreement_with_ee.spearman, 2), agreeN: String(A.agreement_with_ee.pairs), agreeDiff: f(-A.agreement_with_ee.mean_pc_minus_ee),
+            offset: f(A.sensor_offset.median_l7_minus_l8), offsetCi: `${sf(A.sensor_offset.ci95[0])} to ${sf(A.sensor_offset.ci95[1])}`, offsetN: String(A.sensor_offset.pairs),
+            agreeChRho: f(A.agreement_with_ee.change.spearman, 2), agreeChSign: String(A.agreement_with_ee.change.same_sign), agreeChN: String(A.agreement_with_ee.change.lgas),
+            pTot: String(['2000-2012', '2013-2019', '2020-2025'].reduce((t, k) => t + M.rasters.periods[k].passes, 0)),
         };
         $$('[data-v]').forEach(e => { if (e.dataset.v in v) e.textContent = v[e.dataset.v]; });
     }
@@ -176,25 +186,7 @@
         svg.append(g);
     }
 
-    // ---------- Figure 3b: temperature against vegetation ----------
-    function ndviChart() {
-        const pts = GEO.features.map(ft => ft.properties), W = 640, H = 300, m = { l: 46, r: 16, t: 14, b: 42 };
-        const xs = pts.map(p => p.ndvi), ys = pts.map(p => p.mean_lst);
-        const x0 = Math.floor(Math.min(...xs) * 10) / 10, x1 = Math.ceil(Math.max(...xs) * 10) / 10, y0 = Math.floor(Math.min(...ys)) - 1, y1 = Math.ceil(Math.max(...ys)) + 1;
-        const X = v => m.l + (W - m.l - m.r) * (v - x0) / (x1 - x0), Y = v => m.t + (H - m.t - m.b) * (1 - (v - y0) / (y1 - y0));
-        const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, class: 'svgchart', role: 'img', 'aria-label': 'Surface temperature against vegetation, one dot per LGA; greener LGAs are cooler' });
-        for (let v = Math.ceil(y0); v <= y1; v += 2) { svg.append(el('line', { x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v), class: 'grid' })); svg.append(el('text', { x: m.l - 8, y: Y(v) + 4, 'text-anchor': 'end' }, String(v))); }
-        for (let v = x0; v <= x1 + 1e-9; v += 0.1) svg.append(el('text', { x: X(v), y: H - m.b + 18, 'text-anchor': 'middle' }, f(v, 1)));
-        svg.append(el('text', { x: (m.l + W - m.r) / 2, y: H - 4, 'text-anchor': 'middle', class: 'axis-t' }, 'Vegetation index (NDVI)'));
-        svg.append(el('text', { x: 2, y: m.t - 2, class: 'axis-t' }, '°C'));
-        const c = S.regression.lst_on_ndvi.coefficients, a = c.intercept.beta, b = c.ndvi.beta;
-        svg.append(el('line', { x1: X(x0), y1: Y(a + b * x0), x2: X(x1), y2: Y(a + b * x1), class: 'fit' }));
-        pts.forEach(p => svg.append(el('circle', { cx: X(p.ndvi), cy: Y(p.mean_lst), r: 5, class: 'pt' })));
-        [S.lst.hottest, S.lst.coolest].forEach(n => { const p = prop(n); const right = p.ndvi < (x0 + x1) / 2; svg.append(el('text', { x: X(p.ndvi) + (right ? 9 : -9), y: Y(p.mean_lst) + (right ? -9 : 4), 'text-anchor': right ? 'start' : 'end', class: 'lab' }, n)); });
-        $('#ndvichart').append(svg);
-    }
-
-    // ---------- Figure 6: heat island in each period (no pixel maps for these periods yet) ----------
+    // ---------- Figure 11: heat island in each period, per-LGA record ----------
     function periodChart() {
         const P = C.periods, st = C.state, W = 640, H = 310, m = { l: 46, r: 16, t: 30, b: 56 };
         const hi = Math.ceil(Math.max(...P.map(p => st[p.label].ci95[1]))) + 1;
@@ -243,26 +235,17 @@
     }
 
     const get = u => fetch(u).then(r => { if (!r.ok) throw new Error(`${u}: HTTP ${r.status}`); return r.json(); });
-    Promise.all([get('data/summary.json'), get('data/change_summary_2000_2025.json'), get('data/lagos_uhi_processed.geojson'), get('data/context_countries.geojson')])
-        .then(([s, c, g, ctry]) => {
-            S = s; C = c; GEO = g; CTRY = ctry;
+    Promise.all([get('data/summary.json'), get('data/change_summary_2000_2025.json'), get('data/lagos_uhi_processed.geojson'), get('data/context_countries.geojson'), get('data/map_analysis.json'), get('data/maps.json')])
+        .then(([s, c, g, ctry, a, m]) => {
+            S = s; C = c; GEO = g; CTRY = ctry; A = a; M = m;
             fill();
             const chg = n => C.lgas[n] && C.lgas[n].change;
             const changeState = pr => { const ch = chg(pr.lga_name); return !ch || ch.verdict === 'Too few clear days' ? 'nodata' : ch.verdict === 'Warmed' ? null : 'none'; };
-            lgaMap({ id: 'map-area', kind: 'plain', locator: true, labels: true, fmt: () => '',
-                readout: pr => `<b>${pr.lga_name}</b> · ${int(pr.land_area_km2)} km² of land · ${int(pr.population)} people (2020)` });
-            lgaMap({ id: 'map-lst', kind: 'seq', value: pr => pr.mean_lst, fmt: v => `${f(v)} °C`, unit: 'hotter' });
-            lgaMap({ id: 'map-ndvi', title: 'Vegetation index (NDVI)', kind: 'seq', ramp: 'green', value: pr => pr.ndvi, fmt: v => f(v, 2), unit: 'greener' });
-            lgaMap({ id: 'map-ndbi', title: 'Built-up index (NDBI)', kind: 'seq', ramp: 'grey', value: pr => pr.ndbi, fmt: v => f(v, 2), unit: 'more built up' });
-            lgaMap({ id: 'map-gi', kind: 'div', domain: [-2, 2], value: pr => pr.gi_zscore_k5, fmt: v => sf(v, 1), unit: 'z score, cool to hot',
-                readout: (pr, v) => `<b>${pr.lga_name}</b> z = ${sf(v, 2)} · ${Math.abs(v) < 1.96 ? 'not a hot or cold spot' : 'beyond ±1.96'}` });
-            lgaMap({ id: 'map-people', kind: 'seq', value: pr => pr.hei, fmt: v => f(v, 2), unit: 'higher exposure',
-                readout: (pr, v) => `<b>${pr.lga_name}</b> index ${f(v, 2)} · ${f(pr.mean_lst)} °C · ${int(pr.pop_density)} people per km²` });
             lgaMap({ id: 'map-change', kind: 'seq', domain: [0, 3.5], state: changeState, fmt: v => `${sf(v)} °C`, unit: 'warmer',
                 keyExtra: '<span class="nd"><i style="background:#ece9e2"></i>no clear change</span><span class="nd"><i class="hatch"></i>too few passes</span>',
                 value: pr => { const ch = chg(pr.lga_name); return ch && ch.verdict !== 'Too few clear days' ? ch.delta : null; },
                 readout: (pr, v) => { const ch = chg(pr.lga_name); return `<b>${pr.lga_name}</b> ${v == null ? 'too few clear passes to test' : `${sf(v)} °C (95% interval ${sf(ch.ci95[0])} to ${sf(ch.ci95[1])}) · ${ch.verdict === 'Warmed' ? 'clear change' : 'no clear change'}`}`; } });
-            ndviChart(); periodChart();
+            periodChart();
             chrome();
         })
         .catch(err => { console.error(err); $('#abstract').insertAdjacentHTML('afterbegin', '<p class="small" role="alert">The data files could not be loaded. Open the page through a web server or visit the published site.</p>'); chrome(); });

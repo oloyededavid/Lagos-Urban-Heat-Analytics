@@ -751,3 +751,8 @@ figcaption { hyphens: manual; -webkit-hyphens: manual; }
     .svgchart text, .svgchart .axis-t { font-size: 22px; }
     #ndvichart { margin-top: 8px; }
 }
+
+/* ---------- Map figures (images written by scripts/render_maps.py) ---------- */
+.mapimg a { display: block; border: 1px solid #e4e3de; border-radius: 6px; overflow: hidden; background: #fff; }
+.mapimg a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.mapimg img { width: 100%; height: auto; }
