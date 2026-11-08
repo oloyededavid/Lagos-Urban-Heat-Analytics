@@ -1,6 +1,6 @@
 /* Lagos surface heat: study page.
    Every number and map is drawn from docs/data (summary.json, change_summary.json,
-   lagos_uhi_processed.geojson, context_countries.geojson). */
+   change_summary_2000_2025.json, lagos_uhi_processed.geojson, context_countries.geojson). */
 (() => {
     'use strict';
     const $ = (s, el = document) => el.querySelector(s);
@@ -30,11 +30,15 @@
         const smallest = [...GEO.features].sort((a, b) => a.properties.land_area_km2 - b.properties.land_area_km2)[0].properties;
         const rank = [...GEO.features].map(ft => ft.properties).sort((a, b) => b.hei - a.hei).map(p => p.lga_name);
         const ao = labels.map(l => C.state[l].all_observed.weighted_suhi);
+        const testable = names.filter(n => L[n].change && L[n].change.verdict !== 'Too few clear days');
+        const iko = L.Ikorodu.change;
         const v = {
             nLga: String(GEO.features.length),
             lstRange: f(lst.max - lst.min), lstMin: f(lst.min), lstMax: f(lst.max), coolest: lst.coolest, hottest: lst.hottest,
-            dState: f(C.state_change.delta), dCi: `${f(C.state_change.ci95[0])} to ${f(C.state_change.ci95[1])}`,
-            hot1: pct(P[0].share_above_3c), hot3: pct(P[P.length - 1].share_above_3c),
+            dState: sf(C.state_change.delta), dCi: `${sf(C.state_change.ci95[0])} to ${sf(C.state_change.ci95[1])}`,
+            ikoDelta: sf(iko.delta), ikoCi: `${sf(iko.ci95[0])} to ${sf(iko.ci95[1])}`,
+            commonShare: pct(area(common) / area(names)), nTestable: String(testable.length),
+            nFewWord: WORDS[few.length] || String(few.length),
             smallKm: int(smallest.land_area_km2), epeKm: int(prop('Epe').land_area_km2),
             refKm: String(C.method.reference_buffer_m / 1000),
             top3: list(S.heat_exposure.top5.slice(0, 3)), alimRank: String(rank.indexOf('Alimosho') + 1),
@@ -190,18 +194,24 @@
         $('#ndvichart').append(svg);
     }
 
-    // ---------- Figure 6: the three heat-island maps (the only place they appear) ----------
-    function periods() {
-        const box = $('#periods'), [[la0, lo0], [la1, lo1]] = C.map.bounds, W = 2053, H = 422;
-        const p = ([x, y]) => [(x - lo0) / (lo1 - lo0) * W, (la1 - y) / (la1 - la0) * H];
-        const outlines = GEO.features.map(ft => pathOf(ft, p)).join('');
-        const body = C.periods.map(per => `<p class="pt-head">${per.label.replace('-', '–')} <span>· ${per.n_scenes} clear passes · ${pct(per.share_above_3c)}% of land more than 3 °C above the countryside</span></p>
-            <div class="pstack"><img src="data/${per.file}" alt="Heat-island map of Lagos State, ${per.label}" width="${W}" height="${H}" loading="lazy">
-            <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${outlines}"/></svg></div>`).join('');
-        const st = C.map.stops, lo = st[0][0], hi = st[st.length - 1][0];
-        const grad = st.map(([v, col]) => `${col} ${((v - lo) / (hi - lo) * 100).toFixed(1)}%`).join(', ');
-        box.innerHTML = `<div class="pscroll" tabindex="0" role="region" aria-label="Heat-island maps for the three periods; scroll sideways on small screens"><div class="pinner">${body}</div></div>
-            <div class="ramp-key" style="margin-top:12px"><span>${sf(lo, 0)}</span><span class="bar" style="background:linear-gradient(to right, ${grad})"></span><span>${sf(hi, 0)}</span><span class="u">°C above the countryside</span><span class="nd"><i style="background:#fff;border:1px solid #d6d6d2"></i>no clear pass</span></div>`;
+    // ---------- Figure 6: heat island in each period (no pixel maps for these periods yet) ----------
+    function periodChart() {
+        const P = C.periods, st = C.state, W = 640, H = 310, m = { l: 46, r: 16, t: 30, b: 56 };
+        const hi = Math.ceil(Math.max(...P.map(p => st[p.label].ci95[1]))) + 1;
+        const Y = v => m.t + (H - m.t - m.b) * (1 - v / hi), bw = (W - m.l - m.r) / P.length;
+        const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, class: 'svgchart', role: 'img',
+            'aria-label': P.map(p => `${p.label}: ${sf(st[p.label].weighted_suhi)} \u00b0C, interval ${sf(st[p.label].ci95[0])} to ${sf(st[p.label].ci95[1])}`).join('; ') });
+        for (let v = 0; v <= hi; v += 2) { svg.append(el('line', { x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v), class: 'grid' })); svg.append(el('text', { x: m.l - 8, y: Y(v) + 4, 'text-anchor': 'end' }, sf(v, 0))); }
+        svg.append(el('text', { x: 2, y: 12, class: 'axis-t' }, '\u00b0C above the countryside'));
+        P.forEach((p, i) => {
+            const cx = m.l + bw * (i + 0.5), s = st[p.label];
+            svg.append(el('line', { x1: cx, x2: cx, y1: Y(s.ci95[0]), y2: Y(s.ci95[1]), class: 'ci' }));
+            svg.append(el('circle', { cx, cy: Y(s.weighted_suhi), r: 6, class: 'pt' }));
+            svg.append(el('text', { x: cx + 12, y: Y(s.weighted_suhi) + 4, class: 'lab' }, sf(s.weighted_suhi)));
+            svg.append(el('text', { x: cx, y: H - m.b + 22, 'text-anchor': 'middle', class: 'lab' }, p.label.replace('-', '\u2013')));
+            svg.append(el('text', { x: cx, y: H - m.b + 40, 'text-anchor': 'middle' }, `${p.sensors} \u00b7 ${s.passes} passes`));
+        });
+        $('#periodchart').append(svg);
     }
 
     // ---------- page behaviour ----------
@@ -233,7 +243,7 @@
     }
 
     const get = u => fetch(u).then(r => { if (!r.ok) throw new Error(`${u}: HTTP ${r.status}`); return r.json(); });
-    Promise.all([get('data/summary.json'), get('data/change_summary.json'), get('data/lagos_uhi_processed.geojson'), get('data/context_countries.geojson')])
+    Promise.all([get('data/summary.json'), get('data/change_summary_2000_2025.json'), get('data/lagos_uhi_processed.geojson'), get('data/context_countries.geojson')])
         .then(([s, c, g, ctry]) => {
             S = s; C = c; GEO = g; CTRY = ctry;
             fill();
@@ -252,7 +262,7 @@
                 keyExtra: '<span class="nd"><i style="background:#ece9e2"></i>no clear change</span><span class="nd"><i class="hatch"></i>too few passes</span>',
                 value: pr => { const ch = chg(pr.lga_name); return ch && ch.verdict !== 'Too few clear days' ? ch.delta : null; },
                 readout: (pr, v) => { const ch = chg(pr.lga_name); return `<b>${pr.lga_name}</b> ${v == null ? 'too few clear passes to test' : `${sf(v)} °C (95% interval ${sf(ch.ci95[0])} to ${sf(ch.ci95[1])}) · ${ch.verdict === 'Warmed' ? 'clear change' : 'no clear change'}`}`; } });
-            ndviChart(); periods();
+            ndviChart(); periodChart();
             chrome();
         })
         .catch(err => { console.error(err); $('#abstract').insertAdjacentHTML('afterbegin', '<p class="small" role="alert">The data files could not be loaded. Open the page through a web server or visit the published site.</p>'); chrome(); });
