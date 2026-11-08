@@ -698,75 +698,35 @@ figcaption { hyphens: manual; -webkit-hyphens: manual; }
 .react-row .reactions { margin-bottom: 0; }
 .explore-page .ex-intro h1 { margin-bottom: 10px; }
 
-/* ================= Lagos: warm accent and the figures of this study ================= */
-:root { --accent: #c4580f; --accent-ink: #9a420a; --accent-soft: #fdf4ec; --accent-line: #f0d6c2; --cool: #4f7fbf; --muted: #9a9a9a; }
-a { text-decoration-color: var(--accent-line); }
-.cta-card, .cta-card img { border-color: var(--accent-line); }
-.loc-basin.is-on { fill: #f6d2b5; }
-
-/* Figure 1: LGA map with period switch */
-.lga-map-wrap { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 24px; align-items: start; }
-#lga-map { width: 100%; height: auto; }
-#lga-map path { stroke: #fff; stroke-width: 0.8; cursor: pointer; transition: fill 0.4s ease; }
-#lga-map path:hover, #lga-map path.is-on { stroke: var(--ink); stroke-width: 1.6; }
-#lga-map path:focus-visible { outline: none; stroke: var(--focus); stroke-width: 2.2; }
-#lga-map .lagoon-label { font-size: 11px; fill: var(--ink-3); font-style: italic; }
-.lga-info { border-top: 2px solid var(--accent); padding-top: 12px; }
-.lga-info h3 { margin: 0 0 4px; font-size: 20px; }
-.lga-info .kick { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin: 0; }
-.lga-info dl { margin: 12px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 14.5px; }
-.lga-info dt { color: var(--ink-3); }
-.lga-info dd { margin: 0; font-variant-numeric: tabular-nums; }
-.lga-info .hint { font-size: 13px; color: var(--ink-3); margin-top: 12px; }
-.ramp-legend { margin-top: 10px; font-size: 12.5px; color: var(--ink-3); }
-.ramp-legend .ramp { height: 10px; border-radius: 2px; margin: 4px 0 2px; }
-.ramp-legend .ticks { display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; }
-.ramp-legend .nodata { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; }
-.ramp-legend .nodata i { width: 14px; height: 10px; background: #e2e2e2; display: inline-block; border-radius: 2px; }
-
-/* Charts drawn as SVG */
+/* ================= Lagos: maps and charts. Interface uses the blue accent; data use their own scales. ================= */
+:root { --nodata: #e4e4e4; --data-dot: #a93a08; --data-line: #f2711c; }
+.maps { display: grid; gap: 24px; grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr)); }
+.maps.two { --cols: 2; }
+.mapfig { margin: 0; }
+.mapfig .t { font-size: 14px; font-weight: 700; margin: 0 0 6px; }
+.mapfig svg { width: 100%; height: auto; overflow: visible; }
+.mapfig path.u { stroke: #fff; stroke-width: 0.9; cursor: pointer; }
+.mapfig path.u:hover, .mapfig path.u.on { stroke: var(--ink); stroke-width: 1.8; }
+.mapfig path.u:focus-visible { outline: none; stroke: var(--focus); stroke-width: 2.4; }
+.mapfig .ctx { fill: #f1f1ef; stroke: #d6d6d2; stroke-width: 0.6; }
+.mapfig .lab { font-size: 11px; fill: var(--ink-2); pointer-events: none; }
+.mapfig .readout { min-height: 22px; font-size: 14px; color: var(--ink-2); margin-top: 6px; font-variant-numeric: tabular-nums; }
+.mapfig .readout b { color: var(--ink); }
+.ramp-key { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; white-space: nowrap; font-size: 12.5px; color: var(--ink-3); margin-top: 4px; font-variant-numeric: tabular-nums; }
+.ramp-key .bar { flex: 0 1 220px; height: 8px; border-radius: 1px; }
+.ramp-key .nd { display: inline-flex; align-items: center; gap: 6px; }
+.ramp-key .nd i { width: 12px; height: 8px; background: var(--nodata); display: inline-block; }
+.raster img { width: 100%; height: auto; display: block; }
+.raster .pstack { position: relative; }
+.raster .pstack svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.raster .pstack path { fill: none; stroke: rgba(17, 17, 17, 0.28); stroke-width: 0.7; vector-effect: non-scaling-stroke; }
 .svgchart { width: 100%; height: auto; overflow: visible; }
 .svgchart text { font-family: var(--font); font-size: 12.5px; fill: var(--ink-2); }
-.svgchart .grid { stroke: var(--rule); stroke-width: 1; }
-.svgchart .zero { stroke: var(--rule-2); stroke-width: 1.2; }
-.svgchart .axis-title { fill: var(--ink-3); font-size: 12px; }
-.svgchart .ci { stroke: var(--accent-ink); stroke-width: 2.2; stroke-linecap: round; }
-.svgchart .pt { fill: var(--accent-ink); }
-.svgchart .pt-open { fill: #fff; stroke: var(--muted); stroke-width: 1.6; }
-.svgchart .ci-muted { stroke: var(--muted); stroke-width: 1.6; stroke-linecap: round; }
-.svgchart .lab-strong { fill: var(--ink); font-weight: 700; }
-.svgchart .fit { stroke: var(--accent); stroke-width: 2; }
-.svgchart .band { fill: var(--accent); opacity: 0.12; }
-.chart-key { list-style: none; padding: 0; margin: 8px 0 0; display: flex; justify-content: center; flex-wrap: wrap; gap: 4px 20px; font-size: 13.5px; color: var(--ink-2); }
-.chart-key li { display: flex; align-items: center; gap: 8px; margin: 0; }
-.chart-key i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-.chart-key i.k-on { background: var(--accent-ink); }
-.chart-key i.k-off { background: #fff; border: 1.6px solid var(--muted); }
-#fig-lgas .svgchart { max-width: 860px; margin: 0 auto; }
-#periodchart, #urbanchart { max-width: 760px; margin: 0 auto; }
-
-/* Figure 4: period maps */
-.period-maps { display: grid; gap: 14px; }
-.period-maps figure { margin: 0; }
-.period-maps img { width: 100%; height: auto; border: 1px solid var(--rule); background: #f4f6f8; }
-.period-maps .pm-head { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; margin-bottom: 4px; }
-.period-maps .pm-head b { font-variant-numeric: tabular-nums; }
-.period-maps .pm-head span { color: var(--ink-3); font-variant-numeric: tabular-nums; }
-
-/* Screening funnel */
-.funnel { list-style: none; padding: 0; margin: 18px 0; display: grid; gap: 6px; }
-.funnel li { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; font-size: 15px; }
-.funnel .fbar { grid-column: 1 / -1; height: 8px; background: var(--fill); border-radius: 2px; overflow: hidden; }
-.funnel .fbar span { display: block; height: 100%; width: var(--w); background: var(--muted); }
-.funnel li.kept .fbar span { background: var(--accent); }
-.funnel b { font-variant-numeric: tabular-nums; }
-
-td.v-warm { color: var(--accent-ink); font-weight: 700; }
-td.v-none { color: var(--ink-3); }
-
-@media (max-width: 860px) {
-    .lga-map-wrap { grid-template-columns: minmax(0, 1fr); }
-}
-
-.citation p, .refs li { text-align: left !important; hyphens: manual !important; }
-.appbar-back { font-size: 14px; white-space: nowrap; }
+.svgchart .grid { stroke: var(--rule); }
+.svgchart .axis-t { fill: var(--ink-3); font-size: 12px; }
+.svgchart .pt { fill: var(--data-dot); }
+.svgchart .ci { stroke: var(--data-dot); stroke-width: 2; stroke-linecap: round; }
+.svgchart .fit { stroke: var(--data-line); stroke-width: 2; }
+.svgchart .lab { fill: var(--ink); font-weight: 700; }
+#ndvichart, #periodchart { max-width: 640px; margin: 0 auto; }
+@media (max-width: 760px) { .maps.two { --cols: 1; } }
