@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Lagos Urban Heat & Exposure Analytics: dry-season land surface temperature, hot spots and population heat exposure across the 20 Local Government Areas of Lagos State, from Landsat, MODIS, Sentinel-2 and WorldPop via Google Earth Engine.">
-    <meta name="color-scheme" content="light dark">
+    <meta name="color-scheme" content="only light">
     <title>Lagos Urban Heat &amp; Exposure Analytics</title>
 
     <link rel="preconnect" href="https://api.fontshare.com">
@@ -1261,7 +1261,7 @@
         <h4>6. What explains the heat</h4>
         <p>Ordinary least squares regressions of surface temperature on NDVI, on NDBI, and on both, with classical 95% confidence intervals, a leave-one-out check and Moran's I of the residuals. NDVI and NDBI are almost perfectly inversely related across the 20 LGAs, so their separate effects cannot be told apart reliably.</p>
         <h4>7. Change over time</h4>
-        <p>Every Landsat 4, 5, 7, 8 and 9 scene of every dry season from 1985 to 2026 (from 2014, Landsat 8 and 9 only). Frames of the same orbit on the same day are joined into one pass. In each pass, each LGA's <strong>surface urban heat island</strong> is its mean land temperature minus the mean of a fixed rural reference: land within 20 km of Lagos State that the EU Global Human Settlement Layer shows as essentially unbuilt in 2020. Because city and countryside are measured in the same pass, the day's weather, haze and sensor largely cancel. Passes where more than 5% of Lagos land reads over 3 °C colder than the countryside are rejected as cloud or fog the cloud mask missed; a pass must also keep at least 3,000 clear reference pixels (about 100 km²), and an LGA counts in a pass only if half of its land is clear. Each period's value is the median across passes, with a bootstrap 95% interval; trends are Theil–Sen slopes across dry seasons with a Mann–Kendall test, corrected for multiple testing across the LGAs with enough seasons to test. Built-up change comes from GHSL (1995 to 2020). Every pass considered is listed in <span class="mono">lagos_change_scenes.csv</span>.</p>
+        <p>Every Landsat 4, 5, 7, 8 and 9 scene under 70% cloud that fell in a dry season from 1985 to 2026 (from 2014, Landsat 8 and 9 only; the archive has no scenes for 1992 to 1998). Frames of the same orbit on the same day are joined into one pass. In each pass, each LGA's <strong>surface urban heat island</strong> is its mean land temperature minus the mean of a fixed rural reference: land within 20 km of Lagos State that the EU Global Human Settlement Layer shows as essentially unbuilt in 2020. Because city and countryside are measured in the same pass, the day's weather, haze and sensor largely cancel. Passes where more than 5% of Lagos land reads over 3 °C colder than the countryside are rejected as cloud or fog the cloud mask missed; a pass must also keep at least 3,000 clear reference pixels (about 100 km²), and an LGA counts in a pass only if half of its land is clear. Each period's value is the median across passes, with a bootstrap 95% interval; trends are Theil–Sen slopes across dry seasons with a Mann–Kendall test, corrected for multiple testing across the LGAs with enough seasons to test. Built-up change comes from GHSL (1995 to 2020). Every pass considered is listed in <span class="mono">lagos_change_scenes.csv</span>.</p>
         <h4>8. Limitations</h4>
         <p>Twenty large areas give little statistical power and hide variation inside each LGA (the ecological fallacy and the modifiable areal unit problem); the heat-island maps show the detail inside them. Results are associations, not causes or forecasts. Only the dry season is covered. Population is WorldPop 2020 and boundaries date from 2015. For the change analysis: the Landsat archive for West Africa has a gap in dry seasons from 1992 to 1998 and few clear scenes in the late 1980s, so the first period has wide intervals; Landsat 5 and 7 passed over earlier in the morning than Landsat 8 and 9; Landsat 7 has striping after May 2003; the rural reference itself may have changed (farming, forest loss), which would make the heat island look smaller, not larger; and GHSL 2020 stands in for the latest period's built-up area.</p>
     </div>
@@ -1370,7 +1370,6 @@
     const props = () => STATE.features.map(f => f.properties);
 
     // ================= Theme =================
-    const currentTheme = () => 'light';   // single light design
     function repaint() { setBasemap($('basemap-select').value); styleMap(); buildCharts(); if (CH()) { renderChange(); buildChangeCharts(); } }
 
     // ================= Map =================
@@ -1382,9 +1381,8 @@
     const labelLayer = L.layerGroup().addTo(map);
     function setBasemap(kind) {
         if (basemapLayer) map.removeLayer(basemapLayer);
-        const dark = currentTheme() === 'dark';
         basemapLayer = kind === 'terrain' ? esri('World_Topo_Map') : kind === 'satellite' ? esri('World_Imagery')
-            : L.layerGroup([esri(dark ? 'Canvas/World_Dark_Gray_Base' : 'Canvas/World_Light_Gray_Base'), esri(dark ? 'Canvas/World_Dark_Gray_Reference' : 'Canvas/World_Light_Gray_Reference')]);
+            : L.layerGroup([esri('Canvas/World_Light_Gray_Base'), esri('Canvas/World_Light_Gray_Reference')]);
         basemapLayer.addTo(map);
         if (lgaLayer) lgaLayer.bringToFront();
     }
@@ -2109,7 +2107,7 @@
         { target: '#intro', tab: 'overview', title: 'Start with the overview', text: 'The study in plain terms and the short answer. Below are the headline numbers and each finding with a verdict.' },
         { target: '#coef-card', tab: 'explain', title: 'What goes with hotter places?', text: 'Vegetation and built-up density, alone and together, with confidence intervals. When an interval crosses zero, the data cannot pin that effect down. The charts below show all 20 LGAs.' },
         { target: '#panel-stats .table-wrap', tab: 'stats', title: 'Check the statistics', text: 'Clustering, hot spots, regressions and cross-checks, all produced by the repository\'s script. Underlined terms explain themselves when you hover or tap them.' },
-        { target: '.appbar-actions', tab: 'overview', title: 'Share, download and read the methods', text: 'Copy a link to exactly this view or print it, download the data or a map image, read how everything was measured, or switch to dark mode.' }
+        { target: '.appbar-actions', tab: 'overview', title: 'Share, download and read the methods', text: 'Copy a link to exactly this view or print it, download the data or a map image, or read how everything was measured.' }
     ];
     let tourIdx = 0, tourReturn = null, tourLayer = null;
     function placeTour() {
