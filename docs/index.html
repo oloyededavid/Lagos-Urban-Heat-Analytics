@@ -36,6 +36,7 @@
             <a href="#discussion">Discussion</a>
             <a href="explore.html" class="toc-ex">Explorer</a>
         </nav>
+        <nav class="site-links" aria-label="Explorer"><a href="explore.html">Explorer</a></nav>
     </div>
     <div class="progress" aria-hidden="true"><span id="progress"></span></div>
 </header>
@@ -48,11 +49,11 @@
 
     <section id="abstract" data-reveal class="abstract" aria-labelledby="h-abstract">
         <h2 id="h-abstract">Abstract</h2>
-        <p class="lede">The ground in Lagos's crowded inner city is the hottest in the state. Since the first clear satellite images, that heat has spread outwards with the city.</p>
+        <p class="lede">The ground in Lagos's crowded inner city is the hottest in the state. Measured against the countryside, the heat island is larger in recent satellite images than in the first clear ones.</p>
         <ol class="findings">
             <li><b class="hl"><span data-v="lstRange">—</span> °C</b><span class="f-text">Gap in average surface temperature between the hottest and coolest LGA in the dry season.</span></li>
-            <li><b class="hl"><span data-v="dState">—</span> °C</b><span class="f-text">Growth of the heat island, the city's warmth above the countryside, since the first period of clear images.</span></li>
-            <li><b class="hl"><span data-v="hot1">—</span>% to <span data-v="hot3">—</span>%</b><span class="f-text">Share of Lagos land more than 3 °C warmer than the countryside, then and now.</span></li>
+            <li><b class="hl"><span data-v="dState">—</span> °C</b><span class="f-text">Growth of the heat island, the city's warmth above the countryside, in the <span data-v="nCommon">—</span> LGAs seen clearly in every period. Part of it may come from changes of satellite.</span></li>
+            <li><b class="hl"><span data-v="hot1">—</span>% to <span data-v="hot3">—</span>%</b><span class="f-text">Share of Lagos land more than 3 °C warmer than the countryside, in the first and latest periods.</span></li>
         </ol>
         <p class="small">These are ground-surface temperatures on clear mornings, not the air temperature people feel.</p>
     </section>
@@ -65,11 +66,11 @@
 
     <section id="study-area" data-reveal aria-labelledby="h-area">
         <h2 id="h-area"><span class="n">2</span>Study area</h2>
-        <p>Lagos State lies on the coast of south-west Nigeria, between the Atlantic and the Lagos Lagoon. Its <span data-v="nLga">—</span> LGAs range from dense inner-city areas such as Mushin, <span data-v="mushinKm">—</span> km², to large and partly rural Epe, <span data-v="epeKm">—</span> km².</p>
+        <p>Lagos State lies on the coast of south-west Nigeria, between the Atlantic and the Lagos Lagoon. Its <span data-v="nLga">—</span> LGAs range from dense inner-city areas such as Ajeromi/Ifelodun, <span data-v="smallKm">—</span> km² of land, to large and partly rural Epe, <span data-v="epeKm">—</span> km².</p>
     </section>
     <figure class="wide reveal" id="fig-1">
         <div class="mapfig" id="map-area"></div>
-        <figcaption><b>Figure 1.</b> The <span data-v="nLga">—</span> LGAs of Lagos State. Select an LGA for its name and population. Boundaries: FAO GAUL 2015; population: WorldPop 2020; country outlines: Natural Earth.</figcaption>
+        <figcaption><b>Figure 1.</b> The <span data-v="nLga">—</span> LGAs of Lagos State. Labels mark LGAs over 100 km²; select any LGA for its name and population. Boundaries (FAO GAUL 2015) include lagoon and coastal water. Population: WorldPop 2020. Country outlines: Natural Earth.</figcaption>
     </figure>
 
     <section id="data-method" data-reveal aria-labelledby="h-data">
@@ -81,7 +82,7 @@
                     <thead><tr><th class="text">What</th><th class="text">Source</th><th>Years</th></tr></thead>
                     <tbody>
                         <tr><td class="text">Surface temperature</td><td class="text">Landsat 8 and 9; MODIS Terra as a check</td><td>2022–2024</td></tr>
-                        <tr><td class="text">Vegetation (NDVI), built-up density (NDBI)</td><td class="text">Sentinel-2</td><td>2022–2024</td></tr>
+                        <tr><td class="text">Vegetation index (NDVI), built-up index (NDBI)</td><td class="text">Sentinel-2</td><td>2022–2024</td></tr>
                         <tr><td class="text">Population</td><td class="text">WorldPop, 100 m</td><td>2020</td></tr>
                         <tr><td class="text">Heat island over time</td><td class="text">Landsat 4, 5, 7, 8 and 9, every clear dry-season pass</td><td>1985–2026</td></tr>
                         <tr><td class="text">Built-up land over time</td><td class="text">EU Global Human Settlement Layer</td><td>1975–2020</td></tr>
@@ -99,70 +100,72 @@
     <section id="results" aria-labelledby="h-results">
         <h2 id="h-results"><span class="n">4</span>Results</h2>
         <h3 id="h-lst"><span class="n">4.1</span>Land surface temperature</h3>
-        <p>Average dry-season surface temperature runs from <span data-v="lstMin">—</span> °C in <span data-v="coolest">—</span> to <span data-v="lstMax">—</span> °C in <span data-v="hottest">—</span> (Figure 2). Hot LGAs sit next to each other in one block on the mainland, a pattern too strong to be chance <span class="cite">(Moran, 1950)</span>.</p>
+        <p>Average dry-season surface temperature runs from <span data-v="lstMin">—</span> °C in <span data-v="coolest">—</span> to <span data-v="lstMax">—</span> °C in <span data-v="hottest">—</span> (Figure 2). Neighbouring LGAs tend to have similar temperatures, and the hottest form a block on the mainland <span class="cite">(Moran, 1950)</span>; the strength of that pattern depends on how neighbours are defined.</p>
     </section>
     <figure class="wide reveal" id="fig-lst">
         <div class="mapfig" id="map-lst"></div>
-        <figcaption><b>Figure 2.</b> Average surface temperature, dry seasons 2022/23 and 2023/24, Landsat 8 and 9.</figcaption>
+        <figcaption><b>Figure 2.</b> Average land surface temperature per LGA, °C, dry seasons 2022/23 and 2023/24, Landsat 8 and 9 (water masked). Darker means hotter.</figcaption>
     </figure>
 
     <section aria-labelledby="h-veg">
-        <h3 id="h-veg"><span class="n">4.2</span>Vegetation and built-up density</h3>
-        <p>The coolest LGAs are the greenest, and the hottest are the most built up (Figure 3). In Lagos the two go together so closely that the data cannot say how much of the cooling comes from vegetation and how much from less concrete.</p>
+        <h3 id="h-veg"><span class="n">4.2</span>Vegetation and built-up index</h3>
+        <p>Across LGA averages, the coolest LGAs are the greenest and the hottest have the highest built-up index (Figure 3). In Lagos the two go together so closely that the data cannot say how much of the cooling comes from vegetation and how much from less building.</p>
     </section>
     <figure class="wide reveal" id="fig-veg">
         <div class="maps two"><div class="mapfig" id="map-ndvi"></div><div class="mapfig" id="map-ndbi"></div></div>
         <div id="ndvichart"></div>
-        <figcaption><b>Figure 3.</b> Vegetation (NDVI, left) and built-up density (NDBI, right) from Sentinel-2, and below, surface temperature against vegetation, one dot per LGA.</figcaption>
+        <figcaption><b>Figure 3.</b> Vegetation index (NDVI, green: greener is darker) and built-up index (NDBI, grey: more built up is darker), Sentinel-2, dry seasons 2022/23 and 2023/24. Below, average surface temperature against NDVI, one dot per LGA, with the fitted line.</figcaption>
     </figure>
 
     <section aria-labelledby="h-gi">
         <h3 id="h-gi"><span class="n">4.3</span>Spatial clustering and hot spots</h3>
-        <p>A hot-spot test compares each LGA with its neighbours <span class="cite">(Getis &amp; Ord, 1992)</span>. The mainland LGAs lean hot and the east leans cool, but after allowing for testing <span data-v="nLga">—</span> areas at once <span class="cite">(Benjamini &amp; Hochberg, 1995)</span>, no single LGA stands out (Figure 4). The heat is a broad pattern.</p>
+        <p>A hot-spot test compares each LGA with its neighbours <span class="cite">(Getis &amp; Ord, 1992)</span>. The mainland LGAs lean hot and the east leans cool, but no LGA reaches the level of a significant hot or cold spot, even before correcting for testing <span data-v="nLga">—</span> areas at once <span class="cite">(Benjamini &amp; Hochberg, 1995)</span> (Figure 4). The heat is a broad gradient from the mainland core to the east.</p>
     </section>
     <figure class="wide reveal" id="fig-gi">
         <div class="mapfig" id="map-gi"></div>
-        <figcaption><b>Figure 4.</b> Hot-spot score (Getis–Ord <var>G</var><sub>i</sub>* z, 5 nearest neighbours). Red leans hot, blue leans cool. None is significant after correction.</figcaption>
+        <figcaption><b>Figure 4.</b> Hot-spot score per LGA (Getis–Ord <var>G</var><sub>i</sub>* z, 5 nearest neighbours), on a fixed scale of ±2; a score beyond ±1.96 would be significant before correction. Orange leans hot, blue leans cool. Pale colours mean no LGA is a hot or cold spot.</figcaption>
     </figure>
 
     <section aria-labelledby="h-people">
         <h3 id="h-people"><span class="n">4.4</span>Population exposure</h3>
-        <p>Combining surface temperature with population density puts <span data-v="top3">—</span> at the top (Figure 5). These are the places where the most people live on the hottest ground. It is a ranking for attention, not a measure of health risk.</p>
+        <p>Combining surface temperature with population density puts <span data-v="top3">—</span> at the top (Figure 5). The index follows density more than head-count: Alimosho has the most people of any LGA but ranks <span data-v="alimRank">—</span>th. It is a ranking of where heat and crowding coincide, not a measure of health risk.</p>
     </section>
     <figure class="wide reveal" id="fig-people">
         <div class="mapfig" id="map-people"></div>
-        <figcaption><b>Figure 5.</b> Heat exposure index: surface temperature and population density, each scaled from 0 to 1, multiplied.</figcaption>
+        <figcaption><b>Figure 5.</b> Heat exposure index per LGA, 0 to 1: surface temperature (Figure 2) and population density (WorldPop 2020), each scaled from 0 to 1 across the <span data-v="nLga">—</span> LGAs and multiplied. Darker means higher.</figcaption>
     </figure>
 
     <section aria-labelledby="h-change">
         <h3 id="h-change"><span class="n">4.5</span>Change in heat-island intensity</h3>
-        <p>Only <span data-v="scUsed">—</span> of <span data-v="scAll">—</span> Landsat passes since 1985 were clear enough to use, so the record is three periods rather than every year. Across the <span data-v="nCommon">—</span> LGAs seen clearly in all three, the heat island grew from <span data-v="s1">—</span> °C to <span data-v="s3">—</span> °C (Figure 6), and the share of land more than 3 °C above the countryside rose from <span data-v="hot1">—</span>% to <span data-v="hot3">—</span>%.</p>
+        <p>Only <span data-v="scUsed">—</span> of <span data-v="scAll">—</span> Landsat passes since 1985 were clear enough to use, so the record is three periods rather than every year, and the first period mostly describes 2000 to 2003. Across the <span data-v="nCommon">—</span> LGAs seen clearly in all three, the heat island grew by <span data-v="dState">—</span> °C (95% interval <span data-v="dCi">—</span> °C). Across the whole state, the share of land more than 3 °C above the countryside rose from <span data-v="hot1">—</span>% to <span data-v="hot3">—</span>% (Figure 6). Most of the rise falls between the first two periods, which also differ in satellite, so part of it may not be the city.</p>
     </section>
     <figure class="wide reveal" id="fig-change">
         <div class="raster" id="periods"></div>
-        <figcaption><b>Figure 6.</b> Heat island per 90 m pixel in each period, on one scale. Blue: cooler than the countryside. Lines: LGA boundaries. The stripes in 2004–2013 are gaps in Landsat 7 images after a sensor fault in 2003.</figcaption>
+        <figcaption><b>Figure 6.</b> Heat island, °C above the countryside, per 90 m pixel: the median of the clear passes in each period, on one scale (Landsat 4, 5, 7, 8 and 9). Orange is hotter than the countryside, blue cooler, white no clear observation. Lines: LGA boundaries. The stripes in 2004–2013 are gaps in Landsat 7 images after a sensor fault in 2003.</figcaption>
     </figure>
 
     <section aria-labelledby="h-where">
-        <h3 id="h-where"><span class="n">4.6</span>Spatial pattern of change</h3>
-        <p>The largest rises were on the edges of the city, led by <span data-v="top3change">—</span> (Figure 7). The inner city was already hot and changed little. LGAs that were built over most warmed most, but that link rests on three of them; without <span data-v="urbDrop">—</span> it disappears.</p>
+        <h3 id="h-where"><span class="n">4.6</span>Where the change is clear</h3>
+        <p>In only <span data-v="nWarmedWord">—</span> LGAs does the interval exclude zero: <span data-v="warmedList">—</span> (Figure 7). In the rest the data cannot separate change from chance, because each LGA rests on three to eight passes per period, and <span data-v="fewList">—</span> had too few clear passes to test. LGAs that were built over most warmed most, but that link rests on three of them; without <span data-v="urbDrop">—</span> it disappears.</p>
     </section>
     <figure class="wide reveal" id="fig-where">
         <div class="mapfig" id="map-change"></div>
-        <figcaption><b>Figure 7.</b> Change in heat island from the first period to today. Grey: too few clear passes to measure.</figcaption>
+        <figcaption><b>Figure 7.</b> Change in heat island, °C, from the first period to 2014–2026. Orange: the interval excludes zero (darker is more). Pale: no clear change. Hatched: too few clear passes to test.</figcaption>
     </figure>
 
     <section id="discussion" data-reveal aria-labelledby="h-disc">
         <h2 id="h-disc"><span class="n">5</span>Discussion</h2>
-        <p>Lagos's heat follows its buildings. The inner city, built up long ago, is hottest and has stayed so; the growth in heat is where open land has been built over. Vegetation goes with cooler ground, though the data cannot separate its effect from that of less concrete. The LGAs where heat and dense population meet are where cooling measures, such as shade and green space, would reach the most people.</p>
+        <p>The hottest ground is in the dense mainland LGAs, and the coolest is in the vegetated east. Vegetation goes with cooler ground, though in Lagos it cannot be separated from the lower built-up index of the same areas. The heat island is larger in the recent images than in the first ones, clearly so in four LGAs, but the first period is thin and differs in satellite, so the size of the rise is uncertain. The exposure ranking shows where heat and crowding coincide. Air-temperature records and health data would be needed to say anything about harm.</p>
     </section>
 
     <section id="limitations" data-reveal aria-labelledby="h-lim">
         <h2 id="h-lim"><span class="n">6</span>Limitations</h2>
         <ul>
             <li>Ground temperature on clear mornings, not air temperature, and not at night.</li>
-            <li>Clear images are rare: the first period rests on <span data-v="pass1">—</span> passes, mostly from 2000 to 2003, and none exist from 1992 to 1998.</li>
-            <li>Older Landsat satellites passed earlier in the morning, when the heat island is weaker, so part of the change may come from the sensors.</li>
+            <li>Clear images are rare: only scenes under 70% cloud were searched, the first period rests on <span data-v="pass1">—</span> passes, mostly from 2000 to 2003, and no scenes exist from 1992 to 1998.</li>
+            <li>The change figure covers <span data-v="nCommon">—</span> LGAs. <span data-v="exclList">—</span> hold <span data-v="exclShare">—</span>% of the land and lacked enough clear passes. Using every LGA seen in each period gives a different answer (<span data-v="a1">—</span> °C to <span data-v="a3">—</span> °C), because different LGAs are seen in each period.</li>
+            <li>The satellites changed between periods. Older Landsat passes may have been earlier in the morning, when the heat island is weaker, and no overlap test has been run, so part of the change may come from the sensors.</li>
+            <li>MODIS reads <span data-v="modisOff">—</span> °C cooler than Landsat on average, though both rank the LGAs alike. Land surface temperature has not been checked against ground measurements.</li>
             <li>LGA averages hide differences within each LGA.</li>
             <li>The results are associations, not causes.</li>
         </ul>
@@ -170,7 +173,7 @@
 
     <section id="conclusion" data-reveal aria-labelledby="h-concl">
         <h2 id="h-concl"><span class="n">7</span>Conclusion</h2>
-        <p>The hottest ground in Lagos is in its dense mainland core, and the heat island has spread outwards as the city has grown. Air-temperature records from weather stations inside and outside the city would be the next check.</p>
+        <p>The hottest ground in Lagos is in its dense mainland LGAs, and the heat island is larger in 2014–2026 than in the first period, clearly so in Ikorodu, Alimosho, Eti-Osa and Apapa. How much of that rise is the city and how much the change of satellite is not settled. Overlap tests between Landsat 7 and 8 and air-temperature records from weather stations would be the next checks.</p>
     </section>
 
     <section id="explorer" class="explore-cta" data-reveal aria-labelledby="h-explorer">
@@ -202,7 +205,7 @@
 
     <section class="note" data-reveal aria-labelledby="h-note">
         <h2 id="h-note">A note from me</h2>
-        <p>I set out to answer a simple question: is Lagos getting hotter? I assumed the satellites would just tell me. Mostly, they told me it was cloudy. Of <span data-v="scAll">—</span> dry-season passes since 1985, <span data-v="scUsed">—</span> were clear enough to use, and from 1992 to 1998 the archive holds none at all.</p>
+        <p>I set out to answer a simple question: is Lagos getting hotter? I assumed the satellites would just tell me. Mostly, they told me it was cloudy. Of <span data-v="scAll">—</span> dry-season passes since 1985, <span data-v="scUsed">—</span> were clear enough to use, and from 1992 to 1998 no scene was usable at all.</p>
         <p>If you know one of these LGAs and something here does not match what you feel on the street, tell me: <a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics/issues">open an issue on the repository</a>.</p>
         <p class="sign">David</p>
     </section>
