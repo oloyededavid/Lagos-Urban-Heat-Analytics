@@ -48,7 +48,7 @@
 
     <section id="abstract" data-reveal class="abstract" aria-labelledby="h-abstract">
         <h2 id="h-abstract">Summary</h2>
-        <p class="lede">On a clear dry-season morning, the ground in Lagos is hotter than the countryside around it. Since 1985–2003 that gap has grown by <span class="hl" data-v="dState">—</span> °C, and the growth has been fastest where the city spread into farmland.</p>
+        <p class="lede">On a clear dry-season morning, the ground in Lagos is hotter than the countryside around it. Since 1985–2003 that gap has grown by <span class="hl" data-v="dState">—</span> °C, and it grew fastest where the city spread outwards.</p>
         <ol class="findings">
             <li><b class="hl"><span data-v="dState">—</span> °C</b><span class="f-text">Growth of the Lagos heat island from 1985–2003 to 2014–2026 (95% interval <span data-v="dStateCi">—</span> °C), averaged over the <span data-v="nCommon">—</span> areas seen clearly in every period.</span></li>
             <li><b class="hl"><span data-v="hot1">—</span>% to <span data-v="hot3">—</span>%</b><span class="f-text">Share of Lagos land more than <span data-v="hotThr">—</span> °C hotter than the countryside, in the same two periods.</span></li>
@@ -60,7 +60,7 @@
     <section id="introduction" data-reveal aria-labelledby="h-intro">
         <h2 id="h-intro"><span class="n">1</span>Why measure it</h2>
         <p>Cities are warmer than their surroundings because buildings and paving absorb more sunlight, hold heat longer and evaporate less water than vegetation does <span class="cite">(Oke, 1982)</span>. Satellites measure the temperature of the ground surface itself, which is not the air temperature people feel, but they see the whole city at once and have done so since the 1980s <span class="cite">(Voogt &amp; Oke, 2003; Weng, 2009)</span>.</p>
-        <p>Lagos has expanded fast since the 1980s, much of it by building over farmland, wetland and forest on its edges. Earlier Landsat studies found the city's surface getting hotter as vegetation was lost, comparing a handful of dates from 1984 to 2019 <span class="cite">(Obiefuna et al., 2021; Ayanlade et al., 2021)</span>. A study using coarser MODIS data for 2003–2021 attributed about 61% of Lagos's surface warming to urbanisation and the rest to wider climate warming <span class="cite">(Guo et al., 2022)</span>. Comparing absolute temperatures on single dates, however, mixes the city's effect with the weather of each day.</p>
+        <p>Lagos has expanded fast since the 1980s, mostly outwards. Earlier Landsat studies found the city's surface getting hotter as vegetation was lost, comparing a handful of dates from 1984 to 2019 <span class="cite">(Obiefuna et al., 2021; Ayanlade et al., 2021)</span>. A study using coarser MODIS data for 2003–2021 attributed about 61% of Lagos's surface warming to urbanisation and the rest to wider climate warming <span class="cite">(Guo et al., 2022)</span>. Comparing absolute temperatures on single dates, however, mixes the city's effect with the weather of each day.</p>
         <p>This study measures the heat island instead: the city's surface temperature minus the countryside's, in the same satellite pass, so the day's weather largely cancels. It asks three questions. Has the Lagos heat island grown since the 1980s? In which local government areas (LGAs)? And did the areas that were built over most warm most?</p>
     </section>
 
@@ -160,8 +160,8 @@
 
     <section id="discussion" data-reveal aria-labelledby="h-disc">
         <h2 id="h-disc"><span class="n">5</span>What it means</h2>
-        <p>The results agree in direction with earlier Landsat and MODIS studies of Lagos <span class="cite">(Obiefuna et al., 2021; Guo et al., 2022)</span>, but measure something different: not how hot Lagos is on a given day, but how much hotter it is than its countryside on the same morning, and how that gap has changed in each LGA with an interval attached. The pattern is of a heat island that has spread rather than intensified at its core. Inner LGAs that were built up by the 1980s were already hot and have stayed so; the growth is where farmland and bush became housing. That fits the link to new building, but the link comes from three LGAs, so it is a pattern to test with finer units, not a measured effect of building.</p>
-        <p>For planning, the useful output is the ranking: where heat-island growth and population density coincide, and which outer LGAs are on the path the inner ones took. The 2022–2024 exposure ranking (Table 2) and the per-LGA values in the explorer are a starting point for that, not a risk assessment.</p>
+        <p>The results agree in direction with earlier Landsat and MODIS studies of Lagos <span class="cite">(Obiefuna et al., 2021; Guo et al., 2022)</span>, but measure something different: not how hot Lagos is on a given day, but how much hotter it is than its countryside on the same morning, and how that gap has changed in each LGA with an interval attached. The pattern is of a heat island that has spread rather than intensified at its core. Inner LGAs that were built up by the 1980s were already hot and have stayed so; the growth is where open land was built over. That fits the link to new building, but the link comes from three LGAs, so it is a pattern to test with finer units, not a measured effect of building.</p>
+        <p>For planning, the useful part is the ranking: which LGAs combine a strong heat island with many people (Table 2), and which outer LGAs are heading the way the inner ones went. It is a starting point, not a risk assessment.</p>
     </section>
 
     <section id="limitations" data-reveal aria-labelledby="h-lim">
@@ -207,6 +207,14 @@
             <p id="cite-text">Oloyede, D. O. (2026). <i>Four decades of the surface urban heat island in Lagos, Nigeria: Landsat dry seasons 1985–2026 across 20 local government areas</i>. https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics</p>
             <button type="button" class="button" id="copy-cite">Copy citation</button>
         </div>
+    </section>
+
+    <section class="note" data-reveal aria-labelledby="h-note">
+        <h2 id="h-note">A note from me</h2>
+        <p>I set out to answer a simple question: is Lagos getting hotter? I assumed the satellites would just tell me. Mostly, they told me it was cloudy. Of <span data-v="scAll">—</span> dry-season passes since 1985, <span data-v="scUsed">—</span> were clear enough to use, and from 1992 to 1998 the archive holds none at all. The 2004–2013 map is striped because Landsat 7's scan-line corrector broke in 2003 and the satellite carried on anyway, which I found oddly relatable.</p>
+        <p>The neatest result turned out to be the shakiest. The line linking new building to new heat holds only because of <span data-v="urbDrop">—</span>. Take those three out and it disappears. I kept that on the page, because a line that depends on three dots should say so.</p>
+        <p>If you know one of these LGAs and something here does not match what you feel on the street, tell me: <a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics/issues">open an issue on the repository</a>.</p>
+        <p class="sign">David</p>
     </section>
 
     <section id="references" aria-labelledby="h-refs">
