@@ -1,0 +1,297 @@
+{
+ "script": "scripts/epoch_framework.py",
+ "source": "docs/data/lagos_change_lga.csv (published clear passes)",
+ "note": "State values are land-area-weighted heat island (C above the countryside) over the LGAs with at least three clear passes in every period of the scheme; intervals resample whole passes.",
+ "schemes": {
+  "published_1985_2026": {
+   "periods": {
+    "1985-2003": {
+     "passes": 6,
+     "weighted_suhi_common": 2.13,
+     "ci95": [
+      1.6,
+      2.96
+     ],
+     "common_lgas": 17,
+     "weighted_suhi_all_observed": 1.28,
+     "lgas_observed": 20
+    },
+    "2004-2013": {
+     "passes": 7,
+     "weighted_suhi_common": 3.66,
+     "ci95": [
+      3.07,
+      4.49
+     ],
+     "common_lgas": 17,
+     "weighted_suhi_all_observed": 3.33,
+     "lgas_observed": 19
+    },
+    "2014-2026": {
+     "passes": 15,
+     "weighted_suhi_common": 3.87,
+     "ci95": [
+      3.11,
+      4.44
+     ],
+     "common_lgas": 17,
+     "weighted_suhi_all_observed": 2.2,
+     "lgas_observed": 20
+    }
+   },
+   "sensors": {
+    "1985-2003": {
+     "Landsat 4": 1,
+     "Landsat 5": 1,
+     "Landsat 7": 4
+    },
+    "2004-2013": {
+     "Landsat 7": 7
+    },
+    "2014-2026": {
+     "Landsat 8": 13,
+     "Landsat 9": 2
+    }
+   },
+   "change_first_to_last": {
+    "delta": 1.74,
+    "ci95": [
+     0.62,
+     2.53
+    ],
+    "lgas": 17,
+    "note": "LGAs with enough clear passes in every period"
+   },
+   "lgas_warmed": [
+    "Alimosho",
+    "Apapa",
+    "Eti-Osa",
+    "Ikorodu"
+   ],
+   "lgas_testable": 17,
+   "urbanisation": {
+    "n": 17,
+    "slope_c_per_10pp": 1.232,
+    "ci95": [
+     0.359,
+     2.106
+    ],
+    "p_value": 0.008831,
+    "spearman_rho": 0.355,
+    "spearman_p": 0.161541,
+    "ghsl_years": [
+     1995,
+     2020
+    ],
+    "without_most_built": {
+     "dropped": [
+      "Alimosho",
+      "Ikorodu",
+      "Eti-Osa"
+     ],
+     "n": 14,
+     "slope_c_per_10pp": -0.574,
+     "ci95": [
+      -3.9,
+      2.752
+     ],
+     "p_value": 0.713612
+    }
+   }
+  },
+  "brief_four_epochs_2000_2025": {
+   "periods": {
+    "2000-2005": {
+     "passes": 5,
+     "weighted_suhi_common": 4.37,
+     "ci95": [
+      3.35,
+      7.32
+     ],
+     "common_lgas": 6,
+     "weighted_suhi_all_observed": 1.61,
+     "lgas_observed": 19
+    },
+    "2006-2012": {
+     "passes": 6,
+     "weighted_suhi_common": 7.41,
+     "ci95": [
+      6.37,
+      9.71
+     ],
+     "common_lgas": 6,
+     "weighted_suhi_all_observed": 3.25,
+     "lgas_observed": 19
+    },
+    "2013-2019": {
+     "passes": 7,
+     "weighted_suhi_common": 7.53,
+     "ci95": [
+      4.01,
+      8.78
+     ],
+     "common_lgas": 6,
+     "weighted_suhi_all_observed": 2.25,
+     "lgas_observed": 20
+    },
+    "2020-2025": {
+     "passes": 6,
+     "weighted_suhi_common": 6.62,
+     "ci95": [
+      4.67,
+      9.14
+     ],
+     "common_lgas": 6,
+     "weighted_suhi_all_observed": 2.18,
+     "lgas_observed": 20
+    }
+   },
+   "sensors": {
+    "2000-2005": {
+     "Landsat 7": 5
+    },
+    "2006-2012": {
+     "Landsat 7": 6
+    },
+    "2013-2019": {
+     "Landsat 8": 7
+    },
+    "2020-2025": {
+     "Landsat 8": 5,
+     "Landsat 9": 1
+    }
+   },
+   "change_first_to_last": {
+    "delta": 2.25,
+    "ci95": [
+     -1.49,
+     5.1
+    ],
+    "lgas": 6,
+    "note": "LGAs with enough clear passes in every period"
+   },
+   "lgas_warmed": [],
+   "lgas_testable": 7,
+   "urbanisation": {
+    "n": 6,
+    "slope_c_per_10pp": -0.683,
+    "ci95": [
+     -15.194,
+     13.827
+    ],
+    "p_value": 0.902292,
+    "spearman_rho": -0.143,
+    "spearman_p": 0.787172,
+    "ghsl_years": [
+     2000,
+     2020
+    ],
+    "without_most_built": {
+     "dropped": [
+      "Oshodi/Isolo",
+      "Surulere",
+      "Ajeromi/Ifelodun"
+     ],
+     "n": 3,
+     "slope_c_per_10pp": 11.349,
+     "ci95": [
+      -181.343,
+      204.041
+     ],
+     "p_value": 0.591007
+    }
+   }
+  },
+  "sensor_consistent_2000_2025": {
+   "periods": {
+    "2000-2012": {
+     "passes": 11,
+     "weighted_suhi_common": 5.66,
+     "ci95": [
+      4.01,
+      7.56
+     ],
+     "common_lgas": 10,
+     "weighted_suhi_all_observed": 2.74,
+     "lgas_observed": 19
+    },
+    "2013-2019": {
+     "passes": 7,
+     "weighted_suhi_common": 6.95,
+     "ci95": [
+      4.34,
+      8.24
+     ],
+     "common_lgas": 10,
+     "weighted_suhi_all_observed": 2.25,
+     "lgas_observed": 20
+    },
+    "2020-2025": {
+     "passes": 6,
+     "weighted_suhi_common": 6.47,
+     "ci95": [
+      4.47,
+      8.56
+     ],
+     "common_lgas": 10,
+     "weighted_suhi_all_observed": 2.18,
+     "lgas_observed": 20
+    }
+   },
+   "sensors": {
+    "2000-2012": {
+     "Landsat 7": 11
+    },
+    "2013-2019": {
+     "Landsat 8": 7
+    },
+    "2020-2025": {
+     "Landsat 8": 5,
+     "Landsat 9": 1
+    }
+   },
+   "change_first_to_last": {
+    "delta": 0.81,
+    "ci95": [
+     -2.09,
+     3.32
+    ],
+    "lgas": 10,
+    "note": "LGAs with enough clear passes in every period"
+   },
+   "lgas_warmed": [
+    "Ikorodu"
+   ],
+   "lgas_testable": 12,
+   "urbanisation": {
+    "n": 10,
+    "slope_c_per_10pp": 3.577,
+    "ci95": [
+     1.197,
+     5.958
+    ],
+    "p_value": 0.008499,
+    "spearman_rho": 0.333,
+    "spearman_p": 0.346594,
+    "ghsl_years": [
+     2005,
+     2020
+    ],
+    "without_most_built": {
+     "dropped": [
+      "Alimosho",
+      "Oshodi/Isolo",
+      "Surulere"
+     ],
+     "n": 7,
+     "slope_c_per_10pp": 2.501,
+     "ci95": [
+      -11.468,
+      16.47
+     ],
+     "p_value": 0.664699
+    }
+   }
+  }
+ }
+}
