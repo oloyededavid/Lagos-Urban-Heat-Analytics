@@ -44,7 +44,7 @@ are rare. The periods follow the Landsat sensor generations.
 | Change | +1.7 °C from 1985–2003 to 2014–2026 (95% interval +0.6 to +2.5 °C) |
 | Land running hot | The share of Lagos land more than 3 °C above the countryside rose from 26% to 42% |
 | Where it grew | On the edges of the city: Ikorodu +3.3 °C, Alimosho +2.9, Eti-Osa +2.4, Apapa +2.3. Ikorodu also has a significant trend across all seasons after FDR correction. The dense core (Surulere, Mushin, Agege) was already about +6–7 °C in 1985–2003 and shows no clear change. |
-| Urbanisation | LGAs whose built-up share grew most also warmed most: about +1.2 °C per 10 percentage points of land newly built up (95% interval +0.4 to +2.1, p = 0.009, 17 LGAs; GHSL 1995 to 2020) |
+| Urbanisation | LGAs whose built-up share grew most also warmed most: about +1.2 °C per 10 percentage points of land newly built up (95% interval +0.4 to +2.1, p = 0.009, 17 LGAs; GHSL 1995 to 2020). The link rests on Alimosho, Ikorodu and Eti-Osa, which urbanised most; without them it disappears (−0.6 °C per 10 points, 95% interval −3.9 to +2.8) |
 
 ## Data and methods
 
@@ -73,7 +73,7 @@ The four-decade change is computed in `scripts/extract_change_gee.py` (Earth Eng
 - **Unit of measurement:** the Landsat frames of one orbit on one day are joined into one pass. Each LGA's heat island in a pass is its mean land temperature minus the mean of the rural reference in the same pass. The reference is land within 20 km of Lagos State that GHSL shows as essentially unbuilt in 2020.
 - **Quality checks:** a pass needs at least 3,000 clear reference pixels (about 100 km²). It is rejected if more than 5% of Lagos land reads over 3 °C colder than the countryside, which signals cloud or fog the cloud mask missed. An LGA counts in a pass only if half of its land is clear. Every pass considered, with its checks, is in `docs/data/lagos_change_scenes.csv`.
 - **Periods and intervals:** each period value is the median across passes, with a bootstrap 95% interval. An LGA with fewer than 3 clear passes in a period is shown but gets no interval or verdict. The Lagos-wide interval resamples whole passes.
-- **Trend:** a Theil–Sen slope across dry seasons, with a Mann–Kendall test and Benjamini–Hochberg FDR across the 20 LGAs.
+- **Trend:** a Theil–Sen slope across dry seasons, with a Mann–Kendall test and Benjamini–Hochberg FDR across the 18 LGAs with at least eight clear dry seasons.
 - **Urbanisation test:** OLS across LGAs of heat-island change on GHSL built-up change, with a 95% interval.
 
 ### Limitations
@@ -126,7 +126,9 @@ The four-decade change is computed in `scripts/extract_change_gee.py` (Earth Eng
 
 ```
 docs/                 website (GitHub Pages)
-  index.html
+  index.html          study page (figures drawn by assets/app.js from the JSON summaries)
+  explore.html        interactive explorer
+  assets/             page script, stylesheet and explorer preview
   data/               processed GeoJSON, statistical summaries, four-decade change data
     maps/             heat-island maps for each period (PNG)
   vendor/             Leaflet 1.9.4 and Chart.js 4.4.1
