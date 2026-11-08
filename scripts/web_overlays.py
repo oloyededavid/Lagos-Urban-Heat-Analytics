@@ -16,9 +16,13 @@ from pathlib import Path
 
 import numpy as np
 import rasterio
-from matplotlib import colors as mcolors
 from PIL import Image
-from rasterio.warp import Resampling, calculate_default_transform, reproject, transform_bounds
+from rasterio.warp import (
+    Resampling,
+    calculate_default_transform,
+    reproject,
+    transform_bounds,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 RAS = ROOT / "research" / "rasters"

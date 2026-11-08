@@ -1,0 +1,75 @@
+{
+ "script": "scripts/web_overlays.py",
+ "crs": "EPSG:3857",
+ "stops": [
+  [
+   -4,
+   "#1c5cab"
+  ],
+  [
+   -2,
+   "#86b6ef"
+  ],
+  [
+   0,
+   "#f1eee6"
+  ],
+  [
+   2,
+   "#f9a05a"
+  ],
+  [
+   4,
+   "#f2711c"
+  ],
+  [
+   6,
+   "#d9500b"
+  ],
+  [
+   8,
+   "#a93a08"
+  ],
+  [
+   10,
+   "#6b2406"
+  ]
+ ],
+ "periods": [
+  {
+   "label": "2000-2012",
+   "file": "maps/suhi_2000-2012.png",
+   "passes": 13,
+   "sensors": [
+    "landsat-7"
+   ]
+  },
+  {
+   "label": "2013-2019",
+   "file": "maps/suhi_2013-2019.png",
+   "passes": 14,
+   "sensors": [
+    "landsat-8"
+   ]
+  },
+  {
+   "label": "2020-2025",
+   "file": "maps/suhi_2020-2025.png",
+   "passes": 18,
+   "sensors": [
+    "landsat-8",
+    "landsat-9"
+   ]
+  }
+ ],
+ "bounds": [
+  [
+   6.371886,
+   2.70593
+  ],
+  [
+   6.708168,
+   4.347691
+  ]
+ ]
+}
