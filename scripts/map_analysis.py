@@ -19,7 +19,6 @@ from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
-import rasterio
 from scipy.ndimage import convolve
 from scipy.stats import norm
 
@@ -36,6 +35,7 @@ RNG = np.random.default_rng(20251108)
 
 
 def read(name):
+    import rasterio  # imported here so the statistics can be tested without the raster stack
     with rasterio.open(RAS / name) as s:
         a = s.read(1).astype("float64")
         if s.nodata is not None and not np.isnan(s.nodata):
@@ -87,6 +87,7 @@ def gi_star(suhi, land):
 
 
 def write(name, arr, profile, transform=None, dtype="uint8", nodata=0):
+    import rasterio
     pr = dict(profile, dtype=dtype, nodata=nodata, count=1, compress="deflate")
     if transform is not None:
         pr.update(transform=transform, height=arr.shape[0], width=arr.shape[1])
@@ -107,7 +108,8 @@ def main():
     out = {"script": "scripts/map_analysis.py", "period": PERIOD}
 
     # 1. hot spots
-    cls, blk, n = gi_star(suhi, land)
+    import rasterio
+    cls, _blk, n = gi_star(suhi, land)
     t = prof["transform"]
     write(f"hotspots_{PERIOD}.tif", cls, prof, transform=rasterio.Affine(t.a * BLOCK, 0, t.c, 0, t.e * BLOCK, t.f))
     out["hotspots"] = {"cell_m": BLOCK * 60, "neighbour_radius_m": BAND_BLOCKS * BLOCK * 60, "fdr_q": FDR_Q, "cells": n,
@@ -142,7 +144,8 @@ def main():
                        "population_on_land": round(tot_pop), "unobserved": round(float(pop[land & ~obs].sum())), "state": state, "lga": per}
 
     # 4. Landsat 7 vs Landsat 8, same LGA and same season
-    rows = list(csv.DictReader(open(ROOT / "research" / "pc_lga_suhi.csv")))
+    with open(ROOT / "research" / "pc_lga_suhi.csv", newline="") as fh:
+        rows = list(csv.DictReader(fh))
     by = defaultdict(lambda: defaultdict(list))
     for r in rows:
         sens = "l7" if r["platform"] == "landsat-7" else ("l8" if r["platform"] == "landsat-8" else None)
