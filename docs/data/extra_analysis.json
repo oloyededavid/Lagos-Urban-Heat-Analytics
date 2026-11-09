@@ -1,0 +1,306 @@
+{
+ "script": "scripts/extra_analysis.py",
+ "grid_m": 60.0,
+ "access_m": 300.0,
+ "low_ground_m": 10.0,
+ "hot_threshold_c": 4.0,
+ "population_total": 13890059,
+ "population_with_heat_value_share": 0.9934,
+ "access_heat": {
+  "within_300m": {
+   "population_share_of_total": 0.3487,
+   "pop_weighted_mean_suhi_c": 3.5,
+   "population_in_hot_cells_share": 0.5189
+  },
+  "beyond_300m": {
+   "population_share_of_total": 0.6513,
+   "pop_weighted_mean_suhi_c": 6.61,
+   "population_in_hot_cells_share": 0.9796
+  }
+ },
+ "gap_beyond_300m_and_hot": {
+  "population": 8862571,
+  "share_of_total": 0.6381,
+  "cells": 132778
+ },
+ "hot_threshold_sensitivity": {
+  "2": 0.9056,
+  "3": 0.8749,
+  "4": 0.8244,
+  "5": 0.7347
+ },
+ "low_ground": {
+  "below_10m": {
+   "area_share": 0.5829,
+   "population_share_of_total": 0.4426,
+   "pop_weighted_mean_suhi_c": 4.88,
+   "population_beyond_300m_share": 0.514
+  },
+  "10m_and_above": {
+   "area_share": 0.4171,
+   "population_share_of_total": 0.5574,
+   "pop_weighted_mean_suhi_c": 6.05,
+   "population_beyond_300m_share": 0.7604
+  }
+ },
+ "landcover": {
+  "10": {
+   "name": "Tree cover",
+   "area_share": 0.424,
+   "population_share": 0.0887,
+   "median_suhi_c": -1.94,
+   "share_cells_hot": 0.0198,
+   "pop_weighted_mean_suhi_c": 0.55
+  },
+  "20": {
+   "name": "Shrubland",
+   "area_share": 0.0015,
+   "population_share": 0.0005,
+   "median_suhi_c": 2.22,
+   "share_cells_hot": 0.2807,
+   "pop_weighted_mean_suhi_c": 3.63
+  },
+  "30": {
+   "name": "Grassland",
+   "area_share": 0.1428,
+   "population_share": 0.0457,
+   "median_suhi_c": 1.7,
+   "share_cells_hot": 0.1971,
+   "pop_weighted_mean_suhi_c": 3.23
+  },
+  "40": {
+   "name": "Cropland",
+   "area_share": 0.0041,
+   "population_share": 0.0019,
+   "median_suhi_c": 2.59,
+   "share_cells_hot": 0.2878,
+   "pop_weighted_mean_suhi_c": 2.91
+  },
+  "50": {
+   "name": "Built-up",
+   "area_share": 0.3558,
+   "population_share": 0.8447,
+   "median_suhi_c": 5.61,
+   "share_cells_hot": 0.8019,
+   "pop_weighted_mean_suhi_c": 6.3
+  },
+  "60": {
+   "name": "Bare / sparse",
+   "area_share": 0.0098,
+   "population_share": 0.0026,
+   "median_suhi_c": 4.96,
+   "share_cells_hot": 0.6642,
+   "pop_weighted_mean_suhi_c": 5.31
+  },
+  "90": {
+   "name": "Herbaceous wetland",
+   "area_share": 0.0277,
+   "population_share": 0.0056,
+   "median_suhi_c": -1.19,
+   "share_cells_hot": 0.0049,
+   "pop_weighted_mean_suhi_c": -0.35
+  },
+  "95": {
+   "name": "Mangroves",
+   "area_share": 0.0343,
+   "population_share": 0.0103,
+   "median_suhi_c": -1.48,
+   "share_cells_hot": 0.0006,
+   "pop_weighted_mean_suhi_c": -0.94
+  }
+ },
+ "distance_bands": {
+  "0-60 m": {
+   "population_share": 0.1754,
+   "pop_weighted_mean_suhi_c": 1.44
+  },
+  "60-120 m": {
+   "population_share": 0.0408,
+   "pop_weighted_mean_suhi_c": 4.85
+  },
+  "120-180 m": {
+   "population_share": 0.0466,
+   "pop_weighted_mean_suhi_c": 5.45
+  },
+  "180-300 m": {
+   "population_share": 0.0859,
+   "pop_weighted_mean_suhi_c": 5.96
+  },
+  "300-600 m": {
+   "population_share": 0.1763,
+   "pop_weighted_mean_suhi_c": 6.34
+  },
+  "600 m and more": {
+   "population_share": 0.4751,
+   "pop_weighted_mean_suhi_c": 6.72
+  }
+ },
+ "lga": {
+  "Agege": {
+   "population": 706789,
+   "population_beyond_300m_share": 0.9649,
+   "population_low_ground_share": 0.0,
+   "pop_weighted_mean_suhi_c": 6.12,
+   "population_in_hot_cells_share": 0.9831
+  },
+  "Ajeromi/Ifelodun": {
+   "population": 1044226,
+   "population_beyond_300m_share": 0.9107,
+   "population_low_ground_share": 0.9938,
+   "pop_weighted_mean_suhi_c": 7.28,
+   "population_in_hot_cells_share": 0.9906
+  },
+  "Alimosho": {
+   "population": 2014128,
+   "population_beyond_300m_share": 0.7267,
+   "population_low_ground_share": 0.0736,
+   "pop_weighted_mean_suhi_c": 5.95,
+   "population_in_hot_cells_share": 0.905
+  },
+  "Amuwo Odofin": {
+   "population": 500594,
+   "population_beyond_300m_share": 0.36,
+   "population_low_ground_share": 0.9007,
+   "pop_weighted_mean_suhi_c": 4.15,
+   "population_in_hot_cells_share": 0.6084
+  },
+  "Apapa": {
+   "population": 339802,
+   "population_beyond_300m_share": 0.8084,
+   "population_low_ground_share": 0.9967,
+   "pop_weighted_mean_suhi_c": 6.75,
+   "population_in_hot_cells_share": 0.9247
+  },
+  "Badagry": {
+   "population": 359433,
+   "population_beyond_300m_share": 0.0169,
+   "population_low_ground_share": 0.8131,
+   "pop_weighted_mean_suhi_c": 1.9,
+   "population_in_hot_cells_share": 0.2912
+  },
+  "Epe": {
+   "population": 243140,
+   "population_beyond_300m_share": 0.0766,
+   "population_low_ground_share": 0.3468,
+   "pop_weighted_mean_suhi_c": 0.4,
+   "population_in_hot_cells_share": 0.1745
+  },
+  "Eti-Osa": {
+   "population": 423704,
+   "population_beyond_300m_share": 0.5767,
+   "population_low_ground_share": 0.9882,
+   "pop_weighted_mean_suhi_c": 4.2,
+   "population_in_hot_cells_share": 0.5654
+  },
+  "Ibeju Lekki": {
+   "population": 142770,
+   "population_beyond_300m_share": 0.0807,
+   "population_low_ground_share": 0.8167,
+   "pop_weighted_mean_suhi_c": 1.6,
+   "population_in_hot_cells_share": 0.27
+  },
+  "Ifako/Ijaye": {
+   "population": 665835,
+   "population_beyond_300m_share": 0.8572,
+   "population_low_ground_share": 0.0089,
+   "pop_weighted_mean_suhi_c": 6.26,
+   "population_in_hot_cells_share": 0.962
+  },
+  "Ikeja": {
+   "population": 523823,
+   "population_beyond_300m_share": 0.7847,
+   "population_low_ground_share": 0.025,
+   "pop_weighted_mean_suhi_c": 6.58,
+   "population_in_hot_cells_share": 0.9551
+  },
+  "Ikorodu": {
+   "population": 814785,
+   "population_beyond_300m_share": 0.2777,
+   "population_low_ground_share": 0.2706,
+   "pop_weighted_mean_suhi_c": 4.37,
+   "population_in_hot_cells_share": 0.6533
+  },
+  "Kosofe": {
+   "population": 1032060,
+   "population_beyond_300m_share": 0.5168,
+   "population_low_ground_share": 0.4327,
+   "pop_weighted_mean_suhi_c": 5.01,
+   "population_in_hot_cells_share": 0.751
+  },
+  "Lagos Island": {
+   "population": 301676,
+   "population_beyond_300m_share": 0.6088,
+   "population_low_ground_share": 0.884,
+   "pop_weighted_mean_suhi_c": 4.65,
+   "population_in_hot_cells_share": 0.673
+  },
+  "Lagos Mainland": {
+   "population": 511530,
+   "population_beyond_300m_share": 0.8306,
+   "population_low_ground_share": 0.7618,
+   "pop_weighted_mean_suhi_c": 6.18,
+   "population_in_hot_cells_share": 0.9114
+  },
+  "Mushin": {
+   "population": 959012,
+   "population_beyond_300m_share": 0.9551,
+   "population_low_ground_share": 0.0585,
+   "pop_weighted_mean_suhi_c": 6.53,
+   "population_in_hot_cells_share": 0.9915
+  },
+  "Ojo": {
+   "population": 925225,
+   "population_beyond_300m_share": 0.1587,
+   "population_low_ground_share": 0.9659,
+   "pop_weighted_mean_suhi_c": 3.39,
+   "population_in_hot_cells_share": 0.5126
+  },
+  "Oshodi/Isolo": {
+   "population": 972572,
+   "population_beyond_300m_share": 0.5812,
+   "population_low_ground_share": 0.1045,
+   "pop_weighted_mean_suhi_c": 6.09,
+   "population_in_hot_cells_share": 0.9101
+  },
+  "Shomolu": {
+   "population": 626085,
+   "population_beyond_300m_share": 0.8238,
+   "population_low_ground_share": 0.4449,
+   "pop_weighted_mean_suhi_c": 5.92,
+   "population_in_hot_cells_share": 0.9363
+  },
+  "Surulere": {
+   "population": 782869,
+   "population_beyond_300m_share": 0.921,
+   "population_low_ground_share": 0.7503,
+   "pop_weighted_mean_suhi_c": 7.35,
+   "population_in_hot_cells_share": 0.9777
+  }
+ },
+ "access_sensitivity_rasters": [
+  "veg_distance_0.3_m.tif",
+  "veg_distance_0.5_m.tif"
+ ],
+ "lga_order": [
+  "Agege",
+  "Ajeromi/Ifelodun",
+  "Alimosho",
+  "Amuwo Odofin",
+  "Apapa",
+  "Badagry",
+  "Epe",
+  "Eti-Osa",
+  "Ibeju Lekki",
+  "Ifako/Ijaye",
+  "Ikeja",
+  "Ikorodu",
+  "Kosofe",
+  "Lagos Island",
+  "Lagos Mainland",
+  "Mushin",
+  "Ojo",
+  "Oshodi/Isolo",
+  "Shomolu",
+  "Surulere"
+ ]
+}

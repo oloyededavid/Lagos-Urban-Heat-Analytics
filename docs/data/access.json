@@ -1,0 +1,31 @@
+{
+ "script": "scripts/access_analysis.py",
+ "grid_m": 60.0,
+ "veg_ndvi_threshold": 0.4,
+ "access_m": 300.0,
+ "low_ground_m": 10.0,
+ "population_source": "WorldPop 2020 (modelled estimate)",
+ "population_total": 13890059,
+ "population_beyond_300m_share": 0.6513,
+ "population_beyond_300m_ndvi_sensitivity": {
+  "0.3": {
+   "ndvi_threshold": 0.3,
+   "population_beyond_300m_share": 0.4673
+  },
+  "0.4": {
+   "ndvi_threshold": 0.4,
+   "population_beyond_300m_share": 0.6513
+  },
+  "0.5": {
+   "ndvi_threshold": 0.5,
+   "population_beyond_300m_share": 0.7731
+  }
+ },
+ "dem_tiles": 3,
+ "low_ground_area_share": 0.5829,
+ "low_ground_population_share": 0.4426,
+ "heat_low_minus_other_median_c": -1.122,
+ "heat_cells_low": 450248,
+ "heat_cells_other": 322149,
+ "note": "Cell-level medians. No interval: grid cells are spatially dependent, so a bootstrap over cells would overstate precision. Descriptive only, not causal."
+}
