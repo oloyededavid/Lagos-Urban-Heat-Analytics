@@ -771,3 +771,20 @@ figcaption { hyphens: manual; -webkit-hyphens: manual; }
 .react-status { font-size: 15px; color: #1d4f85; }
 .sig-meta { display: inline-flex; gap: 18px; text-transform: uppercase; letter-spacing: 0.06em; font-size: 13px; color: #6b6b6b; }
 .sig-meta [hidden] { display: none; }
+
+/* phone section menu, shown below 1080 px where the header menu is hidden */
+.toc-phone { display: none; }
+@media (max-width: 1080px) {
+    .toc-phone { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; padding: 0 12px 6px; }
+    .toc-phone::-webkit-scrollbar { display: none; }
+    .toc-phone a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; font-size: 14px; color: var(--ink-3); text-decoration: none; white-space: nowrap; border-radius: 6px; }
+    .toc-phone a:hover { color: var(--ink); background: var(--fill); }
+}
+/* touch targets for the Explorer link on phones */
+@media (max-width: 560px) { .site-links a { min-height: 44px; display: inline-flex; align-items: center; } }
+/* interactive LGA map (Figure 15): keep labels at 12 px on phones by scrolling the map sideways inside its box */
+@media (max-width: 760px) {
+    #map-change { overflow-x: auto; }
+    #map-change svg { min-width: 960px; }
+    #map-change .lab { font-size: 12px; }
+}
