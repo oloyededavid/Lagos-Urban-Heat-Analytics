@@ -167,7 +167,7 @@ def main():
     cls_arr[inside & ~beyond] = 0
     cls_arr[beyond & ok & (suhi < HOT_C)] = 1
     cls_arr[beyond & ok & (suhi >= HOT_C)] = 2
-    cls_arr[beyond & ~ok] = 1
+    # beyond 300 m but without a usable heat value: left as no-data (255), not counted as under 4 C
     prof8 = {**prof, "dtype": "uint8", "nodata": 255}
     with rasterio.open(RAS / "access_heat_class.tif", "w", **prof8) as dst:
         dst.write(cls_arr, 1)

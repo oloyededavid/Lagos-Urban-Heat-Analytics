@@ -93,9 +93,10 @@ def main():
     pop_low = float(pop_ok[low].sum() / total) if total else float("nan")
     area_low = float(low.sum() / inside.sum()) if inside.sum() else float("nan")
 
-    # surface heat on low versus other ground (medians of cell values, 2020-2025 dry season)
+    # surface heat on low versus other ground: cell medians, cells with at least 3 clear passes
     suhi, _, _, _ = read("2020-2025_suhi_median.tif")
-    ok = inside & np.isfinite(dem) & np.isfinite(suhi)
+    count = read("2020-2025_count.tif")[0]
+    ok = inside & np.isfinite(dem) & np.isfinite(suhi) & (count >= 3)   # same usable-heat rule as extra_analysis.py
     a = suhi[ok & low]
     b = suhi[ok & ~low]
     diff_med = float(np.median(a) - np.median(b)) if a.size and b.size else float("nan")
