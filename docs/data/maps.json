@@ -1,5 +1,5 @@
 {
- "built": "8 November 2026",
+ "built": "9 November 2026",
  "maps": {
   "m01_reference": "assets/maps/m01_reference.webp",
   "m02_landcover": "assets/maps/m02_landcover.webp",
@@ -16,7 +16,17 @@
   "m16_ndvi_change": "assets/maps/m16_ndvi_change.webp",
   "m13_hotspots": "assets/maps/m13_hotspots.webp",
   "m14_ndvi_heat": "assets/maps/m14_ndvi_heat.webp",
-  "m15_exposure": "assets/maps/m15_exposure.webp"
+  "m15_exposure": "assets/maps/m15_exposure.webp",
+  "m17_green_access": "assets/maps/m17_green_access.webp",
+  "m18_low_ground": "assets/maps/m18_low_ground.webp",
+  "m19_low_ground_heat": "assets/maps/m19_low_ground_heat.webp",
+  "m20_access_gap": "assets/maps/m20_access_gap.webp",
+  "m21_landcover_heat": "assets/maps/m21_landcover_heat.webp",
+  "m22_distance_heat": "assets/maps/m22_distance_heat.webp",
+  "m23_lga_beyond300": "assets/maps/m23_lga_beyond300.webp",
+  "m24_lga_heat": "assets/maps/m24_lga_heat.webp",
+  "m25_veg_ndvi03": "assets/maps/m25_veg_ndvi03.webp",
+  "m26_veg_ndvi05": "assets/maps/m26_veg_ndvi05.webp"
  },
  "rasters": {
   "script": "scripts/pc_build_rasters.py",

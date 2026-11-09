@@ -1,7 +1,7 @@
 """Publication maps for the study page from the rasters of scripts/pc_build_rasters.py.
 
 One cartographic template for every map: title and subtitle, legend with units, scale bar, north
-arrow, latitude/longitude graticule, LGA and state boundaries, no-data entry, optional locator inset,
+arrow, latitude/longitude graticule, LGA and state boundaries, no-data entry,
 and a credit line with sources, coordinate system, author and date. Maps are drawn in the grid's
 own projection, WGS 84 / UTM zone 31N (EPSG:32631), so the scale bar is exact.
 
@@ -29,7 +29,7 @@ from rasterio.warp import transform_geom
 ROOT = Path(__file__).resolve().parents[1]
 RAS = ROOT / "research" / "rasters"
 OUT = ROOT / "docs" / "assets" / "maps"
-DATE = "8 November 2026"
+DATE = "9 November 2026"
 AUTHOR = "D. O. Oloyede"
 CRS_NOTE = "WGS 84 / UTM zone 31N (EPSG:32631)"
 INK, INK2, RULE = "#111111", "#474747", "#d0cfca"
@@ -67,7 +67,6 @@ class Base:
 
     def __init__(self):
         self.lgas = json.loads((ROOT / "docs" / "data" / "lagos_uhi_processed.geojson").read_text())
-        self.ctry = json.loads((ROOT / "research" / "locator_countries.geojson").read_text())  # Natural Earth 1:50m
         ids, self.t = load("lagos_land.tif")
         self.state_ids = None
         with rasterio.open(RAS / "lagos_land.tif") as s:
@@ -158,20 +157,6 @@ class Base:
                 ax.text(pt.x, pt.y, n, fontsize=6.3, ha="center", va="center", color=INK, zorder=7,
                         path_effects=[pe.withStroke(linewidth=2.2, foreground="white")])
 
-    def locator(self, host):
-        ax = host.inset_axes([0.004, 0.50, 0.15, 0.49])
-        ax.set_facecolor("white")
-        for ft in self.ctry["features"]:
-            polys = [ft["geometry"]["coordinates"]] if ft["geometry"]["type"] == "Polygon" else ft["geometry"]["coordinates"]
-            for pg in polys:
-                ax.add_patch(MplPolygon(np.array(pg[0]), closed=True, facecolor="#e6e4de" if ft["properties"]["name"] == "Nigeria" else "#f6f6f4", edgecolor="#9a9a9a", lw=0.4))
-        for f in self.lgas["features"]:
-            ax.add_patch(MplPolygon(np.array(f["geometry"]["coordinates"][0]), closed=True, facecolor="#d9500b", edgecolor="none"))
-        ax.set_xlim(0.0, 15.0); ax.set_ylim(3.6, 14.2); ax.set_zorder(9); ax.set_aspect("equal"); ax.set_xticks([]); ax.set_yticks([])
-        ax.text(8.2, 9.4, "NIGERIA", fontsize=6.5, color=INK2, ha="center"); ax.text(3.4, 5.2, "Lagos", fontsize=6.5, color=INK, ha="center", va="top")
-        for s in ax.spines.values():
-            s.set_color("#9a9a9a"); s.set_linewidth(0.5)
-
     def credit(self, fig, h, source):
         fig.text(0.04, 0.06 / h, f"Source: {source}  ·  Projection: {CRS_NOTE}", fontsize=7, color=INK2, va="bottom")
 
@@ -228,7 +213,7 @@ def map_reference(B):
     for f, s in zip(B.lgas["features"], B.shapes):
         if f["properties"]["land_area_km2"] >= 60:
             ring = np.array(s["coordinates"][0]); ax.text(ring[:, 0].mean(), ring[:, 1].mean(), f["properties"]["lga_name"], fontsize=6.5, ha="center", va="center", color=INK, zorder=7)
-    B.scalebar(ax); B.locator(ax)
+    B.scalebar(ax)
     fig.patches.append(Rectangle((0.04, 0.36 / h), 0.018, 0.13 / h, transform=fig.transFigure, facecolor="#a9cf96", edgecolor="#9a9a9a", lw=0.4))
     fig.text(0.063, 0.425 / h, "Countryside reference (unbuilt land within 20 km)", fontsize=7.5, va="center")
     fig.patches.append(Rectangle((0.36, 0.36 / h), 0.018, 0.13 / h, transform=fig.transFigure, facecolor="#f4f2ec", edgecolor="#3a3a3a", lw=0.4))
@@ -246,7 +231,7 @@ def map_landcover(B):
         idx[wc == c] = i
     idx = np.where(B.inside > 0, idx, np.nan)
     ax.imshow(idx, extent=B.extent, cmap=mcolors.ListedColormap([c for _, _, c in WORLDCOVER]), vmin=-0.5, vmax=len(codes) - 0.5, interpolation="nearest", zorder=3)
-    B.boundaries(ax, color="#222222"); B.scalebar(ax); B.locator(ax)
+    B.boundaries(ax, color="#222222"); B.scalebar(ax)
     tot = np.isfinite(idx).sum()
     handles = [Patch(facecolor=col, edgecolor="#9a9a9a", lw=0.3, label=f"{lab} {pct(100 * (wc[B.inside > 0] == c).sum() / tot)}") for c, lab, col in WORLDCOVER if (wc[B.inside > 0] == c).any()]
     fig.legend(handles=handles, loc="lower left", bbox_to_anchor=(0.035, 0.24 / h), ncol=5, fontsize=7, frameon=False, handlelength=1.2, columnspacing=1.2)
@@ -260,7 +245,7 @@ def pct(v):
 
 def single(B, name, title, sub, arr, cmap, norm, label, ticks=None, extend="neither", source=LS):
     fig, (ax,), h = B.figure(title, sub)
-    im = B.raster(ax, arr, cmap, norm); B.boundaries(ax); B.labels(ax); B.scalebar(ax); B.locator(ax)
+    im = B.raster(ax, arr, cmap, norm); B.boundaries(ax); B.labels(ax); B.scalebar(ax)
     B.colorbar(fig, im, h, label, ticks, extend); B.credit(fig, h, source)
     return save(fig, name)
 
@@ -272,7 +257,7 @@ def triple(B, name, title, sub, key, cmap, norm, label, ticks=None, extend="neit
         im = B.raster(ax, arr, cmap, norm); B.boundaries(ax)
         ax.text(0.44, 0.025, period_note(lab), transform=ax.transAxes, fontsize=8, fontweight="bold", va="bottom", color=INK, zorder=8,
                 bbox=dict(facecolor="white", edgecolor="none", alpha=0.85, pad=2))
-    B.scalebar(axes[0]); B.locator(axes[0]); B.colorbar(fig, im, h, label, ticks, extend); B.credit(fig, h, LS)
+    B.scalebar(axes[0]); B.colorbar(fig, im, h, label, ticks, extend); B.credit(fig, h, LS)
     return save(fig, name)
 
 
@@ -297,7 +282,7 @@ def map_hotspots(B, A):
         rgba[cls == k] = mcolors.to_rgba(c)
     B.raster(ax, np.full(B.shape, np.nan), mcolors.ListedColormap([NODATA]), mcolors.Normalize(0, 1))   # in-state water and no-data underneath
     ax.imshow(rgba, extent=ext, interpolation="nearest", zorder=3)
-    B.boundaries(ax); B.labels(ax); B.scalebar(ax); B.locator(ax)
+    B.boundaries(ax); B.labels(ax); B.scalebar(ax)
     items = [(cols[3], f"Hot spot ({hs['hot']:,} cells)"), (cols[1], f"Cold spot ({hs['cold']:,} cells)"),
              (cols[2], f"Not significant ({hs['not_significant']:,} cells)"), (NODATA, "Too few clear observations"), (WATER, "Water")]
     for k, (c, txt) in enumerate(items):
@@ -325,7 +310,7 @@ def map_bivariate(B, A):
     ax.imshow(np.where(miss & B.water, 1.0, np.nan), extent=B.extent, cmap=mcolors.ListedColormap([WATER]), interpolation="nearest", zorder=2)
     ax.imshow(np.where(miss & ~B.water, 1.0, np.nan), extent=B.extent, cmap=mcolors.ListedColormap([NODATA]), interpolation="nearest", zorder=2)
     ax.imshow(rgba, extent=B.extent, interpolation="nearest", zorder=3)
-    B.boundaries(ax); B.labels(ax); B.scalebar(ax); B.locator(ax)
+    B.boundaries(ax); B.labels(ax); B.scalebar(ax)
     lh = 0.78                                           # legend square, inches
     lax = fig.add_axes([0.075, 0.42 / h, lh / 11, lh / h])
     lax.imshow(np.array(pal), origin="lower", extent=(0, 3, 0, 3))
@@ -375,6 +360,103 @@ def chart_exposure(A):
              "Surface temperature, not air temperature.", fontsize=7.5, color=INK2)
     fig.text(0.04, 0.012, "Source: Landsat Collection 2 Level 2 (Planetary Computer); WorldPop 2020 (unconstrained, modelled)", fontsize=7, color=INK2)
     return save(fig, "m15_exposure")
+
+
+def load_int(name):
+    with rasterio.open(RAS / name) as s:
+        a = s.read(1).astype("float32")
+        a[a == 255] = np.nan
+        return a
+
+
+def map_access_gap(B, X):
+    cls = load_int("access_heat_class.tif")
+    cmap = mcolors.ListedColormap(["#e9f2e4", "#f2b98a", "#a93a08"])
+    share = X["gap_beyond_300m_and_hot"]["share_of_total"] * 100
+    return single(B, "m20_access_gap", "Green-space gap and heat, 2020–2025",
+                  f"Residents more than 300 m from vegetation who also live on cells at least 4 °C warmer than the countryside: {share:.0f}% of the 2020 population",
+                  np.where(B.inside > 0, cls, np.nan), cmap, mcolors.Normalize(-0.5, 2.5),
+                  "0 = within 300 m of vegetation; 1 = beyond 300 m, under 4 °C; 2 = beyond 300 m, 4 °C or more",
+                  [0, 1, 2], "neither", source="Landsat NDVI and surface heat 2020–2025; WorldPop 2020 (modelled)")
+
+
+def lga_values_map(B, name, title, sub, values, cmap, norm, label, ticks, extend="neither"):
+    """Fill each LGA on the grid with its value (LGA index raster written by scripts/extra_analysis.py)."""
+    idx = load_int("lga_index.tif")
+    order = EXTRA["lga_order"]
+    arr = np.full(idx.shape, np.nan, "float32")
+    for i, n in enumerate(order, start=1):
+        if n in values:
+            arr[idx == i] = values[n]
+    return single(B, name, title, sub, arr, cmap, norm, label, ticks, extend,
+                  source="LGA boundaries (FAO GAUL 2015); Landsat surface heat 2020–2025; WorldPop 2020 (modelled)")
+
+
+def chart_bars(name, title, sub, labels, series, xlabel, foot):
+    """Horizontal bar chart; series = list of (values, colour, legend label)."""
+    fig = plt.figure(figsize=(11, 6.4), dpi=150)
+    h = 6.4
+    fig.text(0.04, 1 - 0.28 / h, title, fontsize=14, fontweight="bold", va="top")
+    fig.text(0.04, 1 - 0.60 / h, sub, fontsize=9.5, color=INK2, va="top")
+    ax = fig.add_axes([0.24, 0.2, 0.72, 0.66])
+    y = np.arange(len(labels)); bh = 0.8 / len(series)
+    for k, (vals, col, lab) in enumerate(series):
+        ax.barh(y + (k - (len(series) - 1) / 2) * bh, vals, height=bh, color=col, label=lab)
+    ax.set_yticks(y); ax.set_yticklabels(labels, fontsize=8); ax.invert_yaxis()
+    ax.set_xlabel(xlabel, fontsize=8.5); ax.tick_params(labelsize=7.5, length=2)
+    for sp in ("top", "right"):
+        ax.spines[sp].set_visible(False)
+    ax.grid(axis="x", color="#e2e1dc", lw=0.5); ax.set_axisbelow(True)
+    if len(series) > 1:
+        fig.legend(*ax.get_legend_handles_labels(), ncol=len(series), fontsize=7.5, frameon=False, loc="lower left", bbox_to_anchor=(0.04, 0.075))
+    fig.text(0.04, 0.012, foot, fontsize=7, color=INK2)
+    return save(fig, name)
+
+
+def map_landcover_heat(X):
+    rows = [(v["name"], v) for k, v in sorted(X["landcover"].items(), key=lambda kv: -kv[1]["population_share"]) if v["population_share"] > 0.0005]
+    labels = [f"{n}  ({v['area_share'] * 100:.0f}% of area, {v['population_share'] * 100:.0f}% of people)" for n, v in rows]
+    return chart_bars("m21_landcover_heat", "Heat island by land cover, 2020–2025",
+                      "Median surface heat island of each cell, by ESA WorldCover 2021 class; cells with at least 3 clear passes",
+                      labels, [([v["median_suhi_c"] for _, v in rows], "#d9500b", "Median heat island, °C")],
+                      "°C warmer than the countryside (median cell)",
+                      "Source: ESA WorldCover 2021; Landsat Collection 2 Level 2 (Planetary Computer). Associations only: land cover and built-up density are not separated.")
+
+
+def chart_distance_bands(X):
+    bands = list(X["distance_bands"].items())
+    labels = [f"{k}  ({v['population_share'] * 100:.0f}% of people)" for k, v in bands]
+    return chart_bars("m22_distance_heat", "Heat along the green-space gradient, 2020–2025",
+                      "Population-weighted mean heat island by distance from each cell to the nearest vegetated cell (NDVI ≥ 0.4)",
+                      labels, [([v["pop_weighted_mean_suhi_c"] for _, v in bands], "#a93a08", "Population-weighted mean heat island, °C")],
+                      "°C warmer than the countryside (population-weighted)",
+                      "Source: Landsat Collection 2 Level 2 (Planetary Computer); WorldPop 2020 (modelled). Distance bands are not a walking network.")
+
+
+def map_lga_beyond(B, X):
+    vals = {n: v["population_beyond_300m_share"] * 100 for n, v in X["lga"].items()}
+    return lga_values_map(B, "m23_lga_beyond300", "Share of residents beyond 300 m from green space, by LGA",
+                          "WorldPop 2020 residents of each LGA whose cell is more than 300 m from vegetated land (NDVI ≥ 0.4)",
+                          vals, HEAT, mcolors.Normalize(0, 100),
+                          "% of LGA residents more than 300 m from green space", [0, 25, 50, 75, 100])
+
+
+def map_lga_heat(B, X):
+    vals = {n: v["pop_weighted_mean_suhi_c"] for n, v in X["lga"].items() if v["pop_weighted_mean_suhi_c"] is not None}
+    return lga_values_map(B, "m24_lga_heat", "Population-weighted heat island by LGA, 2020–2025",
+                          "Mean surface heat island of the cells where each LGA's residents live (WorldPop 2020 weights)",
+                          vals, SUHI, SUHI_NORM, "°C warmer than the countryside (population-weighted)", [-4, -2, 0, 2, 4, 6, 8, 10], "both")
+
+
+def map_veg_sensitivity(B, thr, name):
+    d, _ = load(f"veg_distance_{thr}_m.tif")
+    d = np.where(d < 0, np.nan, d)
+    return single(B, name, f"Walking distance to green space at NDVI ≥ {thr}, 2020–2025",
+                  f"Sensitivity check: the same analysis with a vegetation cut-off of {thr} instead of 0.4",
+                  np.where(B.inside > 0, np.minimum(d, 1000), np.nan),
+                  mcolors.LinearSegmentedColormap.from_list("dist", ["#0b461e", "#7fc283", "#f3efe2", "#d9a26b", "#8a4a1c"]),
+                  mcolors.Normalize(0, 1000), "Distance to vegetation, m (1000 m and above as one class)", [0, 300, 600, 1000], "max",
+                  source="USGS Landsat NDVI median 2020–2025")
 
 
 def main():
@@ -428,6 +510,40 @@ def main():
     built["m13_hotspots"] = map_hotspots(B, A)
     built["m14_ndvi_heat"] = map_bivariate(B, A)
     built["m15_exposure"] = chart_exposure(A)
+    # access and low-ground maps (scripts/access_analysis.py writes the rasters and docs/data/access.json)
+    X = json.loads((ROOT / "docs" / "data" / "access.json").read_text())
+    dist, _ = load("veg_distance_m.tif")
+    built["m17_green_access"] = single(B, "m17_green_access", "Walking distance to green space, 2020–2025",
+                                       f"Distance to the nearest vegetated 60 m cell (dry-season NDVI ≥ {X['veg_ndvi_threshold']}); "
+                                       f"{X['population_beyond_300m_share'] * 100:.0f}% of the 2020 population lives more than {X['access_m']:.0f} m from one "
+                                       f"({X['population_beyond_300m_ndvi_sensitivity']['0.3']['population_beyond_300m_share'] * 100:.0f}–"
+                                       f"{X['population_beyond_300m_ndvi_sensitivity']['0.5']['population_beyond_300m_share'] * 100:.0f}% for NDVI 0.3–0.5)",
+                                       np.where(B.inside > 0, np.minimum(dist, 1000), np.nan),
+                                       mcolors.LinearSegmentedColormap.from_list("dist", ["#0b461e", "#7fc283", "#f3efe2", "#d9a26b", "#8a4a1c"]),
+                                       mcolors.Normalize(0, 1000), "Distance to vegetation, m (straight line; 1000 m and above shown as one class)",
+                                       [0, 300, 600, 1000], "max", source="USGS Landsat NDVI median 2020–2025; WorldPop 2020 (modelled)")
+    low, _ = load("low_ground_10m.tif")
+    built["m18_low_ground"] = single(B, "m18_low_ground", "Low ground below 10 m, Lagos",
+                                     f"Copernicus DEM GLO-30 elevation proxy for flood-prone ground, not a flood map; "
+                                     f"{X['low_ground_area_share'] * 100:.0f}% of the study area and {X['low_ground_population_share'] * 100:.0f}% of the 2020 population are below 10 m",
+                                     np.where(low == 1, 1.0, np.where(low == 0, 0.0, np.nan)),
+                                     mcolors.ListedColormap(["#f3efe2", "#1c5cab"]), mcolors.Normalize(0, 1),
+                                     "0 = at or above 10 m (light); 1 = below 10 m (blue)", [0, 1], "neither", source="Copernicus DEM GLO-30 (Planetary Computer)")
+    built["m19_low_ground_heat"] = single(B, "m19_low_ground_heat", "Surface heat island on low ground, 2020–2025",
+                                          f"Only cells below 10 m; cell median {X['heat_low_minus_other_median_c']:+.1f} °C against higher ground; "
+                                          f"descriptive, no interval (cells are spatially dependent)",
+                                          np.where((low == 1) & np.isfinite(suhi), suhi, np.nan), SUHI, SUHI_NORM,
+                                          "°C warmer (orange) or cooler (blue) than the countryside", [-4, -2, 0, 2, 4, 6, 8, 10], "both")
+    # extra analysis maps (scripts/extra_analysis.py writes the class rasters and docs/data/extra_analysis.json)
+    global EXTRA
+    EXTRA = json.loads((ROOT / "docs" / "data" / "extra_analysis.json").read_text())
+    built["m20_access_gap"] = map_access_gap(B, EXTRA)
+    built["m21_landcover_heat"] = map_landcover_heat(EXTRA)
+    built["m22_distance_heat"] = chart_distance_bands(EXTRA)
+    built["m23_lga_beyond300"] = map_lga_beyond(B, EXTRA)
+    built["m24_lga_heat"] = map_lga_heat(B, EXTRA)
+    built["m25_veg_ndvi03"] = map_veg_sensitivity(B, 0.3, "m25_veg_ndvi03")
+    built["m26_veg_ndvi05"] = map_veg_sensitivity(B, 0.5, "m26_veg_ndvi05")
     (OUT.parent.parent / "data").mkdir(exist_ok=True)
     (ROOT / "docs" / "data" / "maps.json").write_text(json.dumps({"built": DATE, "maps": built, "rasters": meta(), "worldcover_accuracy_africa_pct": WC_ACC_AFRICA}, indent=1) + "\n")
     print(json.dumps(built, indent=1))
