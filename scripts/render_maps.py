@@ -135,26 +135,26 @@ class Base:
         im = ax.imshow(a, extent=self.extent, cmap=cmap, norm=norm, interpolation="nearest", zorder=3)
         return im
 
-    def scalebar(self, ax, km=20):
+    def scalebar(self, ax, km=20, fs=7):
         x0, x1, y0, y1 = self.view
         H = y1 - y0
         bx, by = x1 - (x1 - x0) * 0.045 - km * 1000, y1 - H * 0.12
         for i in range(2):
             ax.add_patch(Rectangle((bx + i * km * 500, by), km * 500, H * 0.018, facecolor=INK if i == 0 else "white", edgecolor=INK, lw=0.6, zorder=6))
         for i, v in enumerate((0, km // 2, km)):
-            ax.text(bx + i * km * 500, by + H * 0.035, str(v), ha="center", fontsize=7, color=INK, zorder=6)
-        ax.text(bx + km * 1000 + 1500, by, "km", fontsize=7, color=INK, va="bottom", zorder=6)
+            ax.text(bx + i * km * 500, by + H * 0.035, str(v), ha="center", fontsize=fs, color=INK, zorder=6)
+        ax.text(bx + km * 1000 + 1500, by, "km", fontsize=fs, color=INK, va="bottom", zorder=6)
         nx, ny = bx - 6500, y1 - H * 0.20
         ax.add_patch(MplPolygon([[nx, ny + H * 0.09], [nx - 1500, ny], [nx, ny + H * 0.025], [nx + 1500, ny]], closed=True, facecolor=INK, zorder=6))
         ax.text(nx, ny + H * 0.10, "N", ha="center", va="bottom", fontsize=8, fontweight="bold", zorder=6)
 
-    def labels(self, ax, names=("Alimosho", "Ikeja", "Eti-Osa", "Ikorodu", "Epe", "Badagry", "Ibeju Lekki", "Ojo", "Kosofe")):
+    def labels(self, ax, names=("Alimosho", "Ikeja", "Eti-Osa", "Ikorodu", "Epe", "Badagry", "Ibeju Lekki", "Ojo", "Kosofe"), size=6.3):
         for f, s in zip(self.lgas["features"], self.shapes):
             n = f["properties"]["lga_name"]
             if n in names:
                 from shapely.geometry import shape
                 pt = shape(s).representative_point()
-                ax.text(pt.x, pt.y, n, fontsize=6.3, ha="center", va="center", color=INK, zorder=7,
+                ax.text(pt.x, pt.y, n, fontsize=size, ha="center", va="center", color=INK, zorder=7,
                         path_effects=[pe.withStroke(linewidth=2.2, foreground="white")])
 
     def credit(self, fig, h, source):
@@ -243,11 +243,46 @@ def pct(v):
     return "<1%" if 0 < v < 0.5 else f"{v:.0f}%"
 
 
+PHONE_W = 4.6          # inches; a phone shows this at about 360 px, so 10 pt text is about 11 CSS px
+PHONE_LGA_PT = 8
+PHONE_LGA_NAMES = ("Alimosho", "Ikorodu", "Epe", "Badagry", "Ibeju Lekki", "Ojo", "Eti-Osa")   # fewer, to avoid overlaps at phone size
+
+
+def phone_single(B, name, arr, cmap, norm, label, ticks, extend, source):
+    """Phone version of a one-panel map: no title or subtitle (the caption carries them), larger text.
+
+    The desktop version keeps its title and subtitle; this one is shown below 760 px via <picture>."""
+    import textwrap
+    aspect = (B.view[3] - B.view[2]) / (B.view[1] - B.view[0])
+    w = PHONE_W
+    map_h = 0.96 * w * aspect
+    h = 0.10 + map_h + 1.85
+    fig = plt.figure(figsize=(w, h), dpi=150)
+    ax = fig.add_axes([0.02, 1.85 / h, 0.96, map_h / h])
+    B.frame(ax)
+    ax.tick_params(labelsize=8)
+    im = B.raster(ax, arr, cmap, norm); B.boundaries(ax)
+    B.labels(ax, names=PHONE_LGA_NAMES, size=PHONE_LGA_PT); B.scalebar(ax, fs=7)
+    cax = fig.add_axes([0.04, 1.05 / h, 0.92, 0.22 / h])
+    cb = fig.colorbar(im, cax=cax, orientation="horizontal", extend=extend, ticks=ticks)
+    cb.outline.set_linewidth(0.4); cb.ax.tick_params(labelsize=10, length=2)
+    cb.set_label("\n".join(textwrap.wrap(label, 48)), fontsize=10, color=INK, labelpad=3)
+    cb.ax.xaxis.set_label_position("top")
+    for k, (col, txt) in enumerate(((WATER, "Water (not analysed)"), (NODATA, "No clear observation"))):
+        x = 0.04 + k * 0.48
+        fig.patches.append(Rectangle((x, 0.55 / h), 0.03, 0.16 / h, transform=fig.transFigure, facecolor=col, edgecolor="#9a9a9a", lw=0.4))
+        fig.text(x + 0.04, 0.63 / h, txt, fontsize=9, color=INK2, va="center")
+    fig.text(0.04, 0.10 / h, "\n".join(textwrap.wrap(f"Source: {source}. {CRS_NOTE}.", 60)), fontsize=8, color=INK2, va="bottom", linespacing=1.3)
+    return save(fig, name + "_phone")
+
+
 def single(B, name, title, sub, arr, cmap, norm, label, ticks=None, extend="neither", source=LS):
     fig, (ax,), h = B.figure(title, sub)
     im = B.raster(ax, arr, cmap, norm); B.boundaries(ax); B.labels(ax); B.scalebar(ax)
     B.colorbar(fig, im, h, label, ticks, extend); B.credit(fig, h, source)
-    return save(fig, name)
+    path = save(fig, name)
+    phone_single(B, name, arr, cmap, norm, label, ticks, extend, source)
+    return path
 
 
 def triple(B, name, title, sub, key, cmap, norm, label, ticks=None, extend="neither"):
@@ -392,45 +427,65 @@ def lga_values_map(B, name, title, sub, values, cmap, norm, label, ticks, extend
                   source="LGA boundaries (FAO GAUL 2015); Landsat surface heat 2020–2025; WorldPop 2020 (modelled)")
 
 
-def chart_bars(name, title, sub, labels, series, xlabel, foot):
-    """Horizontal bar chart; series = list of (values, colour, legend label)."""
-    fig = plt.figure(figsize=(11, 6.4), dpi=150)
-    h = 6.4
-    fig.text(0.04, 1 - 0.28 / h, title, fontsize=14, fontweight="bold", va="top")
-    fig.text(0.04, 1 - 0.60 / h, sub, fontsize=9.5, color=INK2, va="top")
-    ax = fig.add_axes([0.24, 0.2, 0.72, 0.66])
+def chart_bars(name, title, sub, labels, series, xlabel, foot, phone=False):
+    """Horizontal bar chart; series = list of (values, colour, legend label).
+
+    phone=True draws a narrow version with larger text and wrapped labels; it is saved as name + "_phone"."""
+    import textwrap
+    if phone:
+        fig = plt.figure(figsize=(PHONE_W, 4.9), dpi=150)
+        fig.text(0.04, 0.975, "\n".join(textwrap.wrap(title, 34)), fontsize=11, fontweight="bold", va="top", color=INK)
+        ax = fig.add_axes([0.40, 0.22, 0.56, 0.62])
+        fs_y, fs_x, fs_leg, fs_foot = 8.5, 9, 9, 7.5
+        labels = ["\n".join(textwrap.wrap(x, 24)) for x in labels]
+        xlabel = "\n".join(textwrap.wrap(xlabel, 34))
+        foot = "\n".join(textwrap.wrap(foot, 70))
+        out = name + "_phone"
+    else:
+        fig = plt.figure(figsize=(11, 6.4), dpi=150)
+        h = 6.4
+        fig.text(0.04, 1 - 0.28 / h, title, fontsize=14, fontweight="bold", va="top")
+        fig.text(0.04, 1 - 0.60 / h, sub, fontsize=9.5, color=INK2, va="top")
+        ax = fig.add_axes([0.24, 0.2, 0.72, 0.66])
+        fs_y, fs_x, fs_leg, fs_foot = 8, 8.5, 7.5, 7
+        out = name
     y = np.arange(len(labels)); bh = 0.8 / len(series)
     for k, (vals, col, lab) in enumerate(series):
         ax.barh(y + (k - (len(series) - 1) / 2) * bh, vals, height=bh, color=col, label=lab)
-    ax.set_yticks(y); ax.set_yticklabels(labels, fontsize=8); ax.invert_yaxis()
-    ax.set_xlabel(xlabel, fontsize=8.5); ax.tick_params(labelsize=7.5, length=2)
+    ax.set_yticks(y); ax.set_yticklabels(labels, fontsize=fs_y); ax.invert_yaxis()
+    ax.set_xlabel(xlabel, fontsize=fs_x); ax.tick_params(labelsize=fs_y, length=2)
     for sp in ("top", "right"):
         ax.spines[sp].set_visible(False)
     ax.grid(axis="x", color="#e2e1dc", lw=0.5); ax.set_axisbelow(True)
     if len(series) > 1:
-        fig.legend(*ax.get_legend_handles_labels(), ncol=len(series), fontsize=7.5, frameon=False, loc="lower left", bbox_to_anchor=(0.04, 0.075))
-    fig.text(0.04, 0.012, foot, fontsize=7, color=INK2)
-    return save(fig, name)
+        fig.legend(*ax.get_legend_handles_labels(), ncol=1 if phone else len(series), fontsize=fs_leg, frameon=False,
+                   loc="lower left", bbox_to_anchor=(0.04, 0.075))
+    fig.text(0.04, 0.012 if not phone else 0.02, foot, fontsize=fs_foot, color=INK2, va="bottom", linespacing=1.3)
+    return save(fig, out)
 
 
 def map_landcover_heat(X):
     rows = [(v["name"], v) for k, v in sorted(X["landcover"].items(), key=lambda kv: -kv[1]["population_share"]) if v["population_share"] > 0.0005]
     labels = [f"{n}  ({v['area_share'] * 100:.0f}% of area, {v['population_share'] * 100:.0f}% of people)" for n, v in rows]
-    return chart_bars("m21_landcover_heat", "Heat island by land cover, 2020–2025",
-                      "Median surface heat island of each cell, by ESA WorldCover 2021 class; cells with at least 3 clear passes",
-                      labels, [([v["median_suhi_c"] for _, v in rows], "#d9500b", "Median heat island, °C")],
-                      "°C warmer than the countryside (median cell)",
-                      "Source: ESA WorldCover 2021; Landsat Collection 2 Level 2 (Planetary Computer). Associations only: land cover and built-up density are not separated.")
+    args = ("m21_landcover_heat", "Heat island by land cover, 2020–2025",
+            "Median surface heat island of each cell, by ESA WorldCover 2021 class; cells with at least 3 clear passes",
+            labels, [([v["median_suhi_c"] for _, v in rows], "#d9500b", "Median heat island, °C")],
+            "°C warmer than the countryside (median cell)",
+            "Source: ESA WorldCover 2021; Landsat Collection 2 Level 2 (Planetary Computer). Associations only: land cover and built-up density are not separated.")
+    chart_bars(*args, phone=True)
+    return chart_bars(*args)
 
 
 def chart_distance_bands(X):
     bands = list(X["distance_bands"].items())
     labels = [f"{k}  ({v['population_share'] * 100:.0f}% of people)" for k, v in bands]
-    return chart_bars("m22_distance_heat", "Heat along the green-space gradient, 2020–2025",
-                      "Population-weighted mean heat island by distance from each cell to the nearest vegetated cell (NDVI ≥ 0.4)",
-                      labels, [([v["pop_weighted_mean_suhi_c"] for _, v in bands], "#a93a08", "Population-weighted mean heat island, °C")],
-                      "°C warmer than the countryside (population-weighted)",
-                      "Source: Landsat Collection 2 Level 2 (Planetary Computer); WorldPop 2020 (modelled). Distance bands are not a walking network.")
+    args = ("m22_distance_heat", "Heat along the green-space gradient, 2020–2025",
+            "Population-weighted mean heat island by distance from each cell to the nearest vegetated cell (NDVI ≥ 0.4)",
+            labels, [([v["pop_weighted_mean_suhi_c"] for _, v in bands], "#a93a08", "Population-weighted mean heat island, °C")],
+            "°C warmer than the countryside (population-weighted)",
+            "Source: Landsat Collection 2 Level 2 (Planetary Computer); WorldPop 2020 (modelled). Distance bands are not a walking network.")
+    chart_bars(*args, phone=True)
+    return chart_bars(*args)
 
 
 def map_lga_beyond(B, X):
