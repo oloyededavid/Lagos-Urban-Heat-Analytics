@@ -8,7 +8,7 @@
     const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
     const NS = 'http://www.w3.org/2000/svg';
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let S, C, GEO, CTRY, A, M;
+    let S, C, GEO, CTRY, A, M, X, EX;
 
     // ---------- formatting ----------
     const f = (x, d = 1) => Number(x).toFixed(d).replace(/^-/, '−');
@@ -57,6 +57,21 @@
             agreeRho: f(A.agreement_with_ee.spearman, 2), agreeN: String(A.agreement_with_ee.pairs), agreeDiff: f(-A.agreement_with_ee.mean_pc_minus_ee),
             offset: f(A.sensor_offset.median_l7_minus_l8), offsetCi: `${sf(A.sensor_offset.ci95[0])} to ${sf(A.sensor_offset.ci95[1])}`, offsetN: String(A.sensor_offset.pairs),
             agreeChRho: f(A.agreement_with_ee.change.spearman, 2), agreeChSign: String(A.agreement_with_ee.change.same_sign), agreeChN: String(A.agreement_with_ee.change.lgas),
+            // green space access and low ground (scripts/access_analysis.py, docs/data/access.json)
+            accVeg: f(X.veg_ndvi_threshold, 1), accM: String(X.access_m), accBeyond: pct(X.population_beyond_300m_share),
+            accLo: pct(X.population_beyond_300m_ndvi_sensitivity['0.3'].population_beyond_300m_share), accHi: pct(X.population_beyond_300m_ndvi_sensitivity['0.5'].population_beyond_300m_share),
+            lowM: String(X.low_ground_m), lowArea: pct(X.low_ground_area_share), lowPop: pct(X.low_ground_population_share),
+            lowDiff: f(X.heat_low_minus_other_median_c, 1),
+            // population, land cover, distance bands, LGAs (scripts/extra_analysis.py, docs/data/extra_analysis.json)
+            gapShare: pct(EX.gap_beyond_300m_and_hot.share_of_total), gapPop: f(EX.gap_beyond_300m_and_hot.population / 1e6, 1),
+            hotWithin: pct(EX.access_heat.within_300m.population_in_hot_cells_share), hotBeyond: pct(EX.access_heat.beyond_300m.population_in_hot_cells_share),
+            wmWithin: f(EX.access_heat.within_300m.pop_weighted_mean_suhi_c), wmBeyond: f(EX.access_heat.beyond_300m.pop_weighted_mean_suhi_c),
+            sens2: pct(EX.hot_threshold_sensitivity['2']), sens5: pct(EX.hot_threshold_sensitivity['5']),
+            lcBuiltPop: pct(EX.landcover['50'].population_share), lcBuiltSuhi: f(EX.landcover['50'].median_suhi_c),
+            lcTreePop: pct(EX.landcover['10'].population_share), lcTreeSuhi: f(EX.landcover['10'].median_suhi_c),
+            bandFar: pct(EX.distance_bands['600 m and more'].population_share),
+            lgaTop: Object.entries(EX.lga).sort((a, b) => b[1].population_beyond_300m_share - a[1].population_beyond_300m_share)[0][0],
+            lgaTopPct: pct(Object.entries(EX.lga).sort((a, b) => b[1].population_beyond_300m_share - a[1].population_beyond_300m_share)[0][1].population_beyond_300m_share),
             pTot: String(['2000-2012', '2013-2019', '2020-2025'].reduce((t, k) => t + M.rasters.periods[k].passes, 0)),
         };
         $$('[data-v]').forEach(e => { if (e.dataset.v in v) e.textContent = v[e.dataset.v]; });
@@ -235,9 +250,9 @@
     }
 
     const get = u => fetch(u).then(r => { if (!r.ok) throw new Error(`${u}: HTTP ${r.status}`); return r.json(); });
-    Promise.all([get('data/summary.json'), get('data/change_summary_2000_2025.json'), get('data/lagos_uhi_processed.geojson'), get('data/context_countries.geojson'), get('data/map_analysis.json'), get('data/maps.json')])
-        .then(([s, c, g, ctry, a, m]) => {
-            S = s; C = c; GEO = g; CTRY = ctry; A = a; M = m;
+    Promise.all([get('data/summary.json'), get('data/change_summary_2000_2025.json'), get('data/lagos_uhi_processed.geojson'), get('data/context_countries.geojson'), get('data/map_analysis.json'), get('data/maps.json'), get('data/access.json'), get('data/extra_analysis.json')])
+        .then(([s, c, g, ctry, a, m, x, ex]) => {
+            S = s; C = c; GEO = g; CTRY = ctry; A = a; M = m; X = x; EX = ex;
             fill();
             const chg = n => C.lgas[n] && C.lgas[n].change;
             const changeState = pr => { const ch = chg(pr.lga_name); return !ch || ch.verdict === 'Too few clear days' ? 'nodata' : ch.verdict === 'Warmed' ? null : 'none'; };

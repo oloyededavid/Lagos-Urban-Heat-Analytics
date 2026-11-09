@@ -209,6 +209,68 @@
         <figcaption><b>Figure 17.</b> Spread of the heat island across clear passes (interquartile range), 2020–2025.</figcaption>
     </figure>
 
+    <section aria-labelledby="h-access">
+        <h3 id="h-access"><span class="n">4.9</span>Green space and low ground</h3>
+        <p><b>Walking distance to green space.</b> Figure 18 maps the straight-line distance from each 60 m cell to the nearest vegetated cell, where vegetation means a dry-season median NDVI of at least <span data-v="accVeg">—</span>. Taking <span data-v="accM">—</span> m as a rough five-minute walk, <span data-v="accBeyond">—</span>% of the 2020 WorldPop population lives farther than that from vegetation. The share moves from <span data-v="accLo">—</span>% to <span data-v="accHi">—</span>% when the NDVI cut-off is set to 0.3 or 0.5, so the result depends strongly on the threshold. It also ignores roads, fences and whether a green space can be entered.</p>
+        <p><b>Low ground.</b> Figure 19 marks cells below <span data-v="lowM">—</span> m of elevation, using the Copernicus DEM GLO-30. Those cells cover <span data-v="lowArea">—</span>% of the study area and hold <span data-v="lowPop">—</span>% of the 2020 population. This is an elevation proxy for flood-prone ground, not a flood map. The DEM is a surface model, so buildings and trees are included in the heights, and drainage, rainfall and flood records are not used.</p>
+        <p><b>Heat on low ground.</b> Figure 20 shows surface heat on the low cells only. Their cell median is <span data-v="lowDiff">—</span> °C against the higher ground. Neighbouring cells are not independent, so no interval is given and the contrast is descriptive. Low ground also mixes elevation with land cover, which this analysis does not separate, so the contrast is not the effect of elevation alone.</p>
+    </section>
+    <figure class="wide reveal mapimg" id="fig-access">
+        <a href="assets/maps/m17_green_access.webp" aria-label="Open Figure 18 at full size"><img src="assets/maps/m17_green_access.webp" width="2200" height="882" loading="lazy" alt="Map of walking distance to vegetation: dark green where vegetation is near, brown where the nearest vegetated cell is more than 1 km away"></a>
+        <figcaption><b>Figure 18.</b> Straight-line distance from each 60 m cell to the nearest vegetated cell (dry-season NDVI median, 2020–2025), colour scale ticks at 0, 300, 600 and 1000 m.</figcaption>
+    </figure>
+    <figure class="wide reveal mapimg" id="fig-lowground">
+        <a href="assets/maps/m18_low_ground.webp" aria-label="Open Figure 19 at full size"><img src="assets/maps/m18_low_ground.webp" width="2200" height="882" loading="lazy" alt="Map of cells below 10 metres elevation, mostly in the southern and coastal mainland"></a>
+        <figcaption><b>Figure 19.</b> Cells below 10 m elevation (Copernicus DEM GLO-30). An elevation proxy for flood-prone ground, not a flood map.</figcaption>
+    </figure>
+    <figure class="wide reveal mapimg" id="fig-lowheat">
+        <a href="assets/maps/m19_low_ground_heat.webp" aria-label="Open Figure 20 at full size"><img src="assets/maps/m19_low_ground_heat.webp" width="2200" height="882" loading="lazy" alt="Map of surface heat island on cells below 10 metres: warm orange across much of the southern mainland, cooler blue in patches"></a>
+        <figcaption><b>Figure 20.</b> Surface heat island, 2020–2025, on cells below 10 m only. Higher ground is left blank.</figcaption>
+    </figure>
+
+    <section aria-labelledby="h-gap">
+        <h3 id="h-gap"><span class="n">4.10</span>Who lives far from green space, and where the heat is</h3>
+        <p>Figure 21 combines the two. Of the 2020 population, <span data-v="gapShare">—</span>% (<span data-v="gapPop">—</span> million people) lives more than 300 m from vegetation and on a cell at least 4 °C warmer than the countryside. Within 300 m of vegetation, <span data-v="hotWithin">—</span>% of residents are on such cells; beyond 300 m, <span data-v="hotBeyond">—</span>%. The population-weighted mean heat island is <span data-v="wmWithin">—</span> °C within 300 m and <span data-v="wmBeyond">—</span> °C beyond. Most people beyond 300 m live on built-up cells, so this gap largely reflects the built-up effect in Figure 22 rather than a separate effect of distance. The 4 °C cut-off is a choice: at 2 °C, <span data-v="sens2">—</span>% of residents with a heat value are on hot cells; at 5 °C, <span data-v="sens5">—</span>%.</p>
+    </section>
+    <figure class="wide reveal mapimg" id="fig-gap">
+        <a href="assets/maps/m20_access_gap.webp" aria-label="Open Figure 21 at full size"><img src="assets/maps/m20_access_gap.webp" width="2200" height="882" loading="lazy" alt="Map of cells within 300 metres of vegetation, cells beyond 300 metres under 4 degrees warmer, and cells beyond 300 metres at 4 degrees or more"></a>
+        <figcaption><b>Figure 21.</b> Access to vegetation and surface heat, 2020–2025, with WorldPop 2020 as the population weight in the percentages.</figcaption>
+    </figure>
+    <section aria-labelledby="h-lc">
+        <h3 id="h-lc"><span class="n">4.11</span>Heat by land cover and by distance</h3>
+        <p>Figure 22 gives the median heat island of each cell by ESA WorldCover 2021 class. Built-up cells, where <span data-v="lcBuiltPop">—</span>% of residents live, have a median of <span data-v="lcBuiltSuhi">—</span> °C; tree-covered cells, where <span data-v="lcTreePop">—</span>% of residents live, have a median of <span data-v="lcTreeSuhi">—</span> °C. These are associations between a land-cover label and surface temperature, not measured causes.</p>
+        <p>Figure 23 bins cells by distance to the nearest vegetated cell. The population-weighted heat island rises in every distance band, from the nearest band to the farthest. <span data-v="bandFar">—</span>% of residents live more than 600 m from vegetated land. The bands are straight-line distances, not walking routes.</p>
+    </section>
+    <figure class="wide reveal mapimg" id="fig-lc">
+        <a href="assets/maps/m21_landcover_heat.webp" aria-label="Open Figure 22 at full size"><img src="assets/maps/m21_landcover_heat.webp" width="2200" height="1280" loading="lazy" alt="Bar chart of median surface heat island by land-cover class, highest for built-up land"></a>
+        <figcaption><b>Figure 22.</b> Median surface heat island by ESA WorldCover 2021 class, 2020–2025.</figcaption>
+    </figure>
+    <figure class="wide reveal mapimg" id="fig-distance">
+        <a href="assets/maps/m22_distance_heat.webp" aria-label="Open Figure 23 at full size"><img src="assets/maps/m22_distance_heat.webp" width="2200" height="1280" loading="lazy" alt="Bar chart of population-weighted heat island by distance band to vegetation, rising with distance"></a>
+        <figcaption><b>Figure 23.</b> Population-weighted mean heat island by distance to the nearest vegetated cell.</figcaption>
+    </figure>
+    <section aria-labelledby="h-lga">
+        <h3 id="h-lga"><span class="n">4.12</span>Green-space access and heat by LGA</h3>
+        <p>Figures 24 and 25 give one value per LGA. The share of residents more than 300 m from vegetation is highest in <span data-v="lgaTop">—</span> (<span data-v="lgaTopPct">—</span>%). Read the two maps together: an LGA average hides the variation inside each LGA.</p>
+        <p>Figures 26 and 27 repeat the distance map with the vegetation cut-off at 0.3 and 0.5. The share beyond 300 m moves from <span data-v="accLo">—</span>% to <span data-v="accHi">—</span>% across that range, against <span data-v="accBeyond">—</span>% at 0.4 (Figure 18).</p>
+    </section>
+    <figure class="wide reveal mapimg" id="fig-lgaaccess">
+        <a href="assets/maps/m23_lga_beyond300.webp" aria-label="Open Figure 24 at full size"><img src="assets/maps/m23_lga_beyond300.webp" width="2200" height="882" loading="lazy" alt="Map of the share of each LGA's residents more than 300 metres from vegetation"></a>
+        <figcaption><b>Figure 24.</b> Share of each LGA's residents (WorldPop 2020) more than 300 m from vegetated land.</figcaption>
+    </figure>
+    <figure class="wide reveal mapimg" id="fig-lgaheat">
+        <a href="assets/maps/m24_lga_heat.webp" aria-label="Open Figure 25 at full size"><img src="assets/maps/m24_lga_heat.webp" width="2200" height="882" loading="lazy" alt="Map of population-weighted surface heat island by LGA"></a>
+        <figcaption><b>Figure 25.</b> Population-weighted mean surface heat island by LGA, 2020–2025.</figcaption>
+    </figure>
+    <figure class="wide reveal mapimg" id="fig-veg03">
+        <a href="assets/maps/m25_veg_ndvi03.webp" aria-label="Open Figure 26 at full size"><img src="assets/maps/m25_veg_ndvi03.webp" width="2200" height="882" loading="lazy" alt="Map of walking distance to vegetation with a 0.3 NDVI cut-off"></a>
+        <figcaption><b>Figure 26.</b> Sensitivity check: distance to vegetation with a 0.3 NDVI cut-off.</figcaption>
+    </figure>
+    <figure class="wide reveal mapimg" id="fig-veg05">
+        <a href="assets/maps/m26_veg_ndvi05.webp" aria-label="Open Figure 27 at full size"><img src="assets/maps/m26_veg_ndvi05.webp" width="2200" height="882" loading="lazy" alt="Map of walking distance to vegetation with a 0.5 NDVI cut-off"></a>
+        <figcaption><b>Figure 27.</b> Sensitivity check: distance to vegetation with a 0.5 NDVI cut-off.</figcaption>
+    </figure>
+
     <section id="discussion" data-reveal aria-labelledby="h-disc">
         <h2 id="h-disc"><span class="n">5</span>Discussion</h2>
         <p>The heat island in Lagos is a mainland phenomenon: the built-up west of the lagoon is several degrees warmer than the countryside, and most residents live on that ground. Vegetation goes with cooler ground, though it cannot be separated from the absence of buildings in the same places. Over 2000–2025 the clear images are too few, and the satellites too different, to show a change in the inner city; the maps point to warming on the growing edges of the city, Ikorodu above all, but no single LGA's rise is conclusive. Starting the record in 1985 instead, as an earlier version of this page did, gives a clear rise, but that result rests on two passes from 1985 and 1991.</p>
@@ -265,6 +327,18 @@
         <p class="sign">David</p>
     </section>
 
+    <section id="feedback" class="feedback" aria-labelledby="h-fb">
+        <h2 id="h-fb">Was this research useful?</h2>
+        <div class="react-row">
+            <div class="reactions" role="group" aria-labelledby="h-fb">
+                <button type="button" class="react" data-react="Useful" aria-pressed="false">Useful <span class="rc"></span></button>
+                <button type="button" class="react" data-react="Interesting" aria-pressed="false">Interesting <span class="rc"></span></button>
+                <button type="button" class="react" data-react="Needs clarity" aria-pressed="false">Needs clarity <span class="rc"></span></button>
+            </div>
+            <span class="react-status" id="react-status" role="status"></span>
+        </div>
+    </section>
+
     <section id="references" aria-labelledby="h-refs">
         <h2 id="h-refs">References</h2>
         <ol class="refs">
@@ -285,12 +359,13 @@
 
 <footer>
     <div class="inner">
-        <p class="sig"><span>David Oloyede</span><span><a href="https://github.com/oloyededavid">github.com/oloyededavid</a></span><span>Last updated <time datetime="2026-11-08">8 November 2026</time></span></p>
+        <p class="sig"><span>David Oloyede</span><span><a href="https://github.com/oloyededavid">github.com/oloyededavid</a></span><span>Last updated <time datetime="2026-11-09">9 November 2026</time></span><span class="sig-meta"><span>Version 1.1</span><span id="views" hidden></span></span></p>
         <p>Code MIT, derived data CC BY 4.0. Source data keep their own terms: Landsat (USGS), Sentinel-2 (Copernicus), MODIS (NASA), GHSL (European Commission JRC), WorldPop, FAO GAUL, Natural Earth.</p>
         <p>Other studies: <a href="https://oloyededavid.github.io/Oueme-Ogun-Groundwater-Recharge/">Ouémé–Ogun water balance</a> · <a href="https://oloyededavid.github.io/Ogun-Catchment-Coast-Observatory/">Ogun Catchment-to-Coast Observatory</a></p>
     </div>
 </footer>
 
 <script src="assets/app.js"></script>
+<script src="assets/feedback.js"></script>
 </body>
 </html>
