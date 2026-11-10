@@ -1,21 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="only light">
-    <title>Surface Urban Heat Island in Lagos State, Nigeria: Spatial Pattern, Population Exposure and Change from Landsat, 2000–2025</title>
-    <meta name="description" content="A satellite study of surface heat in Lagos State, Nigeria: where the ground is hottest today, what goes with it, where heat meets the most people, and how the heat island has changed since the first clear Landsat images.">
-    <meta name="author" content="David Oluwayinka Oloyede">
-    <meta name="citation_title" content="Surface Urban Heat Island in Lagos State, Nigeria: Spatial Pattern, Population Exposure and Change from Landsat, 2000–2025">
-    <meta name="citation_author" content="Oloyede, David Oluwayinka">
-    <meta name="citation_publication_date" content="2026/11/08">
-    <meta name="citation_public_url" content="https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/">
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Surface Urban Heat Island in Lagos State, Nigeria: Spatial Pattern, Population Exposure and Change from Landsat, 2000–2025">
-    <meta property="og:description" content="Surface heat across Lagos State from Landsat: today's pattern, what goes with it, who is exposed, and how it has changed.">
-    <meta property="og:url" content="https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23111'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23fff'/%3E%3C/svg%3E">
+    <title>Urban heat island and distance to vegetation in Lagos State, Nigeria, 2020–2024</title>
+    <meta name="description" content="Urban heat island in Lagos State, 2020–2024: surface heat, population and distance to vegetation.">
+    <meta name="author" content="David Oloyede">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23111'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23f2711c'/%3E%3C/svg%3E">
     <link rel="preconnect" href="https://api.fontshare.com">
     <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
     <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&amp;display=swap">
@@ -23,366 +15,404 @@
     <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-<a class="skip" href="#abstract">Skip to the summary</a>
-
+<a class="skip" href="#abstract">Skip to the abstract</a>
 <header class="site-header">
     <div class="site-inner">
-        <a class="site-id" href="#top">Lagos surface urban heat island</a>
+        <a class="site-id" href="#top">Urban heat island, Lagos State</a>
         <nav class="toc" aria-label="Sections">
             <a href="#abstract">Abstract</a>
-            <a href="#study-area">Study area</a>
-            <a href="#data-method">Methods</a>
+            <a href="#data-and-methods">Methods</a>
             <a href="#results">Results</a>
+            <a href="#explore">Explore</a>
             <a href="#discussion">Discussion</a>
-            <a href="explore.html" class="toc-ex">Explorer</a>
+            <a href="#references">References</a>
         </nav>
-        <nav class="site-links" aria-label="Explorer"><a href="explore.html">Explorer</a></nav>
     </div>
     <nav class="toc-phone" aria-label="Sections on phone">
         <a href="#abstract">Abstract</a>
-        <a href="#study-area">Study area</a>
-        <a href="#data-method">Methods</a>
+        <a href="#data-and-methods">Methods</a>
         <a href="#results">Results</a>
+        <a href="#explore">Explore</a>
         <a href="#discussion">Discussion</a>
+        <a href="#references">References</a>
     </nav>
     <div class="progress" aria-hidden="true"><span id="progress"></span></div>
 </header>
 
 <main class="article" id="top">
-    <header class="title">
-        <h1>Surface Urban Heat Island in Lagos State, Nigeria</h1>
-        <p class="subtitle">Spatial pattern, population exposure and change from Landsat, 2000–2025</p>
-    </header>
+<header class="title">
+    <h1>Urban heat island and distance to vegetation in Lagos State,
+Nigeria, 2020–2024</h1>
+    <p class="sig"><span>David Oloyede</span><span>November
+2026</span><span class="sig-meta"><span>Version 2.0</span></span></p>
+</header>
 
-    <section id="abstract" data-reveal class="abstract" aria-labelledby="h-abstract">
-        <h2 id="h-abstract">Abstract</h2>
-        <p class="lede">Most of Lagos's built-up mainland is several degrees warmer than the surrounding countryside, and most of its people live there. Between 2000 and 2025, the clear satellite images show no change in the heat island of the inner city that can be told apart from chance. The largest rise, in Ikorodu on the city's edge, is not conclusive either.</p>
-        <ol class="findings">
-            <li><b class="hl"><span data-v="exp4">—</span>%</b><span class="f-text">Share of Lagos residents who live where the ground is at least 4 °C warmer than the countryside on clear dry-season mornings, 2020–2025.</span></li>
-            <li><b class="hl"><span data-v="dState">—</span> °C</b><span class="f-text">Change in the heat island, the city's warmth above the countryside, from 2000–2012 to 2020–2025 in the <span data-v="nCommon">—</span> inner LGAs seen clearly in every period. The 95% interval, <span data-v="dCi">—</span> °C, includes zero.</span></li>
-            <li><b class="hl"><span data-v="ikoDelta">—</span> °C</b><span class="f-text">Rise of the heat island in Ikorodu, the largest of any LGA (95% interval <span data-v="ikoCi">—</span> °C), found in both records but not robust to testing many LGAs or to the change of satellite.</span></li>
-        </ol>
-        <p class="small">These are ground-surface temperatures on clear mornings, not the air temperature people feel.</p>
-    </section>
+<h2 id="abstract">Abstract</h2>
+<p>We ask whether residents of Lagos State who live far from vegetation
+also live on hotter ground. The heat measure is the urban heat island
+(UHI): how much warmer the land surface is than the surrounding
+countryside, taken from Landsat satellite images of the dry seasons of
+2020–2024 at about 11:00 local time. About 13.9 million modelled
+residents live on land with a vegetation value. 65% of them live more
+than 300 m from vegetation, and 98% of those live on built-up cells.
+Among built-up cells, residents beyond 300 m are 1.4 °C warmer on
+average than residents within it, or 1.2 °C if vegetated cells are left
+out. The gap is positive in every check we ran. It ranges from 0.4 to
+1.7 °C across the vegetation cut-offs, buffers of 0 to 120 m and
+population layers, and from 0.2 to 1.9 °C within single LGAs. Across all
+land-cover types the gap is 2.2 to 3.1 °C, depending on the population
+layer. These are cross-sectional associations. They do not show that
+vegetation lowers heat exposure.</p>
+<p><strong>Keywords:</strong> urban heat island; land surface
+temperature; Landsat; vegetation; Lagos; population exposure</p>
+<h2 id="introduction">1. Introduction</h2>
+<p>Cities are warmer than the land around them. The air-temperature
+version of this is largest on clear, calm nights (Oke, 1982). Satellite
+surface temperature measures the ground surface instead, and that is the
+quantity used here (Voogt &amp; Oke, 2003).</p>
+<p>Lagos State holds about 14.0 million modelled residents on its mapped
+land. Built-up land lies mainly west of the lagoon, and tree cover is
+concentrated in the east and along the water.</p>
+<p>We ask two questions. How is the surface heat island spread across
+the population? And are residents far from vegetation on warmer built-up
+ground, or does the difference disappear once land cover is held fixed?
+A comparison across all cells mixes the two, so the main comparison is
+built-up cells with built-up cells. We do not analyse change over
+2000–2025. Early images are few, and the switch from Landsat 7 to
+Landsat 8 changes the bands; a sensor offset estimated for the earlier
+study could not be resolved with the data available.</p>
+<h2 id="data-and-methods">2. Data and methods</h2>
+<p><strong>Study area.</strong> Lagos State covers 3,102 km² of mapped
+land on the Atlantic coast of south-west Nigeria, with 20 local
+government areas (LGAs).</p>
+<h3 id="heat-vegetation-population-and-land-cover">2.1 Heat, vegetation,
+population and land cover</h3>
+<p>Surface temperature and vegetation come from Landsat 8 and 9
+Collection 2 Level 2 images (USGS, Landsat Collection 2), accessed
+through Microsoft Planetary Computer, for dry-season images searched
+from December 2019 to March 2025; the images kept run from January 2020
+to December 2024. We masked clouds, cloud shadow and pixels with a
+temperature uncertainty above 4 K, and resampled to a 60 m grid in UTM
+zone 31N. For each cell we took the median over the clear images, and a
+cell needs at least three to enter the heat analysis. Vegetation is the
+median normalised difference vegetation index (NDVI, a satellite
+greenness index), and a cell is vegetated when NDVI is at least 0.4;
+cut-offs of 0.3 and 0.5 are tested.</p>
+<p>The UHI intensity of a cell on one image is its surface temperature
+minus the mean temperature of a countryside reference, and we map the
+median over images. The reference is land within 20 km of the state that
+WorldCover 2021 classes as tree cover, shrubland, grassland, cropland,
+wetland or mangrove (Zanaga et al., 2022). 31% of the reference cells
+lie inside the state.</p>
+<p>Population is the WorldPop 2020 unconstrained product at 100 m
+(WorldPop, 2020; Tatem, 2017), a modelled estimate, summed onto the 60 m
+grid. As a check we also use WorldPop’s constrained product, which
+places people only on settlement cells. Land cover is ESA WorldCover
+2021 at 10 m, sampled at the cell centre.</p>
+<h3 id="image-selection">2.2 Image selection</h3>
+<p>We searched all Landsat 8 and 9 dry-season scenes from December 2019
+to March 2025 with under 70% cloud, giving 173 passes (one satellite,
+one day, one path). A pass was kept if its reference had at least 6,750
+clear 60 m pixels, no more than 5% of built-up 180 m blocks were more
+than 3 °C colder than the reference (a cloud and fog screen), and at
+least one LGA was half clear. 18 passes were kept. 80 failed on a cloudy
+reference, 62 had no LGA half clear, 11 failed the cold screen and 2
+could not be read. All 18 kept passes are on Landsat path 191 at about
+10:03 UTC (11:03 local time), from January 2020 to December 2024. The
+cold screen uses the heat values, so it is partly selection on the
+outcome. Section 3.3 tests this.</p>
+<h3 id="distance-and-exposure-measures">2.3 Distance and exposure
+measures</h3>
+<p>Distance to vegetation is the straight-line distance from a cell to
+the nearest vegetated cell. Residents are “within” if their cell is
+within 300 m (about 3.6 minutes on foot at 5 km/h) and “beyond”
+otherwise. The measure ignores roads, fences and access, and counts a
+single 60 m cell of street trees as vegetation.</p>
+<p>A cell is hot when its UHI intensity is at least 4 °C. The hot share
+of a group is the population on hot cells divided by all residents of
+the group, so cells without a heat value count as not hot; 0.7% of
+residents have no heat value, so the shares are lower bounds by at most
+that much. Mean heat is population-weighted. About 10% of land cells
+have no vegetation or heat value, probably because of the cloud, shadow
+and uncertainty masks, and a further 2% have one or two images. The
+figures use only inputs without gaps (population and land cover). We
+report no confidence intervals from resampling cells, because
+neighbouring cells are not independent.</p>
+<h2 id="results">3. Results</h2>
+<h3 id="population-and-land-cover">3.1 Population and land cover</h3>
+<p>Across all land cells, built-up land covers 32% of the area and holds
+84% of the population, and tree cover covers 44% and holds 9% (Figures 1
+and 2). The median UHI intensity is 5.6 °C on built-up cells and −1.9 °C
+on tree-covered cells.</p>
+<figure class="wide reveal mapimg" id="fig-1">
+<picture><source media="(max-width: 760px)" srcset="assets/maps/m12_population_phone.webp"><img src="assets/maps/m12_population.webp" width="2200" height="722" loading="lazy" alt="Population density, 2020, WorldPop, 100 m, people per km² on a log scale. A modelled estimate."></picture>
+<figcaption>
+<b>Figure 1.</b> Population density, 2020, WorldPop, 100 m, people per
+km² on a log scale. A modelled estimate.
+</figcaption>
+</figure>
+<figure class="wide reveal mapimg" id="fig-2">
+<picture><source media="(max-width: 760px)" srcset="assets/maps/m02_landcover_phone.webp"><img src="assets/maps/m02_landcover.webp" width="2200" height="722" loading="lazy" alt="ESA WorldCover 2021 land cover over all land cells in the state."></picture>
+<figcaption>
+<b>Figure 2.</b> ESA WorldCover 2021 land cover over all land cells in
+the state.
+</figcaption>
+</figure>
+<h3 id="distance-to-vegetation-and-heat">3.2 Distance to vegetation and
+heat</h3>
+<p>65% of residents live more than 300 m from vegetation. That moves
+from 47% to 77% when the NDVI cut-off moves from 0.3 to 0.5. Residents
+on vegetated cells are 13% of the population and are cool partly by
+definition, since vegetation and temperature come from the same
+images.</p>
+<p><strong>Table 1.</strong> Population-weighted mean UHI intensity (°C)
+and hot-cell share by land cover and distance to vegetation. Hot means
+at least 4 °C. The gap is beyond minus within.</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Group</th>
+<th>Within 300 m (°C)</th>
+<th>Beyond 300 m (°C)</th>
+<th>Gap (°C)</th>
+<th>Hot share, within / beyond</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Built-up cells</td>
+<td>5.2</td>
+<td>6.6</td>
+<td>1.4</td>
+<td>78% / 98%</td>
+</tr>
+<tr class="even">
+<td>Other land cells</td>
+<td>1.1</td>
+<td>5.1</td>
+<td>4.0</td>
+<td>15% / 76%</td>
+</tr>
+<tr class="odd">
+<td>All cells</td>
+<td>3.5</td>
+<td>6.6</td>
+<td>3.1</td>
+<td>52% / 98%</td>
+</tr>
+</tbody>
+</table>
+<p>Across all cells the gap is 3.1 °C. Among built-up cells it is 1.4
+°C. 98% of residents beyond 300 m live on built-up cells. The other-land
+group is small beyond 300 m, and its within group contains the vegetated
+cells, so its contrast is unstable. 64% of all residents are both beyond
+300 m and on hot cells. Within built-up cells the mean rises with
+distance in every band, from 4.9 °C at 60–120 m to 6.7 °C beyond 600 m.
+The nearest band, 3.7 °C, includes the vegetated cells themselves. At 2,
+4 and 5 °C, 91%, 82% and 73% of residents on cells with a heat value are
+hot, so the hot share depends on the threshold.</p>
+<h3 id="robustness">3.3 Robustness</h3>
+<p>Table 2 shows how the built-up gap changes with the choices. Removing
+one image, one calendar year or one LGA at a time are leave-one-out
+reruns on the same pixels. They show that no single image drives the
+heat values. They are not confidence intervals, and the vegetation and
+distance layers were held fixed. The gap is positive in every check. Its
+size depends mainly on the vegetation cut-off and on how near the
+vegetated cells the comparison starts.</p>
+<p><strong>Table 2.</strong> Built-up gap (°C) under different
+choices.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Check</th>
+<th>Built-up gap (°C)</th>
+<th>Vegetated cells in within group</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Main estimate (NDVI 0.4, 18 kept images)</td>
+<td>1.4</td>
+<td>in</td>
+</tr>
+<tr class="even">
+<td>Leave one image out</td>
+<td>1.3 to 1.6</td>
+<td>in</td>
+</tr>
+<tr class="odd">
+<td>Leave one calendar year out</td>
+<td>1.2 to 1.7</td>
+<td>in</td>
+</tr>
+<tr class="even">
+<td>Leave one LGA out</td>
+<td>1.3 to 1.5</td>
+<td>in</td>
+</tr>
+<tr class="odd">
+<td>All 138 saved images, all rules off (includes cloudy-reference
+passes)</td>
+<td>1.3</td>
+<td>in</td>
+</tr>
+<tr class="even">
+<td>NDVI cut-off 0.3 / 0.5</td>
+<td>1.2 / 1.6</td>
+<td>in</td>
+</tr>
+<tr class="odd">
+<td>Vegetated cells excluded</td>
+<td>1.2</td>
+<td>out</td>
+</tr>
+<tr class="even">
+<td>Cells within 120 m of vegetation excluded</td>
+<td>0.8</td>
+<td>out</td>
+</tr>
+<tr class="odd">
+<td>WorldPop constrained population</td>
+<td>1.5</td>
+<td>in</td>
+</tr>
+<tr class="even">
+<td>WorldPop constrained population, vegetated cells excluded</td>
+<td>1.3</td>
+<td>out</td>
+</tr>
+<tr class="odd">
+<td>Within 14 of 20 LGAs (mean weighted by the smaller group;
+range)</td>
+<td>0.95 (0.2 to 1.9)</td>
+<td>out</td>
+</tr>
+<tr class="even">
+<td>Low ground below 10 m / higher ground</td>
+<td>1.6 / 0.8</td>
+<td>out</td>
+</tr>
+<tr class="odd">
+<td>Within 500 m of permanent water or sea / further</td>
+<td>1.0 / 1.2</td>
+<td>out</td>
+</tr>
+</tbody>
+</table>
+<p>Rows marked “out” leave vegetated cells out of the within group, so
+compare them with 1.2 °C, not 1.4 °C. The LGA row covers the 14 LGAs
+with more than 50,000 residents in both groups; all 20 LGA gaps are
+positive.</p>
+<p>Across the vegetation cut-offs 0.3 to 0.5, buffers of 0 to 120 m and
+both population layers, the gap runs from 0.4 to 1.7 °C. The all-cell
+gap moves more with the population layer: it is 3.1 °C with the
+unconstrained product and 2.2 °C with the constrained one. This paper
+therefore gives no share of the all-cell gap to land cover.</p>
+<h3 id="explore">3.4 Explore the local government areas</h3>
+<p>Pick a measure, then select an area on the map or from the list. Mean heat is averaged over the cells of an area that have a heat value. The shares count all residents of the area, and residents on cells without a heat value count as not hot. In the east, where a larger share of cells has no heat value, an area's values rest on a smaller share of its land.</p>
+<div id="xp-buttons" class="xp-buttons" role="group" aria-label="Measure"></div>
+<p class="xp-pick"><label for="xp-select">Area</label> <select id="xp-select"></select></p>
+<div id="explore-map" class="xp-map"></div>
+<div class="xp-legend"><span id="xp-min"></span><span id="xp-legend-bar" class="xp-legend-bar" aria-hidden="true"></span><span id="xp-max"></span></div>
+<p id="xp-unit" class="xp-unit"></p>
+<p id="xp-readout" class="xp-readout" role="status">Select an area on the map, on the list above it, or use Tab and Enter.</p>
+<details class="xp-table"><summary>Show all areas as a table</summary><div id="xp-table"></div></details>
+<h2 id="discussion">4. Discussion</h2>
+<p>The heat island is concentrated on built-up cells, and most residents
+live on them. Residents far from vegetation are on warmer ground on
+average. Holding land cover to built-up cells, the gap is 1.4 °C against
+3.1 °C across all cells. The remaining gap could reflect things this
+analysis does not measure, such as building density, tree size and
+position relative to the urban core. Splitting by elevation and by
+distance to permanent water does not remove the gap, but it is larger on
+low ground, and the within-LGA average is smaller than the pooled
+figure. The result is an association. It should not be read as an
+estimate of what planting trees would do, and the share beyond 300 m
+(47% to 77% across NDVI cut-offs) needs that range in any policy
+statement.</p>
+<h2 id="limitations">5. Limitations</h2>
+<p>Landsat measures surface temperature on clear dry-season mornings. It
+is not air temperature and not measured at night. Only 18 images were
+kept, all from one path and one overpass time, and the screening uses
+the heat values. The thermal band is about 100 m across, so heat from
+vegetation spills into neighbouring cells, which may inflate the
+near-vegetation contrast, and the gap was still falling at the widest
+buffer tested (120 m). Harmattan dust and haze in December to February
+can affect both temperature and NDVI. Built-up status is the 10 m
+WorldCover label at the cell centre, a noisy way to hold land cover
+fixed. Cells within and beyond 300 m were seen on different sets of
+images. Population is modelled, and the unconstrained product places
+some people on cells that are not built up. Distance is a straight-line
+proxy and ignores roads and access, and vegetation outside the state
+land mask is not counted. The datasets have different dates: WorldPop
+2020, WorldCover 2021 and heat 2020–2024. We did not compare surface
+temperature with ground stations, test the NDVI cut-off against
+tree-cover maps, or re-check the accuracy of WorldCover or WorldPop.</p>
+<h2 id="conclusion">6. Conclusion</h2>
+<p>In the dry seasons of 2020–2024, surface urban heat in Lagos State is
+concentrated on built-up cells, where most residents live. Among
+built-up cells, residents far from vegetation are 1.4 °C warmer on
+average than residents near it, and the gap is positive in every check.
+It ranges from 0.4 to 1.7 °C across the vegetation cut-offs, buffers of
+0 to 120 m and population layers, and from 0.2 to 1.9 °C within single
+LGAs. These are cross-sectional associations. They do not show cause or
+trend.</p>
+<h2 id="data-and-code-availability">Data and code availability</h2>
+<p>Code is released under the MIT licence and derived data under CC BY
+4.0, from <a
+href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics"
+class="uri">https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics</a>.
+Source data keep their own terms: Landsat (USGS), ESA WorldCover,
+WorldPop and FAO GAUL.</p>
+<h2 id="references">References</h2>
+<p>Oke, T. R. (1982). The energetic basis of the urban heat island.
+<em>Quarterly Journal of the Royal Meteorological Society</em>,
+108(455), 1–24. https://doi.org/10.1002/qj.49710845502</p>
+<p>Tatem, A. J. (2017). WorldPop, open data for spatial demography.
+<em>Scientific Data</em>, 4, 170004.
+https://doi.org/10.1038/sdata.2017.4</p>
+<p>USGS. Landsat Collection 2 Level 2 surface temperature and
+reflectance products, accessed through Microsoft Planetary Computer.</p>
+<p>Voogt, J. A., &amp; Oke, T. R. (2003). Thermal remote sensing of
+urban climates. <em>Remote Sensing of Environment</em>, 86(3), 370–384.
+https://doi.org/10.1016/S0034-4257(03)00079-8</p>
+<p>WorldPop. (2020). <em>Unconstrained individual countries 2000–2020
+(100 m): Nigeria</em>. University of Southampton.
+https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/NGA/nga_ppp_2020.tif</p>
+<p>Zanaga, D., Van De Kerchove, R., De Keersmaecker, W., et al. (2022).
+<em>ESA WorldCover 10 m 2021 v200</em>. Zenodo.
+https://doi.org/10.5281/zenodo.7254221</p>
 
-    <section id="introduction" data-reveal aria-labelledby="h-intro">
-        <h2 id="h-intro"><span class="n">1</span>Introduction</h2>
-        <p>Roads, roofs and paving absorb more sunlight and hold more heat than vegetation does, so cities run warmer than the land around them <span class="cite">(Oke, 1982)</span>. Satellites measure the temperature of the ground surface across a whole city at once, and have done so since the 1980s <span class="cite">(Voogt &amp; Oke, 2003)</span>.</p>
-        <p>Earlier studies found Lagos's surface getting hotter as vegetation was lost <span class="cite">(Obiefuna et al., 2021; Guo et al., 2022)</span>. This study asks three things at the level of the local government areas (LGAs) that run the city: where is it hottest today, what goes with the heat, and how has the pattern changed?</p>
-    </section>
-
-    <section id="study-area" data-reveal aria-labelledby="h-area">
-        <h2 id="h-area"><span class="n">2</span>Study area</h2>
-        <p>Lagos State lies on the coast of south-west Nigeria, between the Atlantic and the Lagos Lagoon. Its <span data-v="nLga">—</span> LGAs range from dense inner-city areas such as Ajeromi/Ifelodun, <span data-v="smallKm">—</span> km² of land, to large and partly rural Epe, <span data-v="epeKm">—</span> km². Built-up land fills the mainland west of the lagoon; tree cover, wetland and mangrove dominate the east (Figures 1 and 2).</p>
-    </section>
-    <figure class="wide reveal mapimg" id="fig-1">
-        <a href="assets/maps/m01_reference.webp" aria-label="Open Figure 1 at full size"><img src="assets/maps/m01_reference.webp" width="2200" height="882" loading="lazy" alt="Map of Lagos State's 20 LGAs with the countryside reference: unbuilt land within 20 km, shaded green"></a>
-        <figcaption><b>Figure 1.</b> The 20 LGAs (FAO GAUL 2015) and the countryside reference: land within 20 km of the state that ESA WorldCover 2021 classes as tree, shrub, grass, cropland, wetland or mangrove.</figcaption>
-    </figure>
-
-    <section id="data-method" data-reveal aria-labelledby="h-data">
-        <h2 id="h-data"><span class="n">3</span>Data and methods</h2>
-        <figure class="tablefig">
-            <figcaption id="cap-t1"><b>Table 1.</b> Data used.</figcaption>
-            <div class="table-wrap">
-                <table aria-labelledby="cap-t1">
-                    <thead><tr><th class="text">What</th><th class="text">Source</th><th>Years</th></tr></thead>
-                    <tbody>
-                        <tr><td class="text">Surface temperature, vegetation (NDVI) and built-up index (NDBI), 60 m maps</td><td class="text">Landsat 7, 8 and 9 Collection 2 Level 2, every clear dry-season pass (Microsoft Planetary Computer)</td><td>2000–2025</td></tr>
-                        <tr><td class="text">Heat island per LGA per pass</td><td class="text">Landsat 7, 8 and 9 (Google Earth Engine)</td><td>2000–2025</td></tr>
-                        <tr><td class="text">Land cover and countryside reference</td><td class="text">ESA WorldCover v200, 10 m</td><td>2021</td></tr>
-                        <tr><td class="text">Population</td><td class="text">WorldPop, 100 m (modelled)</td><td>2020</td></tr>
-                        <tr><td class="text">Elevation (low ground and slope context)</td><td class="text">Copernicus DEM GLO-30, digital surface model, 30 m (Microsoft Planetary Computer)</td><td>n/a</td></tr>
-                        <tr><td class="text">LGA averages: temperature, vegetation, MODIS check</td><td class="text">Landsat 8 and 9, Sentinel-2, MODIS Terra (Google Earth Engine)</td><td>2022–2024</td></tr>
-                        <tr><td class="text">Built-up land over time</td><td class="text">EU Global Human Settlement Layer</td><td>2005–2020</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </figure>
-        <p>All values are from the dry season (December to March), when skies are clearest. The <strong>heat island</strong> is how much warmer the ground is than nearby countryside, measured on the same satellite morning so the day's weather cancels out:</p>
-        <div class="eq" role="group" aria-label="Equation 1">
-            <div><span><var>H</var> = <var>T</var><sub>surface</sub> − <var>T</var><sub>countryside</sub></span><span>(1)</span></div>
+<section id="feedback" class="feedback" aria-labelledby="h-fb">
+    <h2 id="h-fb">What did you think of this page?</h2>
+    <div class="react-row">
+        <div class="reactions" role="group" aria-labelledby="h-fb">
+            <button type="button" class="react" data-react="Useful" aria-pressed="false">Useful <span class="rc"></span></button>
+            <button type="button" class="react" data-react="Interesting" aria-pressed="false">Interesting <span class="rc"></span></button>
+            <button type="button" class="react" data-react="Needs clarity" aria-pressed="false">Unclear in places <span class="rc"></span></button>
         </div>
-        <p>Each map cell (60 m) takes the median of <var>H</var> over the clear passes in a period: <span data-v="p1">—</span> passes in 2000–2012 (Landsat 7), <span data-v="p2">—</span> in 2013–2019 (Landsat 8) and <span data-v="p3">—</span> in 2020–2025 (Landsat 8 and 9). Cloud, cloud shadow and pixels with more than 4 K temperature uncertainty are masked; a pass is dropped when part of the built-up city reads much colder than the countryside, a sign of cloud or haze the mask missed. Land cover comes from ESA WorldCover 2021, whose overall accuracy for Africa is <span data-v="wcAcc">—</span>% <span class="cite">(Zanaga et al., 2022)</span> (Figure 2).</p>
-        <p class="small">The maps take every pass in which part of Lagos is clear. The LGA change statistics in Sections 4.6 and 4.7 come from a separate, stricter per-LGA record built earlier (Google Earth Engine, countryside from GHSL), with fewer passes; Section 4.8 compares the two. Both use the same Landsat temperature product, so the comparison checks the processing, not the satellite measurement. Full method and code: <a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics">repository</a>.</p>
-    </section>
-    <figure class="wide reveal mapimg" id="fig-lc">
-        <a href="assets/maps/m02_landcover.webp" aria-label="Open Figure 2 at full size"><img src="assets/maps/m02_landcover.webp" width="2200" height="882" loading="lazy" alt="Land cover map of Lagos State, 2021: built-up land on the western mainland, tree cover, water and wetland in the east"></a>
-        <figcaption><b>Figure 2.</b> Land cover, 2021 (ESA WorldCover v200), with each class's share of the state. Built-up land is concentrated west of the lagoon.</figcaption>
-    </figure>
-
-    <section id="results" aria-labelledby="h-results">
-        <h2 id="h-results"><span class="n">4</span>Results</h2>
-        <h3 id="h-lst"><span class="n">4.1</span>Land surface temperature</h3>
-        <p>On clear dry-season mornings the ground is hottest across the built-up mainland, from Alimosho and Ikeja south to Apapa, and in Ikorodu; it is coolest under the forest and wetland of the east (Figure 3). Averaged by LGA in the Earth Engine record (dry seasons 2022/23 and 2023/24), surface temperature runs from <span data-v="lstMin">—</span> °C in <span data-v="coolest">—</span> to <span data-v="lstMax">—</span> °C in <span data-v="hottest">—</span>.</p>
-    </section>
-    <figure class="wide reveal mapimg" id="fig-lst">
-        <a href="assets/maps/m03_lst.webp" aria-label="Open Figure 3 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m03_lst_phone.webp"><img src="assets/maps/m03_lst.webp" width="2200" height="882" loading="lazy" alt="Map of median land surface temperature in Lagos State, 2020 to 2025: hottest on the built-up western mainland and Ikorodu"></picture></a>
-        <figcaption><b>Figure 3.</b> Land surface temperature, dry seasons 2020–2025, median of clear morning passes per 60 m cell. Surface temperature, not air temperature.</figcaption>
-    </figure>
-
-    <section aria-labelledby="h-suhi">
-        <h3 id="h-suhi"><span class="n">4.2</span>Heat island</h3>
-        <p>Measured against the countryside on the same morning, most of the built-up mainland is more than 4 °C warmer, and parts of the inner city more than 8 °C (Figure 4). Bright beach sand along the coast also reads warm; that is not urban heat. Vegetated land in Badagry, Epe and Ibeju Lekki is as cool as the countryside or cooler.</p>
-    </section>
-    <figure class="wide reveal mapimg" id="fig-suhi">
-        <a href="assets/maps/m04_suhi.webp" aria-label="Open Figure 4 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m04_suhi_phone.webp"><img src="assets/maps/m04_suhi.webp" width="2200" height="882" loading="lazy" alt="Map of the surface heat island, 2020 to 2025: orange where the ground is warmer than the countryside, blue where cooler"></picture></a>
-        <figcaption><b>Figure 4.</b> Heat island, dry seasons 2020–2025: each 60 m cell's median temperature above (orange) or below (blue) the countryside on the same morning. Zero is neutral.</figcaption>
-    </figure>
-
-    <section aria-labelledby="h-veg">
-        <h3 id="h-veg"><span class="n">4.3</span>Vegetation and built-up land</h3>
-        <p>Where vegetation is sparse the ground is hot, and where it is dense the ground is cool (Figures 5 to 7). Across cells, the greener the ground the cooler it is (rank correlation <span data-v="bivRho">—</span>): <span data-v="bivHot">—</span>% of cells are in both the least green and the hottest third, and <span data-v="bivCool">—</span>% in both the greenest and the coolest. Vegetation and built-up land are near opposites here, so the maps cannot say how much of the cooling comes from trees and how much from the absence of buildings. The correlation is also partly built in: the countryside reference is itself vegetated land, and vegetation and temperature come from the same images.</p>
-    </section>
-    <figure class="wide reveal mapimg" id="fig-ndvi">
-        <a href="assets/maps/m05_ndvi.webp" aria-label="Open Figure 5 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m05_ndvi_phone.webp"><img src="assets/maps/m05_ndvi.webp" width="2200" height="882" loading="lazy" alt="Map of the vegetation index (NDVI), 2020 to 2025: low on the built-up mainland, high in the east"></picture></a>
-        <figcaption><b>Figure 5.</b> Vegetation index (NDVI), dry seasons 2020–2025, from the same Landsat passes as the temperature.</figcaption>
-    </figure>
-
-    <figure class="wide reveal mapimg" id="fig-ndbi">
-        <a href="assets/maps/m06_ndbi.webp" aria-label="Open Figure 6 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m06_ndbi_phone.webp"><img src="assets/maps/m06_ndbi.webp" width="2200" height="882" loading="lazy" alt="Map of the built-up index (NDBI), 2020 to 2025"></picture></a>
-        <figcaption><b>Figure 6.</b> Built-up index (NDBI), dry seasons 2020–2025. A spectral index: bare soil and sand also read high.</figcaption>
-    </figure>
-
-    <figure class="wide reveal mapimg" id="fig-biv">
-        <a href="assets/maps/m14_ndvi_heat.webp" aria-label="Open Figure 7 at full size"><img src="assets/maps/m14_ndvi_heat.webp" width="2200" height="960" loading="lazy" alt="Bivariate map of vegetation and heat: orange where cells are least green and hottest, green where greenest and coolest"></a>
-        <figcaption><b>Figure 7.</b> Vegetation and heat together: each cell classed by its third of NDVI and its third of the heat island across Lagos.</figcaption>
-    </figure>
-
-    <section aria-labelledby="h-gi">
-        <h3 id="h-gi"><span class="n">4.4</span>Hot spots</h3>
-        <p>On a 1 km grid, a hot-spot test <span class="cite">(Getis &amp; Ord, 1992)</span> finds <span data-v="hotN">—</span> hot-spot cells covering the mainland core, Ikorodu and the Lekki corridor, and <span data-v="coldN">—</span> cold-spot cells, mostly in the vegetated east and along the lagoon edges of Badagry and Ojo, after correcting for testing <span data-v="giCells">—</span> cells at once <span class="cite">(Benjamini &amp; Hochberg, 1995)</span> (Figure 8). Hot and cold are relative to the Lagos average, not to the countryside. Neighbouring cells are not independent, so the cell-level significance is optimistic; read the map as a pattern.</p>
-    </section>
-    <figure class="wide reveal mapimg" id="fig-gi">
-        <a href="assets/maps/m13_hotspots.webp" aria-label="Open Figure 8 at full size"><img src="assets/maps/m13_hotspots.webp" width="2200" height="882" loading="lazy" alt="Map of hot and cold spots on a 1 km grid: hot spots on the mainland core and Ikorodu, cold spots in the east"></a>
-        <figcaption><b>Figure 8.</b> Hot and cold spots of the heat island, 2020–2025: Getis–Ord Gi* on 960 m cells, false discovery rate 0.05.</figcaption>
-    </figure>
-
-    <section aria-labelledby="h-people">
-        <h3 id="h-people"><span class="n">4.5</span>Population exposure</h3>
-        <p>The hottest ground is also where most people live (Figure 9). Of <span data-v="popM">—</span> million modelled residents, <span data-v="exp4">—</span>% live in cells at least 4 °C warmer than the countryside; people in cells without enough clear passes are counted in the total but not as exposed. In Mushin, Ajeromi/Ifelodun, Agege and Surulere nearly everyone does; in Epe and Badagry most people live on cooler ground (Figure 10). This shows where heat and people coincide, not a measure of health risk. WorldPop is a model that spreads people across 100 m cells, including some onto vegetated land, so LGA shares are approximate.</p>
-    </section>
-    <figure class="wide reveal mapimg" id="fig-pop">
-        <a href="assets/maps/m12_population.webp" aria-label="Open Figure 9 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m12_population_phone.webp"><img src="assets/maps/m12_population.webp" width="2200" height="882" loading="lazy" alt="Map of population density in 2020, highest on the western mainland"></picture></a>
-        <figcaption><b>Figure 9.</b> Population density, 2020 (WorldPop, 100 m), a modelled estimate rather than a census count.</figcaption>
-    </figure>
-
-    <figure class="wide reveal mapimg" id="fig-people">
-        <a href="assets/maps/m15_exposure.webp" aria-label="Open Figure 10 at full size"><img src="assets/maps/m15_exposure.webp" width="2200" height="1280" loading="lazy" alt="Bar chart of the share of each LGA's residents by heat-island class"></a>
-        <figcaption><b>Figure 10.</b> Share of each LGA's residents by the heat island of the cell they live in, 2020–2025.</figcaption>
-    </figure>
-
-    <section aria-labelledby="h-change">
-        <h3 id="h-change"><span class="n">4.6</span>Change, 2000–2025</h3>
-        <p>Across the <span data-v="nCommon">—</span> inner LGAs seen clearly in every period (<span data-v="commonShare">—</span>% of the land), the heat island changed by <span data-v="dState">—</span> °C between 2000–2012 and 2020–2025, with a 95% interval of <span data-v="dCi">—</span> °C (Figure 11): no change that can be told apart from chance. The maps show where change may lie (Figures 12 and 13): the heat island grew on the edges of the city, in Ikorodu, western Alimosho and the Lekki corridor, places where vegetation declined (Figure 14), while the inner core and much of the west read slightly cooler. Vegetation index rose across most vegetated land, which is likely in part a difference between the Landsat 7 and Landsat 8 sensors; the areas of decline stand out against that. Each period is a different satellite, and the 2000–2012 maps carry stripes from the Landsat 7 scan-line fault, so pixel changes of a degree or two are within the noise.</p>
-    </section>
-    <figure class="wide reveal" id="fig-change">
-        <div id="periodchart"></div>
-        <figcaption><b>Figure 11.</b> Heat island in each period, °C above the countryside, land-area-weighted over the <span data-v="nCommon">—</span> LGAs seen clearly in all three periods, with 95% intervals that resample whole passes.</figcaption>
-    </figure>
-    <figure class="wide reveal mapimg" id="fig-periods">
-        <a href="assets/maps/m07_suhi_periods.webp" aria-label="Open Figure 12 at full size"><img src="assets/maps/m07_suhi_periods.webp" width="2200" height="1963" loading="lazy" alt="Three maps of the heat island for 2000 to 2012, 2013 to 2019 and 2020 to 2025 on the same scale"></a>
-        <figcaption><b>Figure 12.</b> Heat island in the three periods, same scale. Each period is one satellite generation.</figcaption>
-    </figure>
-
-    <figure class="wide reveal mapimg" id="fig-chmap">
-        <a href="assets/maps/m10_change.webp" aria-label="Open Figure 13 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m10_change_phone.webp"><img src="assets/maps/m10_change.webp" width="2200" height="882" loading="lazy" alt="Map of change in the heat island between 2000 to 2012 and 2020 to 2025"></picture></a>
-        <figcaption><b>Figure 13.</b> Change in the heat island, 2000–2012 to 2020–2025, where both periods have at least 3 clear passes. Includes the difference between Landsat 7 and Landsat 8/9.</figcaption>
-    </figure>
-
-    <figure class="wide reveal mapimg" id="fig-ndvich">
-        <a href="assets/maps/m16_ndvi_change.webp" aria-label="Open Figure 14 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m16_ndvi_change_phone.webp"><img src="assets/maps/m16_ndvi_change.webp" width="2200" height="882" loading="lazy" alt="Map of change in vegetation index between 2000 to 2012 and 2020 to 2025"></picture></a>
-        <figcaption><b>Figure 14.</b> Change in vegetation index (NDVI), 2000–2012 to 2020–2025, where both periods have at least 3 clear passes.</figcaption>
-    </figure>
-
-    <section aria-labelledby="h-where">
-        <h3 id="h-where"><span class="n">4.7</span>Change in single LGAs</h3>
-        <p>Of the <span data-v="nTestable">—</span> LGAs with enough clear passes to test, only <span data-v="warmedList">—</span> shows a rise whose 95% interval excludes zero (Figure 15), and the map record gives the same value. With <span data-v="nTestable">—</span> LGAs tested, one such result is about what chance alone would give, its trend across seasons is not significant after correcting for multiple tests, and the interval does not include the uncertainty from the change of satellite. <span data-v="nFewWord">—</span> LGAs had too few clear passes to test at all.</p>
-    </section>
-    <figure class="wide reveal" id="fig-where">
-        <div class="mapfig" id="map-change"></div>
-        <figcaption><b>Figure 15.</b> Change in heat island per LGA, °C, from 2000–2012 to 2020–2025. Orange: the interval excludes zero (darker is more). Pale: no clear change. Hatched: too few clear passes to test.</figcaption>
-    </figure>
-    <section aria-labelledby="h-quality">
-        <h3 id="h-quality"><span class="n">4.8</span>How far the data can be trusted</h3>
-        <p>Clear mornings are scarce, and Landsat 7's scan-line fault leaves stripes after 2003, so some cells rest on few passes (Figure 16); the spread across passes is largest at the city's edges and the coast (Figure 17). Two checks. First, the per-LGA heat island from the maps ranks the LGAs like the Earth Engine record (rank correlation <span data-v="agreeRho">—</span> over <span data-v="agreeN">—</span> LGA-period values; the maps read <span data-v="agreeDiff">—</span> °C lower on average). For change, the agreement is weaker: rank correlation <span data-v="agreeChRho">—</span>, same direction in <span data-v="agreeChSign">—</span> of <span data-v="agreeChN">—</span> LGAs. Second, in the seasons when Landsat 7 and 8 both passed, Landsat 7 read the heat island <span data-v="offset">—</span> °C stronger (95% interval <span data-v="offsetCi">—</span> °C, <span data-v="offsetN">—</span> LGA-season pairs). That interval includes zero and rests on five seasons, so the sensor difference is not resolved: the change from the first period could be understated or overstated by a degree or more.</p>
-    </section>
-    <figure class="wide reveal mapimg" id="fig-cov">
-        <a href="assets/maps/m09_coverage.webp" aria-label="Open Figure 16 at full size"><img src="assets/maps/m09_coverage.webp" width="2200" height="1963" loading="lazy" alt="Three maps of the number of clear passes per cell in each period"></a>
-        <figcaption><b>Figure 16.</b> Number of clear passes per 60 m cell in each period.</figcaption>
-    </figure>
-
-    <figure class="wide reveal mapimg" id="fig-unc">
-        <a href="assets/maps/m11_uncertainty.webp" aria-label="Open Figure 17 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m11_uncertainty_phone.webp"><img src="assets/maps/m11_uncertainty.webp" width="2200" height="882" loading="lazy" alt="Map of the spread of the heat island across passes, 2020 to 2025"></picture></a>
-        <figcaption><b>Figure 17.</b> Spread of the heat island across clear passes (interquartile range), 2020–2025.</figcaption>
-    </figure>
-
-    <section aria-labelledby="h-access">
-        <h3 id="h-access"><span class="n">4.9</span>Green space and low ground</h3>
-        <p><b>Walking distance to green space.</b> Figure 18 maps the straight-line distance from each 60 m cell to the nearest vegetated cell, where vegetation means a dry-season median NDVI of at least <span data-v="accVeg">—</span>. Taking <span data-v="accM">—</span> m as a rough five-minute walk, <span data-v="accBeyond">—</span>% of the 2020 WorldPop population, counted on cells with valid NDVI, lives farther than that from vegetation. The share moves from <span data-v="accLo">—</span>% to <span data-v="accHi">—</span>% when the NDVI cut-off is set to 0.3 or 0.5, so the result depends strongly on the threshold. It also ignores roads, fences and whether a green space can be entered.</p>
-        <p><b>Low ground.</b> Figure 19 marks cells below <span data-v="lowM">—</span> m of elevation, using the Copernicus DEM GLO-30. Those cells cover <span data-v="lowArea">—</span>% of the study area and hold <span data-v="lowPop">—</span>% of the 2020 population. This is an elevation proxy for flood-prone ground, not a flood map. The DEM is a surface model, so buildings and trees are included in the heights, and drainage, rainfall and flood records are not used.</p>
-        <p><b>Heat on low ground.</b> Figure 20 shows surface heat on the low cells only. In cell medians, low cells are <span data-v="lowDiff">—</span> °C relative to the higher ground (negative means cooler). Neighbouring cells are not independent, so no interval is given and the contrast is descriptive. Low ground also mixes elevation with land cover, which this analysis does not separate, so the contrast is not the effect of elevation alone.</p>
-    </section>
-    <figure class="wide reveal mapimg" id="fig-access">
-        <a href="assets/maps/m17_green_access.webp" aria-label="Open Figure 18 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m17_green_access_phone.webp"><img src="assets/maps/m17_green_access.webp" width="2200" height="882" loading="lazy" alt="Map of walking distance to vegetation: dark green where vegetation is near, brown where the nearest vegetated cell is more than 1 km away"></picture></a>
-        <figcaption><b>Figure 18.</b> Straight-line distance from each 60 m cell to the nearest vegetated cell (dry-season NDVI median, 2020–2025), colour scale ticks at 0, 300, 600 and 1000 m.</figcaption>
-    </figure>
-    <figure class="wide reveal mapimg" id="fig-lowground">
-        <a href="assets/maps/m18_low_ground.webp" aria-label="Open Figure 19 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m18_low_ground_phone.webp"><img src="assets/maps/m18_low_ground.webp" width="2200" height="882" loading="lazy" alt="Map of cells below 10 metres elevation, mostly in the southern and coastal mainland"></picture></a>
-        <figcaption><b>Figure 19.</b> Cells below 10 m elevation (Copernicus DEM GLO-30). An elevation proxy for flood-prone ground, not a flood map.</figcaption>
-    </figure>
-    <figure class="wide reveal mapimg" id="fig-lowheat">
-        <a href="assets/maps/m19_low_ground_heat.webp" aria-label="Open Figure 20 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m19_low_ground_heat_phone.webp"><img src="assets/maps/m19_low_ground_heat.webp" width="2200" height="882" loading="lazy" alt="Map of surface heat island on cells below 10 metres: warm orange across much of the southern mainland, cooler blue in patches"></picture></a>
-        <figcaption><b>Figure 20.</b> Surface heat island, 2020–2025, on cells below 10 m only. Higher ground is left blank.</figcaption>
-    </figure>
-
-    <section aria-labelledby="h-gap">
-        <h3 id="h-gap"><span class="n">4.10</span>Who lives far from green space, and where the heat is</h3>
-        <p>Figure 21 combines the two. Of the 2020 population, <span data-v="gapShare">—</span>% (<span data-v="gapPop">—</span> million people) lives more than 300 m from vegetation and on a cell at least 4 °C warmer than the countryside. Within 300 m of vegetation, <span data-v="hotWithin">—</span>% of residents are on such cells; beyond 300 m, <span data-v="hotBeyond">—</span>%. The population-weighted mean heat island is <span data-v="wmWithin">—</span> °C within 300 m and <span data-v="wmBeyond">—</span> °C beyond. Most people beyond 300 m live on built-up cells, so land cover and distance are confounded here, and the analysis does not separate them. The 4 °C cut-off is a choice: at 2 °C, <span data-v="sens2">—</span>% of residents with a heat value are on hot cells; at 5 °C, <span data-v="sens5">—</span>%.</p>
-    </section>
-    <figure class="wide reveal mapimg" id="fig-gap">
-        <a href="assets/maps/m20_access_gap.webp" aria-label="Open Figure 21 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m20_access_gap_phone.webp"><img src="assets/maps/m20_access_gap.webp" width="2200" height="882" loading="lazy" alt="Map of cells within 300 metres of vegetation, cells beyond 300 metres under 4 degrees warmer, and cells beyond 300 metres at 4 degrees or more"></picture></a>
-        <figcaption><b>Figure 21.</b> Access to vegetation and surface heat, 2020–2025, with WorldPop 2020 as the population weight in the percentages.</figcaption>
-    </figure>
-    <section aria-labelledby="h-lc">
-        <h3 id="h-lc"><span class="n">4.11</span>Heat by land cover and by distance</h3>
-        <p>Figure 22 gives the median heat island of each cell by ESA WorldCover 2021 class. Built-up cells, where <span data-v="lcBuiltPop">—</span>% of residents live, have a median of <span data-v="lcBuiltSuhi">—</span> °C; tree-covered cells, where <span data-v="lcTreePop">—</span>% of residents live, have a median of <span data-v="lcTreeSuhi">—</span> °C. These are associations between a land-cover label and surface temperature, not measured causes.</p>
-        <p>Figure 23 bins cells by distance to the nearest vegetated cell. The population-weighted heat island rises in every distance band, most steeply between the first two. <span data-v="bandFar">—</span>% of residents live more than 600 m from vegetated land. The bands are straight-line distances, not walking routes.</p>
-    </section>
-    <figure class="wide reveal mapimg" id="fig-lc-heat">
-        <a href="assets/maps/m21_landcover_heat.webp" aria-label="Open Figure 22 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m21_landcover_heat_phone.webp"><img src="assets/maps/m21_landcover_heat.webp" width="2200" height="1280" loading="lazy" alt="Bar chart of median surface heat island by land-cover class, highest for built-up land"></picture></a>
-        <figcaption><b>Figure 22.</b> Median surface heat island by ESA WorldCover 2021 class, 2020–2025.</figcaption>
-    </figure>
-    <figure class="wide reveal mapimg" id="fig-distance">
-        <a href="assets/maps/m22_distance_heat.webp" aria-label="Open Figure 23 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m22_distance_heat_phone.webp"><img src="assets/maps/m22_distance_heat.webp" width="2200" height="1280" loading="lazy" alt="Bar chart of population-weighted heat island by distance band to vegetation, rising with distance"></picture></a>
-        <figcaption><b>Figure 23.</b> Population-weighted mean heat island by distance to the nearest vegetated cell.</figcaption>
-    </figure>
-    <section aria-labelledby="h-lga">
-        <h3 id="h-lga"><span class="n">4.12</span>Green-space access and heat by LGA</h3>
-        <p>Figures 24 and 25 give one value per LGA. The share of residents more than 300 m from vegetation is highest in <span data-v="lgaTop">—</span> (<span data-v="lgaTopPct">—</span>%). Read the two maps together: an LGA average hides the variation inside each LGA.</p>
-        <p>Figures 26 and 27 repeat the distance map with the vegetation cut-off at 0.3 and 0.5. The share beyond 300 m moves from <span data-v="accLo">—</span>% to <span data-v="accHi">—</span>% across that range, against <span data-v="accBeyond">—</span>% at 0.4 (Figure 18).</p>
-    </section>
-    <figure class="wide reveal mapimg" id="fig-lgaaccess">
-        <a href="assets/maps/m23_lga_beyond300.webp" aria-label="Open Figure 24 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m23_lga_beyond300_phone.webp"><img src="assets/maps/m23_lga_beyond300.webp" width="2200" height="882" loading="lazy" alt="Map of the share of each LGA's residents more than 300 metres from vegetation"></picture></a>
-        <figcaption><b>Figure 24.</b> Share of each LGA's residents (WorldPop 2020) more than 300 m from vegetated land.</figcaption>
-    </figure>
-    <figure class="wide reveal mapimg" id="fig-lgaheat">
-        <a href="assets/maps/m24_lga_heat.webp" aria-label="Open Figure 25 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m24_lga_heat_phone.webp"><img src="assets/maps/m24_lga_heat.webp" width="2200" height="882" loading="lazy" alt="Map of population-weighted surface heat island by LGA"></picture></a>
-        <figcaption><b>Figure 25.</b> Population-weighted mean surface heat island by LGA, 2020–2025.</figcaption>
-    </figure>
-    <figure class="wide reveal mapimg" id="fig-veg03">
-        <a href="assets/maps/m25_veg_ndvi03.webp" aria-label="Open Figure 26 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m25_veg_ndvi03_phone.webp"><img src="assets/maps/m25_veg_ndvi03.webp" width="2200" height="882" loading="lazy" alt="Map of walking distance to vegetation with a 0.3 NDVI cut-off"></picture></a>
-        <figcaption><b>Figure 26.</b> Sensitivity check: distance to vegetation with a 0.3 NDVI cut-off.</figcaption>
-    </figure>
-    <figure class="wide reveal mapimg" id="fig-veg05">
-        <a href="assets/maps/m26_veg_ndvi05.webp" aria-label="Open Figure 27 at full size"><picture><source media="(max-width: 760px)" srcset="assets/maps/m26_veg_ndvi05_phone.webp"><img src="assets/maps/m26_veg_ndvi05.webp" width="2200" height="882" loading="lazy" alt="Map of walking distance to vegetation with a 0.5 NDVI cut-off"></picture></a>
-        <figcaption><b>Figure 27.</b> Sensitivity check: distance to vegetation with a 0.5 NDVI cut-off.</figcaption>
-    </figure>
-
-    <figure class="wide reveal mapimg" id="fig-ndviperiods">
-        <a href="assets/maps/m08_ndvi_periods.webp" aria-label="Open Figure 28 at full size"><img src="assets/maps/m08_ndvi_periods.webp" width="2200" height="1963" loading="lazy" alt="Three maps of the vegetation index in 2000–2012, 2013–2019 and 2020–2025 on one scale"></a>
-        <figcaption><b>Figure 28.</b> Vegetation index (NDVI) in three periods, 2000–2025, on one scale. Context for Figure 14: the Landsat 7 to 8/9 band difference applies here too.</figcaption>
-    </figure>
-
-    <section id="discussion" data-reveal aria-labelledby="h-disc">
-        <h2 id="h-disc"><span class="n">5</span>Discussion</h2>
-        <p>The heat island in Lagos is a mainland phenomenon: the built-up west of the lagoon is several degrees warmer than the countryside, and most residents live on that ground. Vegetation goes with cooler ground, though it cannot be separated from the absence of buildings in the same places. Over 2000–2025 the clear images are too few, and the satellites too different, to show a change in the inner city; the maps point to warming on the growing edges of the city, Ikorodu above all, but no single LGA's rise is conclusive. Starting the record in 1985 instead, as an earlier version of this page did, gives a clear rise, but that result rests on two passes from 1985 and 1991.</p>
-    </section>
-
-    <section id="limitations" data-reveal aria-labelledby="h-lim">
-        <h2 id="h-lim"><span class="n">6</span>Limitations</h2>
-        <ul>
-            <li>Ground temperature on clear mornings, not air temperature, and not at night.</li>
-            <li>Clear images are rare, and the eastern end of Epe has no clear pass in any period.</li>
-            <li>Each period is a different satellite. The Landsat 7 to Landsat 8 difference measured here is not resolved, so sensor differences are not removed from the change.</li>
-            <li>The change estimate covers only the <span data-v="nCommon">—</span> inner LGAs seen clearly in every period, <span data-v="commonShare">—</span>% of the land.</li>
-            <li>Land cover (<span data-v="wcAcc">—</span>% accurate for Africa) and population (modelled) carry their own errors. Land surface temperature has not been checked against ground measurements.</li>
-            <li>Walking distance is a straight-line proxy: it ignores roads, fences and whether a green space can be entered. Vegetation outside the state land mask is not counted, so distances near the state boundary are overstated.</li>
-            <li>Low ground is an elevation proxy, not a flood map. The Copernicus DEM is a surface model, so buildings and trees raise the heights, and drainage and rainfall are not used.</li>
-            <li>Most people beyond 300 m live on built-up cells, so land cover and distance are confounded; the analysis does not separate them. Vegetated cells are cool partly by construction, since vegetation is defined from the same satellite data.</li>
-            <li>The results are associations, not causes.</li>
-        </ul>
-    </section>
-
-    <section id="conclusion" data-reveal aria-labelledby="h-concl">
-        <h2 id="h-concl"><span class="n">7</span>Conclusion</h2>
-        <p>Most of Lagos's built-up mainland is more than 4 °C warmer than the countryside on clear dry-season mornings, and that is where most people live. Between 2000 and 2025 the clear satellite images do not show a change in the inner city that can be told apart from chance; the edges of the city, Ikorodu above all, are where the heat island may have grown. More overlapping Landsat 7 and 8 passes, and air-temperature records from weather stations, would be the next checks.</p>
-    </section>
-
-    <section id="explorer" class="explore-cta" data-reveal aria-labelledby="h-explorer">
-        <a class="cta-card" href="explore.html">
-            <img src="assets/explorer-preview.png" alt="The explorer: a map of Lagos State's LGAs with layer controls and an LGA panel" width="1200" height="700" loading="lazy">
-            <span class="cta-text">
-                <span class="cta-kicker">Interactive explorer</span>
-                <span class="cta-title" id="h-explorer">Explore every LGA</span>
-                <span class="cta-body">Switch map layers, play the heat island through the three periods, open any LGA, and compare two side by side.</span>
-                <span class="cta-go">Open the explorer →</span>
-            </span>
-        </a>
-    </section>
-
-    <section id="data-code" data-reveal aria-labelledby="h-dc">
-        <h2 id="h-dc">Data, code and citation</h2>
-        <ul class="downloads">
-            <li><a href="data/lagos_uhi_processed.geojson" download>lagos_uhi_processed.geojson</a><span>LGA boundaries and 2022–2024 values</span></li>
-            <li><a href="data/change_summary_2000_2025.json" download>change_summary_2000_2025.json</a><span>Heat island 2000–2025, three periods</span></li>
-            <li><a href="data/lagos_change_scenes.csv" download>lagos_change_scenes.csv</a><span>Every satellite pass, used or rejected</span></li>
-            <li><a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics">Repository</a><span>Earth Engine export, analysis scripts and tests</span></li>
-        </ul>
-        <h3 id="cite">How to cite</h3>
-        <div class="citation">
-            <p id="cite-text">Oloyede, D. O. (2026). <i>Surface Urban Heat Island in Lagos State, Nigeria: Spatial Pattern, Population Exposure and Change from Landsat, 2000–2025</i>. https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics</p>
-            <button type="button" class="button" id="copy-cite">Copy citation</button>
-        </div>
-    </section>
-
-    <section class="note" data-reveal aria-labelledby="h-note">
-        <h2 id="h-note">A note from me</h2>
-        <p>I set out to answer a simple question: is Lagos getting hotter? I assumed the satellites would just tell me. Mostly, they told me it was cloudy. Of <span data-v="scAll">—</span> dry-season passes from 2000 to 2025, the strict per-LGA record kept <span data-v="scUsed">—</span>, none at all in 2021, 2022 or 2023. Accepting partly clear scenes for the maps raised that to <span data-v="pTot">—</span>.</p>
-        <p>If you know one of these LGAs and something here does not match what you feel on the street, tell me: <a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics/issues">open an issue on the repository</a>.</p>
-        <p class="sign">David</p>
-    </section>
-
-    <section id="feedback" class="feedback" aria-labelledby="h-fb">
-        <h2 id="h-fb">Was this research useful?</h2>
-        <div class="react-row">
-            <div class="reactions" role="group" aria-labelledby="h-fb">
-                <button type="button" class="react" data-react="Useful" aria-pressed="false">Useful <span class="rc"></span></button>
-                <button type="button" class="react" data-react="Interesting" aria-pressed="false">Interesting <span class="rc"></span></button>
-                <button type="button" class="react" data-react="Needs clarity" aria-pressed="false">Needs clarity <span class="rc"></span></button>
-            </div>
-            <span class="react-status" id="react-status" role="status"></span>
-        </div>
-    </section>
-
-    <section id="references" aria-labelledby="h-refs">
-        <h2 id="h-refs">References</h2>
-        <ol class="refs">
-            <li>Benjamini, Y., &amp; Hochberg, Y. (1995). Controlling the false discovery rate: a practical and powerful approach to multiple testing. <i>Journal of the Royal Statistical Society: Series B</i>, 57(1), 289–300. <a href="https://doi.org/10.1111/j.2517-6161.1995.tb02031.x">doi:10.1111/j.2517-6161.1995.tb02031.x</a></li>
-            <li>European Space Agency. (2022). <i>Copernicus DEM</i>. doi:10.5270/esa-c5d3d65</li>
-            <li>Getis, A., &amp; Ord, J. K. (1992). The analysis of spatial association by use of distance statistics. <i>Geographical Analysis</i>, 24(3), 189–206. <a href="https://doi.org/10.1111/j.1538-4632.1992.tb00261.x">doi:10.1111/j.1538-4632.1992.tb00261.x</a></li>
-            <li>Gorelick, N., Hancher, M., Dixon, M., Ilyushchenko, S., Thau, D., &amp; Moore, R. (2017). Google Earth Engine: planetary-scale geospatial analysis for everyone. <i>Remote Sensing of Environment</i>, 202, 18–27. <a href="https://doi.org/10.1016/j.rse.2017.06.031">doi:10.1016/j.rse.2017.06.031</a></li>
-            <li>Guo, L., Di, L., Zhang, C., Lin, L., Chen, F., &amp; Molla, A. (2022). Evaluating contributions of urbanization and global climate change to urban land surface temperature change: a case study in Lagos, Nigeria. <i>Scientific Reports</i>, 12, 14168. <a href="https://doi.org/10.1038/s41598-022-18193-w">doi:10.1038/s41598-022-18193-w</a></li>
-            <li>Moran, P. A. P. (1950). Notes on continuous stochastic phenomena. <i>Biometrika</i>, 37(1–2), 17–23. <a href="https://doi.org/10.1093/biomet/37.1-2.17">doi:10.1093/biomet/37.1-2.17</a></li>
-            <li>Obiefuna, J. N., Okolie, C. J., Nwilo, P. C., Daramola, O. E., &amp; Isiofia, L. C. (2021). Potential influence of urban sprawl and changing land surface temperature on outdoor thermal comfort in Lagos State, Nigeria. <i>Quaestiones Geographicae</i>, 40(1), 5–23. <a href="https://doi.org/10.2478/quageo-2021-0001">doi:10.2478/quageo-2021-0001</a></li>
-            <li>Oke, T. R. (1982). The energetic basis of the urban heat island. <i>Quarterly Journal of the Royal Meteorological Society</i>, 108(455), 1–24. <a href="https://doi.org/10.1002/qj.49710845502">doi:10.1002/qj.49710845502</a></li>
-            <li>Voogt, J. A., &amp; Oke, T. R. (2003). Thermal remote sensing of urban climates. <i>Remote Sensing of Environment</i>, 86(3), 370–384. <a href="https://doi.org/10.1016/S0034-4257(03)00079-8">doi:10.1016/S0034-4257(03)00079-8</a></li>
-            <li>Zanaga, D., Van De Kerchove, R., Daems, D., De Keersmaecker, W., Brockmann, C., Kirches, G., Wevers, J., Cartus, O., Santoro, M., Fritz, S., Lesiv, M., Herold, M., Tsendbazar, N.-E., Xu, P., Ramoino, F., &amp; Arinò, O. (2022). <i>ESA WorldCover 10 m 2021 v200</i>. Zenodo. <a href="https://doi.org/10.5281/zenodo.7254221">doi:10.5281/zenodo.7254221</a></li>
-        </ol>
-    </section>
+        <span class="react-status" id="react-status" role="status"></span>
+    </div>
+    <p class="react-note">One reaction per browser. Counts are anonymous and stored with a public counter. To say what is unclear, open an issue on the repository.</p>
+</section>
 </main>
 
-<button type="button" class="to-top" id="to-top" aria-label="Back to top" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
-
 <footer>
-    <div class="inner">
-        <p class="sig"><span>David Oloyede</span><span><a href="https://github.com/oloyededavid">github.com/oloyededavid</a></span><span>Last updated <time datetime="2026-11-09">9 November 2026</time></span><span class="sig-meta"><span>Version 1.2</span><span id="views" hidden></span></span></p>
-        <p>Code MIT, derived data CC BY 4.0. Source data keep their own terms: Landsat (USGS), Sentinel-2 (Copernicus), MODIS (NASA), GHSL (European Commission JRC), WorldPop, FAO GAUL, Natural Earth.</p>
-        <p>Other studies: <a href="https://oloyededavid.github.io/Oueme-Ogun-Groundwater-Recharge/">Ouémé–Ogun water balance</a> · <a href="https://oloyededavid.github.io/Ogun-Catchment-Coast-Observatory/">Ogun Catchment-to-Coast Observatory</a></p>
-    </div>
+    <p>Code (MIT) and derived data (CC BY 4.0): <a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics">github.com/oloyededavid/Lagos-Urban-Heat-Analytics</a>.</p>
 </footer>
-
-<script src="assets/app.js"></script>
+<script src="assets/explore.js"></script>
 <script src="assets/feedback.js"></script>
 </body>
 </html>

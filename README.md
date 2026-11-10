@@ -126,9 +126,8 @@ The four-decade change is computed in `scripts/extract_change_gee.py` (Earth Eng
 
 ```
 docs/                 website (GitHub Pages)
-  index.html          study page (figures drawn by assets/app.js from the JSON summaries)
-  explore.html        interactive explorer
-  assets/             page script, stylesheet and explorer preview
+  index.html          single study page, built from paper/paper.md by scripts/build_page.py
+  assets/             stylesheet, explore.js (interactive LGA map), feedback.js (reactions)
   data/               processed GeoJSON, statistical summaries, four-decade change data
     maps/             heat-island maps for each period (PNG)
   vendor/             Leaflet 1.9.4 and Chart.js 4.4.1
