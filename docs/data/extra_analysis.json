@@ -23,6 +23,89 @@
   "share_of_total": 0.6381,
   "cells": 132778
  },
+ "stratified": {
+  "built_up": {
+   "within_300m": {
+    "population": 2831486,
+    "pop_weighted_mean_suhi_c": 5.21,
+    "population_in_hot_cells_share": 0.7827
+   },
+   "beyond_300m": {
+    "population": 8900999,
+    "pop_weighted_mean_suhi_c": 6.64,
+    "population_in_hot_cells_share": 0.9833
+   },
+   "distance_bands": {
+    "0-60 m": {
+     "population": 617634,
+     "pop_weighted_mean_suhi_c": 3.65
+    },
+    "60-120 m": {
+     "population": 483289,
+     "pop_weighted_mean_suhi_c": 4.92
+    },
+    "120-180 m": {
+     "population": 594720,
+     "pop_weighted_mean_suhi_c": 5.51
+    },
+    "180-300 m": {
+     "population": 1135844,
+     "pop_weighted_mean_suhi_c": 6.02
+    },
+    "300-600 m": {
+     "population": 2385863,
+     "pop_weighted_mean_suhi_c": 6.37
+    },
+    "600 m and more": {
+     "population": 6515135,
+     "pop_weighted_mean_suhi_c": 6.74
+    }
+   }
+  },
+  "other_land": {
+   "within_300m": {
+    "population": 2011492,
+    "pop_weighted_mean_suhi_c": 1.06,
+    "population_in_hot_cells_share": 0.1474
+   },
+   "beyond_300m": {
+    "population": 146082,
+    "pop_weighted_mean_suhi_c": 5.05,
+    "population_in_hot_cells_share": 0.755
+   },
+   "distance_bands": {
+    "0-60 m": {
+     "population": 1818409,
+     "pop_weighted_mean_suhi_c": 0.68
+    },
+    "60-120 m": {
+     "population": 83342,
+     "pop_weighted_mean_suhi_c": 4.42
+    },
+    "120-180 m": {
+     "population": 52845,
+     "pop_weighted_mean_suhi_c": 4.72
+    },
+    "180-300 m": {
+     "population": 56895,
+     "pop_weighted_mean_suhi_c": 4.83
+    },
+    "300-600 m": {
+     "population": 62420,
+     "pop_weighted_mean_suhi_c": 5.1
+    },
+    "600 m and more": {
+     "population": 83663,
+     "pop_weighted_mean_suhi_c": 5.02
+    }
+   }
+  }
+ },
+ "vegetated_cells": {
+  "population_share_of_total": 0.1325,
+  "pop_weighted_mean_suhi_c": 0.63,
+  "within_300m_excluding_vegetated_pop_weighted_mean_suhi_c": 5.24
+ },
  "hot_threshold_sensitivity": {
   "2": 0.9056,
   "3": 0.8749,

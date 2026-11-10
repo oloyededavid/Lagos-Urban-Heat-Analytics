@@ -83,6 +83,41 @@ def main():
                                       "share_of_total": round(float(pop_ok[gap].sum() / total), 4),
                                       "cells": int(gap.sum())}
 
+    # 1b. stratified by land cover: built-up (WorldCover 50) versus all other land cells with a value
+    d_ = np.where(inside & np.isfinite(veg_d), veg_d, np.nan)
+    bins_ = [0, 60, 120, 180, 300, 600, 1e9]
+    labels_ = ["0-60 m", "60-120 m", "120-180 m", "180-300 m", "300-600 m", "600 m and more"]
+    wc_b = inside & (wc == 50)
+    wc_o = inside & (wc != 50)
+    out["stratified"] = {}
+    for lab, lm in {"built_up": wc_b, "other_land": wc_o}.items():
+        out["stratified"][lab] = {}
+        for k, m in {"within_300m": lm & ~beyond, "beyond_300m": lm & beyond}.items():
+            mm = m & ok
+            p_ = pop_ok[mm]
+            out["stratified"][lab][k] = {
+                "population": round(float(pop_ok[m].sum())),
+                "pop_weighted_mean_suhi_c": round(float(np.sum(p_ * suhi[mm]) / p_.sum()), 2) if p_.sum() else None,
+                "population_in_hot_cells_share": round(float(pop_ok[mm & (suhi >= HOT_C)].sum() / pop_ok[m].sum()), 4) if pop_ok[m].sum() else None,
+            }
+        out["stratified"][lab]["distance_bands"] = {}
+        for lo, hi, lab2 in zip(bins_[:-1], bins_[1:], labels_):
+            m = lm & (d_ >= 0) & (d_ <= hi) if lo == 0 else lm & (d_ > lo) & (d_ <= hi)
+            mm = m & ok
+            p_ = pop_ok[mm]
+            out["stratified"][lab][ "distance_bands"][lab2] = {
+                "population": round(float(pop_ok[m].sum())),
+                "pop_weighted_mean_suhi_c": round(float(np.sum(p_ * suhi[mm]) / p_.sum()), 2) if p_.sum() else None,
+            }
+
+    # 1c. residents on vegetated cells (distance 0) reported as their own group
+    veg_c = inside & (d_ == 0)
+    out["vegetated_cells"] = {
+        "population_share_of_total": round(float(pop_ok[veg_c].sum() / total), 4),
+        "pop_weighted_mean_suhi_c": round(float(np.sum(pop_ok[veg_c & ok] * suhi[veg_c & ok]) / pop_ok[veg_c & ok].sum()), 2) if pop_ok[veg_c & ok].sum() else None,
+        "within_300m_excluding_vegetated_pop_weighted_mean_suhi_c": round(float(np.sum(pop_ok[ok & (inside & ~beyond) & ~veg_c] * suhi[ok & (inside & ~beyond) & ~veg_c]) / pop_ok[ok & (inside & ~beyond) & ~veg_c].sum()), 2),
+    }
+
     # 2. sensitivity of the hot threshold
     out["hot_threshold_sensitivity"] = {f"{th:g}": round(float(pop_ok[ok & (suhi >= th)].sum() / pop_heat.sum()), 4) for th in (2, 3, 4, 5)}
 
