@@ -1,0 +1,90 @@
+{
+ "source": {
+  "constrained": "https://data.worldpop.org/GIS/Population/Global_2000_2020_Constrained/2020/maxar_v1/NGA/nga_ppp_2020_constrained.tif",
+  "unconstrained": "WorldPop 2020 nga_ppp_2020 (scripts/pc_population.py)"
+ },
+ "variants": {
+  "unconstrained": {
+   "total_population": 13890059,
+   "beyond_share": 0.6513349787160181,
+   "all_within": {
+    "population": 4842977.663894286,
+    "mean_c": 3.5027580740792383,
+    "hot_share": 0.5188702694985035
+   },
+   "all_beyond": {
+    "population": 9047081.184164809,
+    "mean_c": 6.613009475939456,
+    "hot_share": 0.9796055482806452
+   },
+   "bu_within": {
+    "population": 2831486.0280682007,
+    "mean_c": 5.212108178910625,
+    "hot_share": 0.782737192567328
+   },
+   "bu_beyond": {
+    "population": 8900998.802126035,
+    "mean_c": 6.638270033548249,
+    "hot_share": 0.9832925561794569
+   },
+   "pooled_gap_c": 3.1102514018602174,
+   "bu_gap_c": 1.4261618546376242,
+   "bu_share_of_beyond_pop": 0.9838530926090877
+  },
+  "constrained": {
+   "total_population": 13948392,
+   "beyond_share": 0.6606559157371521,
+   "all_within": {
+    "population": 4733304.0,
+    "mean_c": 4.425974182028752,
+    "hot_share": 0.6114575862884521
+   },
+   "all_beyond": {
+    "population": 9215088.0,
+    "mean_c": 6.656587601643225,
+    "hot_share": 0.9822454452514648
+   },
+   "bu_within": {
+    "population": 3607143.25,
+    "mean_c": 5.128890787832211,
+    "hot_share": 0.7506824731826782
+   },
+   "bu_beyond": {
+    "population": 9139912.0,
+    "mean_c": 6.670507244671493,
+    "hot_share": 0.984136164188385
+   },
+   "pooled_gap_c": 2.230613419614473,
+   "bu_gap_c": 1.5416164568392814,
+   "bu_share_of_beyond_pop": 0.9918420746497483
+  },
+  "unconstrained_built_up_only": {
+   "total_population": 11732485,
+   "beyond_share": 0.758662715609808,
+   "all_within": {
+    "population": 2831486.0280682007,
+    "mean_c": 5.212108178910624,
+    "hot_share": 0.782737192567328
+   },
+   "all_beyond": {
+    "population": 8900998.802126035,
+    "mean_c": 6.638270033548249,
+    "hot_share": 0.9832925561794569
+   },
+   "bu_within": {
+    "population": 2831486.0280682007,
+    "mean_c": 5.212108178910625,
+    "hot_share": 0.782737192567328
+   },
+   "bu_beyond": {
+    "population": 8900998.802126035,
+    "mean_c": 6.638270033548249,
+    "hot_share": 0.9832925561794569
+   },
+   "pooled_gap_c": 1.4261618546376251,
+   "bu_gap_c": 1.4261618546376242,
+   "bu_share_of_beyond_pop": 1.0
+  }
+ },
+ "note": "Constrained layer restricts people to built-up areas using a settlement mask; unconstrained spreads them across all cells. The built-up-only variant keeps the unconstrained totals on built-up cells."
+}
