@@ -1,0 +1,20 @@
+{
+ "note": "Gaps recomputed for each vegetation cut-off; same heat median and population as the main result.",
+ "cutoffs": {
+  "0.3": {
+   "beyond_share": 0.4672692993949431,
+   "bu_gap_c": 1.1585155820648563,
+   "pooled_gap_c": 2.4008164972133743
+  },
+  "0.4": {
+   "beyond_share": 0.6513349787160181,
+   "bu_gap_c": 1.4261618546376242,
+   "pooled_gap_c": 3.1102514018602174
+  },
+  "0.5": {
+   "beyond_share": 0.773138797408252,
+   "bu_gap_c": 1.6136973871419835,
+   "pooled_gap_c": 3.9006747056969093
+  }
+ }
+}
