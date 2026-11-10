@@ -1,0 +1,174 @@
+pass_id,date,platform,wrs_path,ref_pixels,cold_share,verdict,saved
+landsat-8_191_2019-12-03,2019-12-03,landsat-8,191,66385,0.0014005602240896359,no LGA at least half clear,True
+landsat-8_192_2019-12-10,2019-12-10,landsat-8,192,1503,,reference mostly cloudy,True
+landsat-8_190_2019-12-12,2019-12-12,landsat-8,190,2332,,reference mostly cloudy,True
+landsat-8_191_2019-12-19,2019-12-19,landsat-8,191,49987,0.0,no LGA at least half clear,True
+landsat-8_192_2019-12-26,2019-12-26,landsat-8,192,9160,,cold anomaly (cloud or fog),True
+landsat-8_190_2019-12-28,2019-12-28,landsat-8,190,538216,0.0,no LGA at least half clear,True
+landsat-8_191_2020-01-04,2020-01-04,landsat-8,191,734959,0.0,kept,True
+landsat-8_192_2020-01-11,2020-01-11,landsat-8,192,9,,reference mostly cloudy,True
+landsat-8_190_2020-01-13,2020-01-13,landsat-8,190,5384,0.0,reference mostly cloudy,True
+landsat-8_191_2020-01-20,2020-01-20,landsat-8,191,507481,0.0,kept,True
+landsat-8_192_2020-01-27,2020-01-27,landsat-8,192,8811,,cold anomaly (cloud or fog),True
+landsat-8_190_2020-01-29,2020-01-29,landsat-8,190,13020,0.0,no LGA at least half clear,True
+landsat-8_191_2020-02-05,2020-02-05,landsat-8,191,584015,0.0,kept,True
+landsat-8_192_2020-02-12,2020-02-12,landsat-8,192,2911,,reference mostly cloudy,True
+landsat-8_190_2020-02-14,2020-02-14,landsat-8,190,512114,0.0,no LGA at least half clear,True
+landsat-8_191_2020-02-21,2020-02-21,landsat-8,191,73625,0.0,no LGA at least half clear,True
+landsat-8_192_2020-02-28,2020-02-28,landsat-8,192,0,,reference mostly cloudy,False
+landsat-8_191_2020-03-08,2020-03-08,landsat-8,191,204146,0.19260865466201565,cold anomaly (cloud or fog),True
+landsat-8_192_2020-03-15,2020-03-15,landsat-8,192,0,,reference mostly cloudy,False
+landsat-8_191_2020-12-05,2020-12-05,landsat-8,191,59320,0.0,no LGA at least half clear,True
+landsat-8_192_2020-12-12,2020-12-12,landsat-8,192,125,,reference mostly cloudy,True
+landsat-8_190_2020-12-14,2020-12-14,landsat-8,190,6631,0.0,reference mostly cloudy,True
+landsat-8_191_2020-12-21,2020-12-21,landsat-8,191,3342,,reference mostly cloudy,True
+landsat-8_192_2020-12-28,2020-12-28,landsat-8,192,0,,reference mostly cloudy,False
+landsat-8_191_2021-01-06,2021-01-06,landsat-8,191,195720,0.04939773695096727,kept,True
+landsat-8_192_2021-01-13,2021-01-13,landsat-8,192,348,,reference mostly cloudy,True
+landsat-8_190_2021-01-15,2021-01-15,landsat-8,190,86554,0.0,no LGA at least half clear,True
+landsat-8_191_2021-01-22,2021-01-22,landsat-8,191,145994,0.0,kept,True
+landsat-8_192_2021-01-29,2021-01-29,landsat-8,192,0,,reference mostly cloudy,False
+landsat-8_190_2021-01-31,2021-01-31,landsat-8,190,1369,0.0,reference mostly cloudy,True
+landsat-8_191_2021-02-07,2021-02-07,landsat-8,191,172782,0.0,no LGA at least half clear,True
+landsat-8_192_2021-02-14,2021-02-14,landsat-8,192,0,,reference mostly cloudy,False
+landsat-8_190_2021-02-16,2021-02-16,landsat-8,190,0,,reference mostly cloudy,False
+landsat-8_191_2021-02-23,2021-02-23,landsat-8,191,20904,0.0,no LGA at least half clear,True
+landsat-8_192_2021-03-02,2021-03-02,landsat-8,192,526,,reference mostly cloudy,True
+landsat-8_190_2021-03-04,2021-03-04,landsat-8,190,9128,0.0,no LGA at least half clear,True
+landsat-8_190_2021-12-01,2021-12-01,landsat-8,190,3111,0.0,reference mostly cloudy,True
+landsat-9_192_2021-12-07,2021-12-07,landsat-9,192,0,,reference mostly cloudy,False
+landsat-8_191_2021-12-08,2021-12-08,landsat-8,191,366841,0.36929032258064515,cold anomaly (cloud or fog),True
+landsat-9_190_2021-12-09,2021-12-09,landsat-9,190,16021,0.0,no LGA at least half clear,True
+landsat-8_192_2021-12-15,2021-12-15,landsat-8,192,0,,reference mostly cloudy,False
+landsat-9_191_2021-12-16,2021-12-16,landsat-9,191,16124,0.16031886625332153,cold anomaly (cloud or fog),True
+landsat-8_190_2021-12-17,2021-12-17,landsat-8,190,77641,0.0,no LGA at least half clear,True
+landsat-9_192_2021-12-23,2021-12-23,landsat-9,192,541,,reference mostly cloudy,True
+landsat-8_191_2021-12-24,2021-12-24,landsat-8,191,252982,0.0,no LGA at least half clear,True
+landsat-9_190_2021-12-25,2021-12-25,landsat-9,190,510621,0.0,no LGA at least half clear,True
+landsat-9_191_2022-01-01,2022-01-01,landsat-9,191,2901,0.0,reference mostly cloudy,True
+landsat-8_190_2022-01-02,2022-01-02,landsat-8,190,528905,0.0563165905631659,cold anomaly (cloud or fog),True
+landsat-9_192_2022-01-08,2022-01-08,landsat-9,192,0,,reference mostly cloudy,False
+landsat-8_191_2022-01-09,2022-01-09,landsat-8,191,733482,0.0,kept,True
+landsat-9_190_2022-01-10,2022-01-10,landsat-9,190,157366,0.0,no LGA at least half clear,True
+landsat-8_192_2022-01-16,2022-01-16,landsat-8,192,1078,,reference mostly cloudy,True
+landsat-9_191_2022-01-17,2022-01-17,landsat-9,191,,,read error,False
+landsat-9_192_2022-01-24,2022-01-24,landsat-9,192,1859,,reference mostly cloudy,True
+landsat-8_191_2022-01-25,2022-01-25,landsat-8,191,1126994,0.0,kept,True
+landsat-9_190_2022-01-26,2022-01-26,landsat-9,190,547326,0.0,no LGA at least half clear,True
+landsat-8_192_2022-02-01,2022-02-01,landsat-8,192,2839,,reference mostly cloudy,True
+landsat-9_191_2022-02-02,2022-02-02,landsat-9,191,992094,0.0,kept,True
+landsat-8_190_2022-02-03,2022-02-03,landsat-8,190,392784,0.0,no LGA at least half clear,True
+landsat-9_192_2022-02-09,2022-02-09,landsat-9,192,448,,reference mostly cloudy,True
+landsat-8_191_2022-02-10,2022-02-10,landsat-8,191,202552,0.0003059039461609055,kept,True
+landsat-9_190_2022-02-11,2022-02-11,landsat-9,190,27246,0.0,no LGA at least half clear,True
+landsat-8_192_2022-02-17,2022-02-17,landsat-8,192,3313,,reference mostly cloudy,True
+landsat-9_191_2022-02-18,2022-02-18,landsat-9,191,23207,0.0,no LGA at least half clear,True
+landsat-8_190_2022-02-19,2022-02-19,landsat-8,190,4542,,reference mostly cloudy,True
+landsat-9_192_2022-02-25,2022-02-25,landsat-9,192,100,,reference mostly cloudy,True
+landsat-9_190_2022-02-27,2022-02-27,landsat-9,190,645,,reference mostly cloudy,True
+landsat-8_192_2022-03-05,2022-03-05,landsat-8,192,337,,reference mostly cloudy,True
+landsat-8_190_2022-03-07,2022-03-07,landsat-8,190,44112,0.0,no LGA at least half clear,True
+landsat-8_192_2022-03-21,2022-03-21,landsat-8,192,,,read error,False
+landsat-8_192_2022-12-02,2022-12-02,landsat-8,192,0,,reference mostly cloudy,False
+landsat-9_191_2022-12-03,2022-12-03,landsat-9,191,314191,0.29508196721311475,cold anomaly (cloud or fog),True
+landsat-8_190_2022-12-04,2022-12-04,landsat-8,190,13351,0.0,no LGA at least half clear,True
+landsat-9_192_2022-12-10,2022-12-10,landsat-9,192,0,,reference mostly cloudy,False
+landsat-8_191_2022-12-11,2022-12-11,landsat-8,191,399578,0.0,kept,True
+landsat-9_190_2022-12-12,2022-12-12,landsat-9,190,24094,0.0,no LGA at least half clear,True
+landsat-8_192_2022-12-18,2022-12-18,landsat-8,192,0,,reference mostly cloudy,False
+landsat-9_191_2022-12-19,2022-12-19,landsat-9,191,1417211,3.279548734094189e-05,kept,True
+landsat-8_190_2022-12-20,2022-12-20,landsat-8,190,546480,0.0,no LGA at least half clear,True
+landsat-9_192_2022-12-26,2022-12-26,landsat-9,192,5869,,reference mostly cloudy,True
+landsat-8_191_2022-12-27,2022-12-27,landsat-8,191,1364547,0.0,kept,True
+landsat-9_190_2022-12-28,2022-12-28,landsat-9,190,581390,0.0,no LGA at least half clear,True
+landsat-8_192_2023-01-03,2023-01-03,landsat-8,192,328,,reference mostly cloudy,True
+landsat-8_190_2023-01-05,2023-01-05,landsat-8,190,223833,0.0,no LGA at least half clear,True
+landsat-9_192_2023-01-11,2023-01-11,landsat-9,192,74,,reference mostly cloudy,True
+landsat-8_191_2023-01-12,2023-01-12,landsat-8,191,316808,0.0,kept,True
+landsat-9_190_2023-01-13,2023-01-13,landsat-9,190,258743,0.0,no LGA at least half clear,True
+landsat-8_192_2023-01-19,2023-01-19,landsat-8,192,0,,reference mostly cloudy,False
+landsat-9_191_2023-01-20,2023-01-20,landsat-9,191,88,,reference mostly cloudy,True
+landsat-8_190_2023-01-21,2023-01-21,landsat-8,190,7677,0.0,no LGA at least half clear,True
+landsat-9_192_2023-01-27,2023-01-27,landsat-9,192,1840,,reference mostly cloudy,True
+landsat-8_191_2023-01-28,2023-01-28,landsat-8,191,0,,reference mostly cloudy,False
+landsat-9_190_2023-01-29,2023-01-29,landsat-9,190,18411,0.0,no LGA at least half clear,True
+landsat-8_192_2023-02-04,2023-02-04,landsat-8,192,0,,reference mostly cloudy,False
+landsat-9_191_2023-02-05,2023-02-05,landsat-9,191,24556,0.0,no LGA at least half clear,True
+landsat-8_190_2023-02-06,2023-02-06,landsat-8,190,110458,0.04294478527607362,no LGA at least half clear,True
+landsat-9_192_2023-02-12,2023-02-12,landsat-9,192,0,,reference mostly cloudy,False
+landsat-8_191_2023-02-13,2023-02-13,landsat-8,191,178963,0.0,no LGA at least half clear,True
+landsat-9_190_2023-02-14,2023-02-14,landsat-9,190,65808,0.0,no LGA at least half clear,True
+landsat-8_192_2023-02-20,2023-02-20,landsat-8,192,0,,reference mostly cloudy,False
+landsat-9_191_2023-02-21,2023-02-21,landsat-9,191,142127,0.0,no LGA at least half clear,True
+landsat-8_190_2023-02-22,2023-02-22,landsat-8,190,2316,0.0,reference mostly cloudy,True
+landsat-8_192_2023-03-08,2023-03-08,landsat-8,192,0,,reference mostly cloudy,False
+landsat-8_190_2023-03-10,2023-03-10,landsat-8,190,77115,0.0,no LGA at least half clear,True
+landsat-8_191_2023-03-17,2023-03-17,landsat-8,191,87924,0.0,no LGA at least half clear,True
+landsat-8_190_2023-03-26,2023-03-26,landsat-8,190,0,,reference mostly cloudy,False
+landsat-8_192_2023-12-05,2023-12-05,landsat-8,192,743,,reference mostly cloudy,True
+landsat-9_191_2023-12-06,2023-12-06,landsat-9,191,39294,0.0,no LGA at least half clear,True
+landsat-8_190_2023-12-07,2023-12-07,landsat-8,190,17543,0.0,no LGA at least half clear,True
+landsat-9_192_2023-12-13,2023-12-13,landsat-9,192,3007,,reference mostly cloudy,True
+landsat-8_191_2023-12-14,2023-12-14,landsat-8,191,1365598,0.0,kept,True
+landsat-9_190_2023-12-15,2023-12-15,landsat-9,190,586500,0.0,no LGA at least half clear,True
+landsat-8_192_2023-12-21,2023-12-21,landsat-8,192,0,,reference mostly cloudy,False
+landsat-9_191_2023-12-22,2023-12-22,landsat-9,191,759849,0.0,kept,True
+landsat-8_190_2023-12-23,2023-12-23,landsat-8,190,589021,0.0,no LGA at least half clear,True
+landsat-9_192_2023-12-29,2023-12-29,landsat-9,192,125,,reference mostly cloudy,True
+landsat-8_191_2023-12-30,2023-12-30,landsat-8,191,192403,0.0,no LGA at least half clear,True
+landsat-9_190_2023-12-31,2023-12-31,landsat-9,190,83028,0.0,no LGA at least half clear,True
+landsat-8_192_2024-01-06,2024-01-06,landsat-8,192,287,,reference mostly cloudy,True
+landsat-9_191_2024-01-07,2024-01-07,landsat-9,191,152590,0.0,kept,True
+landsat-8_190_2024-01-08,2024-01-08,landsat-8,190,7530,0.0,no LGA at least half clear,True
+landsat-9_192_2024-01-14,2024-01-14,landsat-9,192,252,,reference mostly cloudy,True
+landsat-8_191_2024-01-15,2024-01-15,landsat-8,191,586359,0.10854828770138217,cold anomaly (cloud or fog),True
+landsat-9_190_2024-01-16,2024-01-16,landsat-9,190,358320,0.0,no LGA at least half clear,True
+landsat-8_192_2024-01-22,2024-01-22,landsat-8,192,935,,reference mostly cloudy,True
+landsat-9_191_2024-01-23,2024-01-23,landsat-9,191,189754,0.0,no LGA at least half clear,True
+landsat-8_190_2024-01-24,2024-01-24,landsat-8,190,1403,,reference mostly cloudy,True
+landsat-9_192_2024-01-30,2024-01-30,landsat-9,192,0,,reference mostly cloudy,False
+landsat-8_191_2024-01-31,2024-01-31,landsat-8,191,16981,0.0,no LGA at least half clear,True
+landsat-9_190_2024-02-01,2024-02-01,landsat-9,190,440886,0.13504823151125403,cold anomaly (cloud or fog),True
+landsat-8_192_2024-02-07,2024-02-07,landsat-8,192,0,,reference mostly cloudy,False
+landsat-9_191_2024-02-08,2024-02-08,landsat-9,191,1028031,0.0,kept,True
+landsat-8_190_2024-02-09,2024-02-09,landsat-8,190,376637,0.0,no LGA at least half clear,True
+landsat-9_192_2024-02-15,2024-02-15,landsat-9,192,0,,reference mostly cloudy,False
+landsat-9_190_2024-02-17,2024-02-17,landsat-9,190,11929,0.0,no LGA at least half clear,True
+landsat-9_191_2024-02-24,2024-02-24,landsat-9,191,36035,,cold anomaly (cloud or fog),True
+landsat-9_192_2024-03-02,2024-03-02,landsat-9,192,0,,reference mostly cloudy,False
+landsat-8_192_2024-03-10,2024-03-10,landsat-8,192,0,,reference mostly cloudy,False
+landsat-9_191_2024-03-11,2024-03-11,landsat-9,191,999,0.0,reference mostly cloudy,True
+landsat-9_192_2024-03-18,2024-03-18,landsat-9,192,0,,reference mostly cloudy,False
+landsat-8_192_2024-03-26,2024-03-26,landsat-8,192,2920,,reference mostly cloudy,True
+landsat-9_191_2024-03-27,2024-03-27,landsat-9,191,110961,0.0,no LGA at least half clear,True
+landsat-9_190_2024-12-01,2024-12-01,landsat-9,190,616137,0.0,no LGA at least half clear,True
+landsat-8_192_2024-12-07,2024-12-07,landsat-8,192,0,,reference mostly cloudy,False
+landsat-9_191_2024-12-08,2024-12-08,landsat-9,191,1374996,0.0,kept,True
+landsat-8_190_2024-12-09,2024-12-09,landsat-8,190,100434,0.0,no LGA at least half clear,True
+landsat-9_192_2024-12-15,2024-12-15,landsat-9,192,45,,reference mostly cloudy,True
+landsat-9_190_2024-12-17,2024-12-17,landsat-9,190,141650,0.0,no LGA at least half clear,True
+landsat-9_192_2024-12-31,2024-12-31,landsat-9,192,49,,reference mostly cloudy,True
+landsat-8_191_2025-01-01,2025-01-01,landsat-8,191,61388,0.0,no LGA at least half clear,True
+landsat-9_190_2025-01-02,2025-01-02,landsat-9,190,21909,0.0,no LGA at least half clear,True
+landsat-8_192_2025-01-08,2025-01-08,landsat-8,192,33,,reference mostly cloudy,True
+landsat-9_191_2025-01-09,2025-01-09,landsat-9,191,350463,0.00015576323987538941,no LGA at least half clear,True
+landsat-8_190_2025-01-10,2025-01-10,landsat-8,190,543919,0.0,no LGA at least half clear,True
+landsat-9_192_2025-01-16,2025-01-16,landsat-9,192,0,,reference mostly cloudy,False
+landsat-8_191_2025-01-17,2025-01-17,landsat-8,191,158620,0.02491408934707904,no LGA at least half clear,True
+landsat-8_192_2025-01-24,2025-01-24,landsat-8,192,1343,,reference mostly cloudy,True
+landsat-9_191_2025-01-25,2025-01-25,landsat-9,191,24492,0.0,no LGA at least half clear,True
+landsat-8_190_2025-01-26,2025-01-26,landsat-8,190,36966,0.0,no LGA at least half clear,True
+landsat-9_192_2025-02-01,2025-02-01,landsat-9,192,0,,reference mostly cloudy,False
+landsat-8_191_2025-02-02,2025-02-02,landsat-8,191,211047,0.2309836718438869,cold anomaly (cloud or fog),True
+landsat-9_190_2025-02-03,2025-02-03,landsat-9,190,32217,0.0,no LGA at least half clear,True
+landsat-8_192_2025-02-09,2025-02-09,landsat-8,192,0,,reference mostly cloudy,False
+landsat-9_191_2025-02-10,2025-02-10,landsat-9,191,691,0.0,reference mostly cloudy,True
+landsat-8_190_2025-02-11,2025-02-11,landsat-8,190,33751,0.0,no LGA at least half clear,True
+landsat-9_192_2025-02-17,2025-02-17,landsat-9,192,0,,reference mostly cloudy,False
+landsat-9_190_2025-02-19,2025-02-19,landsat-9,190,904,,reference mostly cloudy,True
+landsat-8_192_2025-02-25,2025-02-25,landsat-8,192,1749,,reference mostly cloudy,True
+landsat-9_192_2025-03-05,2025-03-05,landsat-9,192,0,,reference mostly cloudy,False
+landsat-8_191_2025-03-06,2025-03-06,landsat-8,191,0,,reference mostly cloudy,False
+landsat-9_190_2025-03-07,2025-03-07,landsat-9,190,1526,,reference mostly cloudy,True
+landsat-9_191_2025-03-14,2025-03-14,landsat-9,191,87562,0.0015620932048945586,no LGA at least half clear,True
+landsat-8_192_2025-03-29,2025-03-29,landsat-8,192,751,,reference mostly cloudy,True
