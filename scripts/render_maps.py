@@ -85,15 +85,16 @@ class Base:
         self.extent = (self.t.c, self.t.c + self.t.a * self.shape[1], self.t.f + self.t.e * self.shape[0], self.t.f)
 
     # --- frame ---
-    def figure(self, title, subtitle, panels=1, height=None, foot=0.86):
+    def figure(self, title, subtitle, panels=1, height=None, foot=0.86, notitle=False):
         w = 11.0
         aspect = (self.view[3] - self.view[2]) / (self.view[1] - self.view[0])
         mh = w * 0.92 * aspect
-        top, gap = 0.95, 0.38
+        top, gap = (0.15 if notitle else 0.95), 0.38
         h = height or (top + panels * mh + (panels - 1) * gap + 0.28 + foot)
         fig = plt.figure(figsize=(w, h), dpi=150)
-        fig.text(0.04, 1 - 0.28 / h, title, fontsize=14, fontweight="bold", color=INK, va="top")
-        fig.text(0.04, 1 - 0.60 / h, subtitle, fontsize=9.5, color=INK2, va="top")
+        if not notitle:   # a page caption can carry the title, so a figure may be drawn without it
+            fig.text(0.04, 1 - 0.28 / h, title, fontsize=14, fontweight="bold", color=INK, va="top")
+            fig.text(0.04, 1 - 0.60 / h, subtitle, fontsize=9.5, color=INK2, va="top")
         axes = []
         for i in range(panels):
             bottom = 1 - (top + (i + 1) * mh + i * gap) / h
@@ -135,15 +136,17 @@ class Base:
         im = ax.imshow(a, extent=self.extent, cmap=cmap, norm=norm, interpolation="nearest", zorder=3)
         return im
 
-    def scalebar(self, ax, km=20, fs=7):
+    def scalebar(self, ax, km=20, fs=7, compact=False):
         x0, x1, y0, y1 = self.view
         H = y1 - y0
         bx, by = x1 - (x1 - x0) * 0.045 - km * 1000, y1 - H * 0.12
         for i in range(2):
             ax.add_patch(Rectangle((bx + i * km * 500, by), km * 500, H * 0.018, facecolor=INK if i == 0 else "white", edgecolor=INK, lw=0.6, zorder=6))
         for i, v in enumerate((0, km // 2, km)):
-            ax.text(bx + i * km * 500, by + H * 0.035, str(v), ha="center", fontsize=fs, color=INK, zorder=6)
-        ax.text(bx + km * 1000 + 1500, by, "km", fontsize=fs, color=INK, va="bottom", zorder=6)
+            if compact and i < 2:   # phone maps: only the end value, so the labels do not collide
+                continue
+            ax.text(bx + i * km * 500, by + H * (0.07 if compact else 0.035), str(v), ha="center", fontsize=fs, color=INK, zorder=6)
+        ax.text(bx + km * 1000 + 1500, by + (H * 0.07 if compact else 0), "km", fontsize=fs, color=INK, va="bottom", zorder=6)
         nx, ny = bx - 6500, y1 - H * 0.20
         ax.add_patch(MplPolygon([[nx, ny + H * 0.09], [nx - 1500, ny], [nx, ny + H * 0.025], [nx + 1500, ny]], closed=True, facecolor=INK, zorder=6))
         ax.text(nx, ny + H * 0.10, "N", ha="center", va="bottom", fontsize=8, fontweight="bold", zorder=6)
@@ -160,14 +163,14 @@ class Base:
     def credit(self, fig, h, source):
         fig.text(0.04, 0.06 / h, f"Source: {source}  ·  Projection: {CRS_NOTE}", fontsize=7, color=INK2, va="bottom")
 
-    def colorbar(self, fig, im, h, label, ticks=None, extend="neither", y=0.42, nodata=True):
+    def colorbar(self, fig, im, h, label, ticks=None, extend="neither", y=0.42, nodata=True, only_water=False):
         cax = fig.add_axes([0.04, y / h, 0.42, 0.13 / h])
         cb = fig.colorbar(im, cax=cax, orientation="horizontal", extend=extend, ticks=ticks)
         cb.outline.set_linewidth(0.4); cb.ax.tick_params(labelsize=7, length=2)
         cb.ax.xaxis.set_label_position("top")
         cb.set_label(label, fontsize=8, color=INK, labelpad=3)
         if nodata:
-            for k, (col, txt) in enumerate(((WATER, "Water (not analysed)"), (NODATA, "No clear observation"))):
+            for k, (col, txt) in enumerate(((WATER, "Water (not analysed)"), (NODATA, "No clear observation"))[: 1 if only_water else 2]):
                 yy = y + 0.13 - k * 0.2
                 fig.patches.append(Rectangle((0.52, yy / h), 0.018, 0.13 / h, transform=fig.transFigure, facecolor=col, edgecolor="#9a9a9a", lw=0.4))
                 fig.text(0.543, (yy + 0.065) / h, txt, fontsize=7, color=INK2, va="center")
@@ -222,20 +225,42 @@ def map_reference(B):
     return save(fig, "m01_reference")
 
 
-def map_landcover(B):
+def map_landcover(B, phone=False):
+    """Land cover over all land cells (no gaps). Percentages are shares of all land cells."""
     wc, _ = load("worldcover_2021.tif")
-    fig, (ax,), h = B.figure("Land cover, 2021", f"ESA WorldCover 2021 v200, 10 m, shown at 60 m (majority). Overall accuracy {WC_ACC_AFRICA}% for Africa (independent validation)")
+    land = B.land
     codes = [c for c, _, _ in WORLDCOVER]
     idx = np.full(wc.shape, np.nan)
     for i, c in enumerate(codes):
         idx[wc == c] = i
-    idx = np.where(B.inside > 0, idx, np.nan)
-    ax.imshow(idx, extent=B.extent, cmap=mcolors.ListedColormap([c for _, _, c in WORLDCOVER]), vmin=-0.5, vmax=len(codes) - 0.5, interpolation="nearest", zorder=3)
-    B.boundaries(ax, color="#222222"); B.scalebar(ax)
+    idx = np.where(land, idx, np.nan)
     tot = np.isfinite(idx).sum()
-    handles = [Patch(facecolor=col, edgecolor="#9a9a9a", lw=0.3, label=f"{lab} {pct(100 * (wc[B.inside > 0] == c).sum() / tot)}") for c, lab, col in WORLDCOVER if (wc[B.inside > 0] == c).any()]
+    handles = [Patch(facecolor=col, edgecolor="#9a9a9a", lw=0.3, label=f"{lab} {pct(100 * (wc[land] == c).sum() / tot)}")
+               for c, lab, col in WORLDCOVER if (wc[land] == c).any()]
+    cmap = mcolors.ListedColormap([c for _, _, c in WORLDCOVER])
+    if phone:
+        aspect = (B.view[3] - B.view[2]) / (B.view[1] - B.view[0])
+        w = PHONE_W
+        map_h = 0.96 * w * aspect
+        rows = -(-len(handles) // 2)
+        legend_h = 0.30 * rows + 0.35
+        h = 0.10 + map_h + legend_h + 0.45
+        fig = plt.figure(figsize=(w, h), dpi=150)
+        ax = fig.add_axes([0.15, (legend_h + 0.45) / h, 0.82, map_h / h])
+        B.frame(ax); ax.tick_params(labelsize=10)
+        thin_ticks(ax)
+        ax.imshow(idx, extent=B.extent, cmap=cmap, vmin=-0.5, vmax=len(codes) - 0.5, interpolation="nearest", zorder=3)
+        B.boundaries(ax, color="#222222"); B.scalebar(ax, fs=9, compact=True)
+        short = [Patch(facecolor=hd.get_facecolor(), edgecolor="#9a9a9a", lw=0.3, label=hd.get_label().replace("Bare / sparse vegetation", "Bare / sparse")) for hd in handles]
+        fig.legend(handles=short, loc="lower left", bbox_to_anchor=(0.04, 0.44 / h), ncol=2, fontsize=10, frameon=False, handlelength=1.2)
+        import textwrap
+        fig.text(0.04, 0.02 / h, "\n".join(textwrap.wrap("Source: ESA WorldCover 2021 v200 (Zanaga et al., 2022). Shares of all land cells.", 52)), fontsize=9, color=INK2, va="bottom")
+        return save(fig, "m02_landcover_phone")
+    fig, (ax,), h = B.figure("Land cover, 2021", "", notitle=True)
+    ax.imshow(idx, extent=B.extent, cmap=cmap, vmin=-0.5, vmax=len(codes) - 0.5, interpolation="nearest", zorder=3)
+    B.boundaries(ax, color="#222222"); B.scalebar(ax)
     fig.legend(handles=handles, loc="lower left", bbox_to_anchor=(0.035, 0.24 / h), ncol=5, fontsize=7, frameon=False, handlelength=1.2, columnspacing=1.2)
-    B.credit(fig, h, "ESA WorldCover 2021 v200 (Zanaga et al., 2022); share of the state's area in each class")
+    B.credit(fig, h, "ESA WorldCover 2021 v200 (Zanaga et al., 2022); share of all land cells in each class")
     return save(fig, "m02_landcover")
 
 
@@ -243,12 +268,21 @@ def pct(v):
     return "<1%" if 0 < v < 0.5 else f"{v:.0f}%"
 
 
-PHONE_W = 4.6          # inches; a phone shows this at about 360 px, so 10 pt text is about 11 CSS px
-PHONE_LGA_PT = 8
-PHONE_LGA_NAMES = ("Alimosho", "Ikorodu", "Epe", "Badagry", "Ibeju Lekki", "Ojo", "Eti-Osa")   # fewer, to avoid overlaps at phone size
+PHONE_W = 4.2          # inches; shown at about 358 CSS px, so 10 pt text is about 12 CSS px
+PHONE_LGA_PT = 10
 
 
-def phone_single(B, name, arr, cmap, norm, label, ticks, extend, source):
+def thin_ticks(ax):
+    """Every other tick, and none within 4% of the right or top edge, so no label is clipped on a narrow map."""
+    x0, x1 = ax.get_xlim(); y0, y1 = ax.get_ylim()
+    xt = [t for t in ax.get_xticks()[::2] if x0 < t < x1 - 0.06 * (x1 - x0)]
+    yt = [t for t in ax.get_yticks()[::2] if y0 < t < y1 - 0.06 * (y1 - y0)]
+    ax.set_xticks(xt); ax.set_yticks(yt)
+
+PHONE_LGA_NAMES = ("Alimosho", "Ikorodu", "Epe", "Badagry", "Eti-Osa")   # fewer, to avoid overlaps at phone size
+
+
+def phone_single(B, name, arr, cmap, norm, label, ticks, extend, source, only_water=False):
     """Phone version of a one-panel map: no title or subtitle (the caption carries them), larger text.
 
     The desktop version keeps its title and subtitle; this one is shown below 760 px via <picture>."""
@@ -258,30 +292,31 @@ def phone_single(B, name, arr, cmap, norm, label, ticks, extend, source):
     map_h = 0.96 * w * aspect
     h = 0.10 + map_h + 1.85
     fig = plt.figure(figsize=(w, h), dpi=150)
-    ax = fig.add_axes([0.02, 1.85 / h, 0.96, map_h / h])
+    ax = fig.add_axes([0.15, 1.85 / h, 0.82, map_h / h])
     B.frame(ax)
-    ax.tick_params(labelsize=8)
+    ax.tick_params(labelsize=10)
+    thin_ticks(ax)
     im = B.raster(ax, arr, cmap, norm); B.boundaries(ax)
-    B.labels(ax, names=PHONE_LGA_NAMES, size=PHONE_LGA_PT); B.scalebar(ax, fs=7)
+    B.labels(ax, names=PHONE_LGA_NAMES, size=PHONE_LGA_PT); B.scalebar(ax, fs=9, compact=True)
     cax = fig.add_axes([0.04, 1.05 / h, 0.92, 0.22 / h])
     cb = fig.colorbar(im, cax=cax, orientation="horizontal", extend=extend, ticks=ticks)
-    cb.outline.set_linewidth(0.4); cb.ax.tick_params(labelsize=10, length=2)
-    cb.set_label("\n".join(textwrap.wrap(label, 48)), fontsize=10, color=INK, labelpad=3)
+    cb.outline.set_linewidth(0.4); cb.ax.tick_params(labelsize=11, length=2)
+    cb.set_label("\n".join(textwrap.wrap(label, 44)), fontsize=11, color=INK, labelpad=3)
     cb.ax.xaxis.set_label_position("top")
-    for k, (col, txt) in enumerate(((WATER, "Water (not analysed)"), (NODATA, "No clear observation"))):
+    for k, (col, txt) in enumerate(((WATER, "Water (not analysed)"), (NODATA, "No clear observation"))[: 1 if only_water else 2]):
         x = 0.04 + k * 0.48
         fig.patches.append(Rectangle((x, 0.55 / h), 0.03, 0.16 / h, transform=fig.transFigure, facecolor=col, edgecolor="#9a9a9a", lw=0.4))
-        fig.text(x + 0.04, 0.63 / h, txt, fontsize=9, color=INK2, va="center")
-    fig.text(0.04, 0.10 / h, "\n".join(textwrap.wrap(f"Source: {source}. {CRS_NOTE}.", 60)), fontsize=8, color=INK2, va="bottom", linespacing=1.3)
+        fig.text(x + 0.04, 0.63 / h, txt, fontsize=11, color=INK2, va="center")
+    fig.text(0.04, 0.10 / h, "\n".join(textwrap.wrap(f"Source: {source}. {CRS_NOTE}.", 52)), fontsize=9, color=INK2, va="bottom", linespacing=1.3)
     return save(fig, name + "_phone")
 
 
-def single(B, name, title, sub, arr, cmap, norm, label, ticks=None, extend="neither", source=LS):
-    fig, (ax,), h = B.figure(title, sub)
+def single(B, name, title, sub, arr, cmap, norm, label, ticks=None, extend="neither", source=LS, notitle=False):
+    fig, (ax,), h = B.figure(title, sub, notitle=notitle)
     im = B.raster(ax, arr, cmap, norm); B.boundaries(ax); B.labels(ax); B.scalebar(ax)
-    B.colorbar(fig, im, h, label, ticks, extend); B.credit(fig, h, source)
+    B.colorbar(fig, im, h, label, ticks, extend, only_water=notitle); B.credit(fig, h, source)
     path = save(fig, name)
-    phone_single(B, name, arr, cmap, norm, label, ticks, extend, source)
+    phone_single(B, name, arr, cmap, norm, label, ticks, extend, source, only_water=notitle)
     return path
 
 
@@ -519,6 +554,7 @@ def main():
     built = {}
     built["m01_reference"] = map_reference(B)
     built["m02_landcover"] = map_landcover(B)
+    map_landcover(B, phone=True)
     lst, _ = load(f"{LATEST}_lst_median.tif"); suhi, _ = load(f"{LATEST}_suhi_median.tif")
     ndvi, _ = load(f"{LATEST}_ndvi_median.tif"); ndbi, _ = load(f"{LATEST}_ndbi_median.tif")
     lo, hi = np.nanpercentile(lst[B.inside > 0], [2, 98])
@@ -555,7 +591,7 @@ def main():
     dens = pop / 0.0036
     built["m12_population"] = single(B, "m12_population", "Population density, 2020", "WorldPop 2020, 100 m, people per km² (log scale); a modelled estimate, not a census count",
                                      np.where(dens > 0, dens, np.nan), POP, mcolors.LogNorm(100, 100000), "People per km²", [100, 1000, 10000, 100000], "both",
-                                     source="WorldPop 2020 (unconstrained, 100 m)")
+                                     source="WorldPop 2020 (unconstrained, 100 m)", notitle=True)
     nd_a, _ = load(f"{PERIODS[0]}_ndvi_median.tif"); nd_b, _ = load(f"{LATEST}_ndvi_median.tif")
     built["m16_ndvi_change"] = single(B, "m16_ndvi_change", "Change in vegetation index (NDVI), 2000–2012 to 2020–2025",
                                       "Difference of period medians where both periods have at least 3 clear passes; includes the Landsat 7 to Landsat 8/9 band difference",
