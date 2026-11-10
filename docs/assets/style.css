@@ -788,3 +788,62 @@ figcaption { hyphens: manual; -webkit-hyphens: manual; }
     #map-change svg { min-width: 960px; }
     #map-change .lab { font-size: 12px; }
 }
+
+/* paper tables on the study page: fit the column, wrap text inside cells on phones */
+main table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 15px; line-height: 1.4; margin: 14px 0 22px; }
+main table th, main table td { text-align: left; vertical-align: top; padding: 7px 8px; border-bottom: 1px solid #e4e4e0; overflow-wrap: anywhere; }
+main table th { font-weight: 600; color: var(--ink); }
+@media (max-width: 560px) { main table { font-size: 13.5px; } main table th, main table td { padding: 6px 5px; } }
+main table th, main table td { white-space: normal; min-width: 0; }
+
+/* title block byline (the .sig rules above only cover the footer) */
+header.title .sig { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; margin: 18px 0 0; font-size: 15px; color: var(--ink-2); }
+header.title .sig .sig-meta { color: var(--ink-3); }
+/* opaque sticky header so body text does not show through the menu */
+.site-header { background: #fff; }
+
+/* interactive LGA map on the study page */
+.xp-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 14px; }
+.xp-btn { min-height: 44px; padding: 0 14px; font: inherit; font-size: 15px; color: var(--ink); background: #fff; border: 1px solid #cfcfca; border-radius: 8px; cursor: pointer; }
+.xp-btn:hover { background: var(--fill); }
+.xp-btn[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.xp-map svg { width: 100%; height: auto; display: block; }
+.xp-u { stroke: #fff; stroke-width: 1.2; cursor: pointer; }
+.xp-u:hover, .xp-u.on { stroke: #111; stroke-width: 2.4; }
+.xp-u:focus-visible { outline: none; stroke: #1f56b0; stroke-width: 3; }
+.xp-legend { display: flex; align-items: center; gap: 10px; margin: 10px 0 2px; font-size: 14px; color: var(--ink-2); }
+.xp-legend-bar { flex: 0 0 160px; height: 12px; border-radius: 3px; }
+.xp-readout { min-height: 3.2em; margin: 8px 0 12px; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+.xp-readout b { color: var(--ink); }
+.xp-table summary { cursor: pointer; font-size: 15px; padding: 10px 0; min-height: 44px; display: flex; align-items: center; }
+.xp-table table { font-size: 14px; }
+.xp-table table th, .xp-table table td { padding: 6px 6px; }
+@media (max-width: 560px) { .xp-table table { font-size: 12.5px; } .xp-btn { font-size: 14px; padding: 0 10px; } }
+
+/* header offset for in-page links on phones, where the header has two rows */
+@media (max-width: 1080px) { html { scroll-padding-top: 130px; } }
+
+/* explorer table: keep words whole and let the table scroll inside its box on phones */
+.xp-table > div { overflow-x: auto; }
+.xp-table table { table-layout: auto; min-width: 560px; }
+.xp-table table th, .xp-table table td { overflow-wrap: normal; word-break: normal; white-space: normal; }
+.xp-table table th[scope="row"] { white-space: nowrap; }
+
+/* long URLs in the reference list wrap instead of widening the page */
+main p, main li { overflow-wrap: anywhere; }
+/* the explorer table scrolls inside its own box */
+#xp-table { display: block; max-width: 100%; overflow-x: auto; }
+
+/* map: area picker, legend, readout, summary control */
+.xp-pick { margin: 0 0 10px; font-size: 15px; }
+.xp-pick select { min-height: 44px; font: inherit; font-size: 15px; padding: 0 10px; border: 1px solid #cfcfca; border-radius: 8px; background: #fff; max-width: 100%; }
+.xp-sel { fill: none; stroke: #111; stroke-width: 3; pointer-events: none; paint-order: stroke; }
+.xp-unit { margin: 2px 0 6px; font-size: 14px; color: var(--ink-3); }
+.xp-main { font-size: 17px; font-weight: 600; color: var(--ink); }
+.xp-readout { min-height: 4.2em; }
+.xp-table summary { list-style: none; border: 1px solid #cfcfca; border-radius: 8px; padding: 0 14px; display: inline-flex; width: auto; }
+.xp-table summary::-webkit-details-marker { display: none; }
+.xp-table summary::before { content: "+"; margin-right: 8px; font-weight: 600; }
+.xp-table[open] summary::before { content: "−"; }
+/* the phone section menu fades at the right edge so it reads as scrollable */
+@media (max-width: 1080px) { .toc-phone { -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent); mask-image: linear-gradient(90deg, #000 88%, transparent); padding-right: 36px; } }
