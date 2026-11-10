@@ -1,0 +1,227 @@
+{
+ "note": "Built-up gap in degrees C, population-weighted, WorldCover built-up cells only. Buffer removes within-group cells within that distance of vegetation (0 removes vegetated cells only). Same heat median (kept passes) throughout.",
+ "grid": {
+  "ndvi0.3|buffer0|unconstrained": {
+   "bu_gap_c": 0.79,
+   "within_pop": 4293403,
+   "beyond_pop": 6456896
+  },
+  "ndvi0.3|buffer60|unconstrained": {
+   "bu_gap_c": 0.583,
+   "within_pop": 3478531,
+   "beyond_pop": 6456896
+  },
+  "ndvi0.3|buffer120|unconstrained": {
+   "bu_gap_c": 0.437,
+   "within_pop": 2679422,
+   "beyond_pop": 6456896
+  },
+  "ndvi0.3|buffer0|constrained": {
+   "bu_gap_c": 0.834,
+   "within_pop": 4832272,
+   "beyond_pop": 6639990
+  },
+  "ndvi0.3|buffer60|constrained": {
+   "bu_gap_c": 0.61,
+   "within_pop": 3889739,
+   "beyond_pop": 6639990
+  },
+  "ndvi0.3|buffer120|constrained": {
+   "bu_gap_c": 0.452,
+   "within_pop": 2958353,
+   "beyond_pop": 6639990
+  },
+  "ndvi0.4|buffer0|unconstrained": {
+   "bu_gap_c": 1.237,
+   "within_pop": 2616714,
+   "beyond_pop": 8900999
+  },
+  "ndvi0.4|buffer60|unconstrained": {
+   "bu_gap_c": 0.993,
+   "within_pop": 2213852,
+   "beyond_pop": 8900999
+  },
+  "ndvi0.4|buffer120|unconstrained": {
+   "bu_gap_c": 0.792,
+   "within_pop": 1730564,
+   "beyond_pop": 8900999
+  },
+  "ndvi0.4|buffer0|constrained": {
+   "bu_gap_c": 1.319,
+   "within_pop": 3297902,
+   "beyond_pop": 9139912
+  },
+  "ndvi0.4|buffer60|constrained": {
+   "bu_gap_c": 1.056,
+   "within_pop": 2766854,
+   "beyond_pop": 9139912
+  },
+  "ndvi0.4|buffer120|constrained": {
+   "bu_gap_c": 0.843,
+   "within_pop": 2137438,
+   "beyond_pop": 9139912
+  },
+  "ndvi0.5|buffer0|unconstrained": {
+   "bu_gap_c": 1.555,
+   "within_pop": 1365931,
+   "beyond_pop": 10341880
+  },
+  "ndvi0.5|buffer60|unconstrained": {
+   "bu_gap_c": 1.329,
+   "within_pop": 1229841,
+   "beyond_pop": 10341880
+  },
+  "ndvi0.5|buffer120|unconstrained": {
+   "bu_gap_c": 1.089,
+   "within_pop": 1003897,
+   "beyond_pop": 10341880
+  },
+  "ndvi0.5|buffer0|constrained": {
+   "bu_gap_c": 1.656,
+   "within_pop": 1957363,
+   "beyond_pop": 10748756
+  },
+  "ndvi0.5|buffer60|constrained": {
+   "bu_gap_c": 1.419,
+   "within_pop": 1749929,
+   "beyond_pop": 10748756
+  },
+  "ndvi0.5|buffer120|constrained": {
+   "bu_gap_c": 1.166,
+   "within_pop": 1408918,
+   "beyond_pop": 10748756
+  }
+ },
+ "lga": {
+  "1": {
+   "bu_gap_c": 1.055,
+   "within_pop": 22146,
+   "beyond_pop": 674263
+  },
+  "2": {
+   "bu_gap_c": 0.203,
+   "within_pop": 72042,
+   "beyond_pop": 935535
+  },
+  "3": {
+   "bu_gap_c": 0.927,
+   "within_pop": 369493,
+   "beyond_pop": 1454041
+  },
+  "4": {
+   "bu_gap_c": 0.78,
+   "within_pop": 151588,
+   "beyond_pop": 174560
+  },
+  "5": {
+   "bu_gap_c": 0.851,
+   "within_pop": 35370,
+   "beyond_pop": 269764
+  },
+  "6": {
+   "bu_gap_c": 0.989,
+   "within_pop": 79690,
+   "beyond_pop": 5603
+  },
+  "7": {
+   "bu_gap_c": 1.405,
+   "within_pop": 28636,
+   "beyond_pop": 16841
+  },
+  "8": {
+   "bu_gap_c": 0.274,
+   "within_pop": 110395,
+   "beyond_pop": 230029
+  },
+  "9": {
+   "bu_gap_c": 0.423,
+   "within_pop": 26858,
+   "beyond_pop": 7868
+  },
+  "10": {
+   "bu_gap_c": 0.686,
+   "within_pop": 71921,
+   "beyond_pop": 569135
+  },
+  "11": {
+   "bu_gap_c": 1.016,
+   "within_pop": 75344,
+   "beyond_pop": 409742
+  },
+  "12": {
+   "bu_gap_c": 0.87,
+   "within_pop": 315015,
+   "beyond_pop": 220057
+  },
+  "13": {
+   "bu_gap_c": 1.315,
+   "within_pop": 291047,
+   "beyond_pop": 521773
+  },
+  "14": {
+   "bu_gap_c": 0.707,
+   "within_pop": 60171,
+   "beyond_pop": 178733
+  },
+  "15": {
+   "bu_gap_c": 1.224,
+   "within_pop": 64043,
+   "beyond_pop": 409788
+  },
+  "16": {
+   "bu_gap_c": 1.165,
+   "within_pop": 38378,
+   "beyond_pop": 894387
+  },
+  "17": {
+   "bu_gap_c": 1.362,
+   "within_pop": 398523,
+   "beyond_pop": 143251
+  },
+  "18": {
+   "bu_gap_c": 0.766,
+   "within_pop": 263254,
+   "beyond_pop": 556857
+  },
+  "19": {
+   "bu_gap_c": 1.221,
+   "within_pop": 90894,
+   "beyond_pop": 512215
+  },
+  "20": {
+   "bu_gap_c": 1.897,
+   "within_pop": 51909,
+   "beyond_pop": 716556
+  }
+ },
+ "low_ground": {
+  "low_ground_below_10m": {
+   "bu_gap_c": 1.6,
+   "within_pop": 1419420,
+   "beyond_pop": 3081918
+  },
+  "higher_ground": {
+   "bu_gap_c": 0.844,
+   "within_pop": 1197294,
+   "beyond_pop": 5819081
+  }
+ },
+ "water": {
+  "water_within_500m": {
+   "bu_gap_c": 1.006,
+   "within_pop": 276746,
+   "beyond_pop": 365398
+  },
+  "water_beyond_500m": {
+   "bu_gap_c": 1.232,
+   "within_pop": 2339968,
+   "beyond_pop": 8535601
+  }
+ },
+ "lga_summary": {
+  "n": 14,
+  "min": 0.203,
+  "max": 1.897,
+  "weighted_mean": 0.95
+ }
+}
