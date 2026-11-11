@@ -26,7 +26,6 @@ def gap_for(pop, suhi, count, base, d, buf):
     """Built-up gap with within-group cells at distance <= buf removed (buf = 0 removes vegetated cells only)."""
     inside, wc = base["inside"], base["wc"]
     beyond = inside & (np.nan_to_num(d, nan=-1) > um.ACCESS_M)
-    within = inside & ~beyond & (np.nan_to_num(d, nan=-1) > buf)
     b2 = {"inside": inside & ~((~beyond) & (np.nan_to_num(d, nan=-1) <= buf)), "beyond": beyond, "wc": wc}
     r = um.headline(pop, suhi, count, b2)
     return r["bu_gap_c"], r["bu_within"]["population"], r["bu_beyond"]["population"]
