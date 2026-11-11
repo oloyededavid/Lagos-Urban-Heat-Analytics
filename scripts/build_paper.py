@@ -114,14 +114,19 @@ vals.update({
 GS = json.loads((DATA / "gap_specifications.json").read_text())
 SN = json.loads((DATA / "sensitivity_ndvi.json").read_text())["cutoffs"]
 grid_gaps = [v["bu_gap_c"] for v in GS["grid"].values()]
-assert all(g > 0 for g in grid_gaps), "built-up gap changes sign in some specification"
+if not all(g > 0 for g in grid_gaps):
+    raise SystemExit("built-up gap changes sign in some specification")
 G = GS["grid"]
 _sp = json.loads((DATA / "sensitivity_passes.json").read_text())
 for _k in ("leave_one_pass_out", "leave_one_year_out", "leave_one_lga_out"):
-    assert all(r["bu_gap_c"] > 0 for r in _sp[_k]["runs"].values()), f"built-up gap not positive in {_k}"
-assert _sp["screening_all_saved_passes"]["bu_gap_c"] > 0
-assert all(v["bu_gap_c"] > 0 for v in GS["lga"].values()), "an LGA gap is not positive"
-assert _sp["baseline_check"]["count_matches"] and _sp["baseline_check"]["max_abs_diff_median_c"] < 0.05, "pass stack does not reproduce the composite"
+    if not all(r["bu_gap_c"] > 0 for r in _sp[_k]["runs"].values()):
+        raise SystemExit(f"built-up gap not positive in {_k}")
+if not _sp["screening_all_saved_passes"]["bu_gap_c"] > 0:
+    raise SystemExit("built-up gap not positive with screening off")
+if not all(v["bu_gap_c"] > 0 for v in GS["lga"].values()):
+    raise SystemExit("an LGA gap is not positive")
+if not (_sp["baseline_check"]["count_matches"] and _sp["baseline_check"]["max_abs_diff_median_c"] < 0.05):
+    raise SystemExit("pass stack does not reproduce the composite")
 vals.update({
     "pop_con_bu_ex": f1(G["ndvi0.4|buffer0|constrained"]["bu_gap_c"]),
     "bu_band_second": f1(E["stratified"]["built_up"]["distance_bands"]["60-120 m"]["pop_weighted_mean_suhi_c"]),
