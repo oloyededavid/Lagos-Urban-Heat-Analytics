@@ -7,8 +7,8 @@ used by render_maps.py.
 Definitions (stated on the page):
   - Vegetated cell: 2020-2025 dry-season median NDVI at or above VEG_NDVI (0.4 by default; 0.3 and 0.5 are
     reported as sensitivity checks).
-  - Access: a resident has green-space access if a vegetated cell lies within ACCESS_M metres (300 m, about a
-    five-minute walk). This is a proxy, not a measured walking network.
+  - Access: a resident has green-space access if a vegetated cell lies within ACCESS_M metres (300 m, about 3.6
+    minutes on foot at 5 km/h). This is a proxy, not a measured walking network.
   - Low ground: cells below LOW_M metres of elevation from the Copernicus DEM GLO-30. This is an elevation
     proxy for flood-prone ground. It is not a flood map and does not use drainage.
   - Population: WorldPop 2020, a modelled estimate, not a census count.
