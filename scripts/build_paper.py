@@ -177,7 +177,8 @@ kept_n = SQ["kept_passes"]; saved_n = SQ["saved_passes"]
 vals.update({
     "n_passes": str(len(passes_csv)), "n_kept": str(kept_n), "n_saved": str(saved_n),
     "v_cloud": str(verdicts["reference mostly cloudy"]), "v_lga": str(verdicts["no LGA at least half clear"]),
-    "v_cold": str(verdicts["cold anomaly (cloud or fog)"]), "v_err": str(verdicts["read error"]),
+    "v_cold": str(verdicts["cold anomaly (cloud or fog)"]),
+    "n_p191": str(sum(1 for r in passes_csv if r["wrs_path"] == "191")), "v_err": str(verdicts["read error"]),
     "ref_inside_pct": f"{ref_inside_share:.0f}",
     "pop_con_beyond": pct(SP["constrained"]["beyond_share"]), "pop_con_bu_gap": f1(SP["constrained"]["bu_gap_c"]),
     "pop_con_pooled": f1(SP["constrained"]["pooled_gap_c"]),
