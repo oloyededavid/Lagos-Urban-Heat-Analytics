@@ -143,7 +143,6 @@ vals.update({
 })
 vals.update({"heat_pct": f"{heat_share * 100:.0f}",
              "heat_pop_m": f"{E['population_total'] * E['population_with_heat_value_share'] / 1e6:.1f}",
-                      "hot4_pct": pct(E["hot_threshold_sensitivity"]["4"]) if "4" in E["hot_threshold_sensitivity"] else "",
              "low_absdiff": f"{abs(A['heat_low_minus_other_median_c']):.1f}",
              "walk_min": f"{float(A['access_m']) / 5000 * 60:.1f}",
              "nodata_comp_pct": f"{(np.isfinite(ndvi) & land_m).sum() / land_m.sum() * 100:.0f}",
