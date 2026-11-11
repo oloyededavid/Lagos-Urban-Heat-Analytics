@@ -71,7 +71,7 @@ The four-decade change is computed in `scripts/extract_change_gee.py` (Earth Eng
 `scripts/analyze_change.py`:
 
 - **Unit of measurement:** the Landsat frames of one orbit on one day are joined into one pass. Each LGA's heat island in a pass is its mean land temperature minus the mean of the rural reference in the same pass. The reference is land within 20 km of Lagos State that GHSL shows as essentially unbuilt in 2020.
-- **Quality checks:** a pass needs at least 3,000 clear reference pixels (about 100 km²). It is rejected if more than 5% of Lagos land reads over 3 °C colder than the countryside, which signals cloud or fog the cloud mask missed. An LGA counts in a pass only if half of its land is clear. Every pass considered, with its checks, is in `docs/data/lagos_change_scenes.csv`.
+- **Quality checks:** a pass needs at least 3,000 clear reference pixels (about 24 km² at the 90 m scale used there). It is rejected if more than 5% of Lagos land reads over 3 °C colder than the countryside, which signals cloud or fog the cloud mask missed. An LGA counts in a pass only if half of its land is clear. Every pass considered, with its checks, is in `docs/data/lagos_change_scenes.csv`.
 - **Periods and intervals:** each period value is the median across passes, with a bootstrap 95% interval. An LGA with fewer than 3 clear passes in a period is shown but gets no interval or verdict. The Lagos-wide interval resamples whole passes.
 - **Trend:** a Theil–Sen slope across dry seasons, with a Mann–Kendall test and Benjamini–Hochberg FDR across the 18 LGAs with at least eight clear dry seasons.
 - **Urbanisation test:** OLS across LGAs of heat-island change on GHSL built-up change, with a 95% interval.
