@@ -65,13 +65,15 @@ def main():
     tmp = ROOT / "paper" / "_page_body.md"
     tmp.write_text(body, encoding="utf-8")
     out = ROOT / "docs" / "index.html"
-    subprocess.run(["pandoc", str(tmp), "-f", "markdown-raw_html+raw_html", "-t", "html5", "--shift-heading-level-by=1",
-                    "--template", str(ROOT / "scripts" / "page_template.html"), "-o", str(out),
-                    "--metadata", f"pagetitle={meta.get('title', '')}", "--metadata", f"title={meta.get('title', '')}",
-                    "--metadata", f"author={meta.get('author', '')}", "--metadata", f"date={meta.get('date', '')}",
-                    "--metadata", "description=Urban heat island in Lagos State, 2020–2024: surface heat, population and distance to vegetation."],
-                   check=True)
-    tmp.unlink()
+    try:
+        subprocess.run(["pandoc", str(tmp), "-f", "markdown-raw_html+raw_html", "-t", "html5", "--shift-heading-level-by=1",
+                        "--template", str(ROOT / "scripts" / "page_template.html"), "-o", str(out),
+                        "--metadata", f"pagetitle={meta.get('title', '')}", "--metadata", f"title={meta.get('title', '')}",
+                        "--metadata", f"author={meta.get('author', '')}", "--metadata", f"date={meta.get('date', '')}",
+                        "--metadata", "description=Urban heat island in Lagos State, 2020–2024: surface heat, population and distance to vegetation."],
+                       check=True)
+    finally:
+        tmp.unlink(missing_ok=True)
     html = out.read_text(encoding="utf-8")
     marker = '<h2 id="discussion">'
     assert html.count(marker) == 1, "discussion heading not found"
