@@ -128,8 +128,8 @@ docs/                 website (GitHub Pages)
   index.html          single study page, built from paper/paper.md by scripts/build_page.py
   assets/             stylesheet, explore.js (interactive LGA map), feedback.js (reactions)
   data/               processed GeoJSON, statistical summaries, four-decade change data
-    maps/             heat-island maps for each period (PNG)
-  vendor/             Leaflet 1.9.4 and Chart.js 4.4.1
+    maps/             heat-island maps for each period (PNG; not used by the current page)
+  vendor/             Leaflet 1.9.4 and Chart.js 4.4.1 (not used by the current page)
 scripts/
   extract_data_gee.js     Earth Engine export
   ingest_gee_export.py    validation and installation
