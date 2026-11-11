@@ -44,7 +44,7 @@
     <h1>Surface urban heat island and distance to vegetation in Lagos
 State, Nigeria, 2020–2024</h1>
     <p class="sig"><span>David Oloyede</span><span>November
-2026</span><span class="sig-meta"><span>Version 2.5</span></span></p>
+2026</span><span class="sig-meta"><span>Version 2.6</span></span></p>
 </header>
 
 <h2 id="abstract">Abstract</h2>
@@ -138,8 +138,9 @@ that much. Mean heat is population-weighted. About 10% of land cells
 have no vegetation or heat value, probably because of the cloud, shadow
 and uncertainty masks, and a further 2% have one or two images. The
 figures use only inputs without gaps (population and land cover). We
-report no confidence intervals from resampling cells, because
-neighbouring cells are not independent.</p>
+report no confidence intervals. Neighbouring cells are strongly
+dependent, so an interval from resampling cells would be too narrow, and
+a spatial block bootstrap was not done.</p>
 <h2 id="results">3. Results</h2>
 <h3 id="population-and-land-cover">3.1 Population and land cover</h3>
 <p>Across all land cells, built-up land covers 32% of the area and holds
