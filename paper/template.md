@@ -118,4 +118,4 @@ Voogt, J. A., & Oke, T. R. (2003). Thermal remote sensing of urban climates. *Re
 
 WorldPop. (2020). *Unconstrained individual countries 2000–2020 (100 m): Nigeria*. University of Southampton. https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/NGA/nga_ppp_2020.tif
 
-Zanaga, D., Van De Kerchove, R., De Keersmaecker, W., et al. (2022). *ESA WorldCover 10 m 2021 v200*. Zenodo. https://doi.org/10.5281/zenodo.7254221
+Zanaga, D., Van De Kerchove, R., Daems, D., et al. (2022). *ESA WorldCover 10 m 2021 v200*. Zenodo. https://doi.org/10.5281/zenodo.7254221
