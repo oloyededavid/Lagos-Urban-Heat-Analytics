@@ -6,12 +6,11 @@ island has changed over four decades (1985–2026).
 
 **Live site:** https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/
 
-The site has a map with six layers (surface temperature, hot and cold spots, heat exposure,
-vegetation, population density, and the heat island over time, with a period slider, play and a
-then-and-now swipe). It also has a plain-language overview, a four-decade change view with a heat
-strip for every LGA, a page for each LGA, a "what explains the heat" panel, the full statistical
-audit and rankings. A guided tour and a
-glossary come with it, and you can download the data, the map and the charts.
+The site is now one study page built from `paper/paper.md`: a short research note on the 2020–2024
+heat island and distance to vegetation, printed maps, and an interactive map of the LGAs. The
+six-layer map, per-LGA pages, tour, glossary and downloads described in earlier versions of this file
+were removed. The sections below up to "Four decades of change" describe the earlier LGA-level study
+(2022/23 and 2023/24 seasons) whose summary files remain in `docs/data/`; they are not on the page.
 
 ## What the data shows
 
