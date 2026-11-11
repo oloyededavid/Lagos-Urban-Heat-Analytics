@@ -36,6 +36,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import sys
 import math
 import time
 import urllib.request
@@ -257,6 +258,7 @@ def main(argv=None):
         try:
             return key, *read_pass(passes[key], grid, lagos_land, ref_mask, lga_ids, len(names), built=(wc == 50))
         except Exception as e:  # network or file errors: record and continue
+            print(f"read error for {key}: {e!r}", file=sys.stderr, flush=True)
             return key, {"error": str(e)[:200]}, None
 
     with ThreadPoolExecutor(args.workers) as ex:
