@@ -55,6 +55,7 @@ def main():
         try:
             return key, *pb.read_pass(passes[key], grid, lagos_land, ref_mask, lga_ids, len(names), built=(wc == 50))
         except Exception as e:  # keep going; record the error
+            print(f"read error for {key}: {e!r}", file=sys.stderr, flush=True)
             return key, {"error": str(e)[:200]}, None
 
     rows = []
