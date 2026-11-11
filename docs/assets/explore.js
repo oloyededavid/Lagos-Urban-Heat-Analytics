@@ -74,7 +74,7 @@
                 const sel = paths.find(p => p.dataset.name === name);
                 outline.setAttribute('d', sel ? sel.getAttribute('d') : '');
                 picker.value = name || '';
-                readout.innerHTML = name ? detail(name) : 'Select an area on the map, on the list below it, or use Tab and Enter.';
+                readout.innerHTML = name ? detail(name) : 'Select an area on the map, on the list above it, or use Tab and Enter.';
             };
             const paint = () => {
                 const nums = Object.keys(vals).map(n => value(n)).filter(v => v != null);
