@@ -44,7 +44,7 @@
     <h1>Surface urban heat island and distance to vegetation in Lagos
 State, Nigeria, 2020–2024</h1>
     <p class="sig"><span>David Oloyede</span><span>November
-2026</span><span class="sig-meta"><span>Version 2.13</span></span></p>
+2026</span><span class="sig-meta"><span>Version 2.14</span></span></p>
 </header>
 
 <h2 id="abstract">Abstract</h2>
@@ -366,7 +366,10 @@ themselves, and we did not control for the greenness of the cell, so the
 built-up gap may partly restate the known link between surface
 temperature and NDVI. Cells within and beyond 300 m were seen on
 different sets of images. Population is modelled, and the unconstrained
-product places some people on cells that are not built up. Distance is a
+product places some people on cells that are not built up. Cells without
+an NDVI value are treated as not vegetated in the distance calculation;
+we did not check their land cover, and if many are vegetation or wetland
+masked as water, the share beyond 300 m is overstated. Distance is a
 straight-line proxy and ignores roads and access, and vegetation outside
 the state land mask is not counted. The 300 m distance is borrowed from
 green-space indicators that count areas of at least 1 ha, while a single
