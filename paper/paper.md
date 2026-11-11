@@ -1,14 +1,14 @@
 ---
-title: "Urban heat island and distance to vegetation in Lagos State, Nigeria, 2020–2024"
+title: "Surface urban heat island and distance to vegetation in Lagos State, Nigeria, 2020–2024"
 author: "David Oloyede"
 date: "November 2026"
 ---
 
 # Abstract
 
-We ask whether residents of Lagos State who live far from vegetation also live on hotter ground. The heat measure is the urban heat island (UHI): how much warmer the land surface is than the surrounding countryside, taken from Landsat satellite images of the dry seasons of 2020–2024 at about 11:00 local time. About 13.9 million modelled residents live on land with a vegetation value. 65% of them live more than 300 m from vegetation, and 98% of those live on built-up cells. Among built-up cells, residents beyond 300 m are 1.4 °C warmer on average than residents within it, or 1.2 °C if vegetated cells are left out. The gap is positive in every check we ran. It ranges from 0.4 to 1.7 °C across the vegetation cut-offs, buffers of 0 to 120 m and population layers, and from 0.2 to 1.9 °C within single LGAs. Across all land-cover types the gap is 2.2 to 3.1 °C, depending on the population layer. These are cross-sectional associations. They do not show that vegetation lowers heat exposure.
+We ask whether residents of Lagos State who live far from vegetation also live on hotter ground. The heat measure is the surface urban heat island (UHI): how much warmer the land surface is than the surrounding countryside, taken from Landsat satellite images of the dry seasons of 2020–2024 at about 11:00 local time. About 13.9 million modelled residents live on land with a vegetation value. 65% of them live more than 300 m from vegetation, and 98% of those live on built-up cells. Among built-up cells, residents beyond 300 m are 1.4 °C warmer on average than residents within it, or 1.2 °C if vegetated cells are left out. The gap is positive in every check we ran. It ranges from 0.4 to 1.7 °C across the vegetation cut-offs, buffers of 0 to 120 m and population layers, and from 0.2 to 1.9 °C within single LGAs. Across all land-cover types the gap is 2.2 to 3.1 °C, depending on the population layer. These are cross-sectional associations. They do not show that vegetation lowers surface temperature.
 
-**Keywords:** urban heat island; land surface temperature; Landsat; vegetation; Lagos; population exposure
+**Keywords:** surface urban heat island; land surface temperature; Landsat; vegetation; Lagos; population
 
 # 1. Introduction
 
@@ -34,7 +34,7 @@ Population is the WorldPop 2020 unconstrained product at 100 m (WorldPop, 2020; 
 
 We searched all Landsat 8 and 9 dry-season scenes from December 2019 to March 2025 with under 70% cloud, giving 173 passes (one satellite, one day, one path). A pass was kept if its reference had at least 6,750 clear 60 m pixels, no more than 5% of built-up 180 m blocks were more than 3 °C colder than the reference (a cloud and fog screen), and at least one LGA was half clear. 18 passes were kept. 80 failed on a cloudy reference, 62 had no LGA half clear, 11 failed the cold screen and 2 could not be read. All 18 kept passes are on Landsat path 191 at about 10:03 UTC (11:03 local time), from January 2020 to December 2024. The cold screen uses the heat values, so it is partly selection on the outcome. Section 3.3 tests this.
 
-## 2.3 Distance and exposure measures
+## 2.3 Distance and heat measures
 
 Distance to vegetation is the straight-line distance from a cell to the nearest vegetated cell. Residents are "within" if their cell is within 300 m (about 3.6 minutes on foot at 5 km/h) and "beyond" otherwise. The measure ignores roads, fences and access, and counts a single 60 m cell of street trees as vegetation.
 
