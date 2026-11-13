@@ -29,7 +29,7 @@ The latest commit (`f32a469`) built and deployed successfully on GitHub Pages, a
 
 ## 4. Map inventory (M01-M18)
 
-Legend: **Exists** = already in repo. **Build** = can be made now from repo data. **Export** = needs a new Earth Engine export (script written by Claude, run with your Google account). **Not defensible** = would require data that does not exist; replaced as noted.
+Legend: **Exists** = already in repo. **Build** = can be made now from repo data. **Export** = needs a new Earth Engine export (script in the repository, run with a Google account). **Not defensible** = would require data that does not exist; replaced as noted.
 
 | ID | Map | Status | How |
 |---|---|---|---|

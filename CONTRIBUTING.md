@@ -1,4 +1,4 @@
-# Working on this repository
+# Contributing and working on this repository
 
 Static research site (GitHub Pages, `docs/`) on the urban heat island of Lagos State, 2020–2024
 (a short research note and one interactive page), with the Python scripts that produce every number and map on it.
