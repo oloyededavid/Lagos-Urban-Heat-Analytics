@@ -847,3 +847,7 @@ main p, main li { overflow-wrap: anywhere; }
 .xp-table[open] summary::before { content: "−"; }
 /* the phone section menu fades at the right edge so it reads as scrollable */
 @media (max-width: 1080px) { .toc-phone { -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent); mask-image: linear-gradient(90deg, #000 88%, transparent); padding-right: 36px; } }
+
+/* consistency with the portfolio: left-aligned text, portfolio blue */
+:root { --accent: #1f5fae; }
+.article section > p, .article section li, .note p, .citation p, figcaption, .eqx-text { text-align: left; hyphens: manual; -webkit-hyphens: manual; }
