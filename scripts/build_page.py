@@ -31,7 +31,7 @@ def figure_html(m):
             f'<figcaption><b>Figure {num}.</b> {desc}</figcaption></figure>')
 
 
-EXPLORE = """<h3 id="explore">3.4 Explore the local government areas</h3>
+EXPLORE = """<h3 id="explore">3.4 Map of the local government areas</h3>
 <p>Pick a measure, then select an area on the map or from the list. Mean heat is averaged over the cells of an area that have a heat value. The shares count all residents of the area, and residents on cells without a heat value count as not hot. In the east, where a larger share of cells has no heat value, an area's values rest on a smaller share of its land.</p>
 <div id="xp-buttons" class="xp-buttons" role="group" aria-label="Measure"></div>
 <p class="xp-pick"><label for="xp-select">Area</label> <select id="xp-select"></select></p>
