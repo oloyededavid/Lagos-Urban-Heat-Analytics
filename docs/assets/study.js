@@ -39,4 +39,13 @@
         const id = $('.site-id'); if (id) id.focus({ preventScroll: true });
     });
 
+    // ---------- copy citation ----------
+    const copy = $('#copy-cite');
+    if (copy) copy.addEventListener('click', () => {
+        const t = $('#cite-text').textContent.replace(/\s+/g, ' ').trim();
+        const done = () => { const was = copy.textContent; copy.textContent = 'Copied'; setTimeout(() => { copy.textContent = was; }, 1600); };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, () => window.prompt('Copy the citation:', t));
+        else window.prompt('Copy the citation:', t);
+    });
+
 })();
