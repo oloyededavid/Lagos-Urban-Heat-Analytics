@@ -48,4 +48,48 @@
         else window.prompt('Copy the citation:', t);
     });
 
+    // ---------- reactions and page views ----------
+    const NS = document.body.dataset.counter, STORE = document.body.dataset.store || `${NS}-reaction`;
+    if (!NS) return;
+    const COUNTER = 'https://abacus.jasoncameron.dev';
+    const LIVE = location.hostname === 'oloyededavid.github.io' && !navigator.webdriver;
+    const KEY = { 'Useful': 'useful', 'Interesting': 'interesting', 'Needs clarity': 'clarity' };
+    const fmt = n => Number(n).toLocaleString('en-GB');
+    const count = (op, key) => fetch(`${COUNTER}/${op}/${NS}/${key}`)
+        .then(r => (r.ok ? r.json() : r.status === 404 ? { value: 0 } : Promise.reject(r.status)))
+        .then(j => Number(j.value) || 0);
+    const show = (label, n) => { const el = $(`.react[data-react="${label}"] .rc`); if (el) el.textContent = n ? fmt(n) : ''; };
+    if (LIVE) {
+        const v = $('#views');
+        if (v) {
+            const seen = store.get(`${NS}-viewed`);
+            count(seen ? 'get' : 'hit', 'views')
+                .then(n => { if (!seen) store.set(`${NS}-viewed`, '1'); if (n) { v.textContent = `${fmt(n)} page views`; v.hidden = false; } })
+                .catch(() => {});
+        }
+        Object.entries(KEY).forEach(([label, key]) => { if ($(`.react[data-react="${label}"]`)) count('get', key).then(n => show(label, n)).catch(() => {}); });
+    }
+    const buttons = $$('.react'), status = $('#react-status');
+    if (!buttons.length || !status) return;
+    let reaction = store.get(STORE, true) || '';
+    const mark = () => buttons.forEach(b => {
+        b.setAttribute('aria-pressed', String(b.dataset.react === reaction));
+        b.classList.toggle('is-other', !!reaction && b.dataset.react !== reaction);
+    });
+    mark();
+    if (reaction) status.textContent = 'Thanks, your reaction is counted.';
+    buttons.forEach(b => b.addEventListener('click', () => {
+        if (reaction) {
+            status.textContent = reaction === b.dataset.react ? 'Thanks, your reaction is counted.' : 'You have already reacted from this browser.';
+            return;
+        }
+        reaction = b.dataset.react;
+        store.set(STORE, reaction, true);
+        mark();
+        status.textContent = 'Thank you! Counted.';
+        const rc = $('.rc', b);
+        rc.textContent = fmt((Number((rc.textContent || '0').replace(/,/g, '')) || 0) + 1);
+        b.classList.add('pop');
+        if (LIVE) count('hit', KEY[reaction]).then(n => show(reaction, n)).catch(() => {});
+    }));
 })();
