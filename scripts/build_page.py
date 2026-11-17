@@ -79,7 +79,7 @@ def main():
     assert html.count(marker) == 1, "discussion heading not found"
     html = html.replace(marker, EXPLORE + marker)
     html = tidy(html)
-    out.write_text(_study_links(html, out.parent), encoding="utf-8")
+    out.write_text(_study_links(_page_end(html), out.parent), encoding="utf-8")
     print("wrote", out)
 
 
@@ -102,6 +102,46 @@ def _study_links(html, docs):
         block = f.read_text(encoding="utf-8").strip()
         html = _re.sub(r"<!-- study-others:start -->.*?<!-- study-others:end -->", lambda m: block, html, flags=_re.S)
     return html
+
+
+def _web_ending(html, end):
+    """Shape the end of the page like the other study sites: the paper's own data-and-code section becomes the
+    opening paragraph of "Data, code and citation" (so the page says it once), the page end goes before the
+    references, and the references become the same compact list, with DOIs shown as doi:..."""
+    import re as _re
+    m = _re.search(r'<h2 id="[^"]*data-and-code[^"]*">.*?</h2>\s*(.*?)(?=<h2 )', html, flags=_re.S)
+    if not m:
+        raise SystemExit("page end: the paper's data-and-code section was not found (its heading id changed?)")
+    html = html[:m.start()] + html[m.end():]
+    end, n = _re.subn(r'(<h2 id="h-dc">.*?</h2>)', lambda k: k.group(1) + "\n    " + m.group(1).strip(), end, count=1, flags=_re.S)
+    if not n:
+        raise SystemExit('page end: page_end.html has no <h2 id="h-dc"> heading')
+    anchor = '<h2 id="references">'
+    if anchor not in html:
+        raise SystemExit("page end: no References heading to place the end of the page before")
+    html = html.replace(anchor, end + "\n" + anchor, 1)
+    r = _re.search(r'(<h2 id="references">References</h2>\s*)((?:<p>.*?</p>\s*)+)', html, flags=_re.S)
+    if not r:
+        raise SystemExit("page end: no reference paragraphs after the References heading")
+    else:
+        def item(p):
+            p = " ".join(p.split())  # pandoc wraps lines, even inside tags
+            p = _re.sub(r'<a href="https://doi\.org/([^"]+)"[^>]*>[^<]*</a>', lambda k: f'<a href="https://doi.org/{k.group(1)}">doi:{k.group(1)}</a>', p)
+            trim = lambda u: (u[:-1] if u.endswith(")") and u.count("(") < u.count(")") else u).rstrip(".,;:")
+            def bare(k, doi):
+                u = trim(k.group(1)); rest = k.group(1)[len(u):]
+                return (f'<a href="https://doi.org/{u}">doi:{u}</a>' if doi else f'<a href="{u}">{u}</a>') + rest
+            p = _re.sub(r'(?<![">/])https://doi\.org/([^\s<]+)', lambda k: bare(k, True), p)
+            p = _re.sub(r'(?<![">/])(https?://[^\s<]+)', lambda k: bare(k, False), p)
+            return "<li>" + p + "</li>"
+        items = [item(p) for p in _re.findall(r"<p>(.*?)</p>", r.group(2), flags=_re.S)]
+        html = html[:r.start(2)] + '<ol class="refs" role="list">\n' + "\n".join(items) + "\n</ol>\n" + html[r.end(2):]
+    return html
+
+
+def _page_end(html):
+    """The end of the page (key terms, data and citation, a note, feedback) lives in page_end.html next to this script."""
+    return _web_ending(html, Path(__file__).with_name("page_end.html").read_text(encoding="utf-8").strip())
 
 if __name__ == "__main__":
     main()
