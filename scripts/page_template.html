@@ -71,9 +71,14 @@ $body$
 </section>
 </main>
 
+<button type="button" class="to-top" id="to-top" aria-label="Back to top" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+
 <footer>
-    <p>David Oloyede · <a href="https://github.com/oloyededavid">github.com/oloyededavid</a> · Last updated $date$</p>
-    <p>Code (MIT) and derived data (CC BY 4.0): <a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics">github.com/oloyededavid/Lagos-Urban-Heat-Analytics</a>. Source data keep their own licences.</p>
+    <div class="inner">
+        <p class="sig"><span>David Oloyede</span><span><a href="https://github.com/oloyededavid">github.com/oloyededavid</a></span><span>Last updated $date$</span><span class="views" id="views" hidden></span></p>
+        <p>Code MIT, derived data CC BY 4.0. Source data keep their own terms: Landsat (USGS), ESA WorldCover, Copernicus DEM GLO-30 (ESA and Airbus), WorldPop, FAO GAUL and Natural Earth.</p>
+        <!-- study-others:start --><!-- study-others:end -->
+    </div>
 </footer>
 <script src="assets/explore.js"></script>
 <script src="assets/study.js"></script>
