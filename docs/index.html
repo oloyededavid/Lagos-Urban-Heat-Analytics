@@ -7,8 +7,10 @@
     <title>Surface urban heat island and distance to vegetation in Lagos State, Nigeria, 2020–2024</title>
 <link rel="canonical" href="https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Surface urban heat island and distance to vegetation in Lagos State, Nigeria, 2020–2024">
-<meta property="og:description" content="Urban heat island in Lagos State, 2020–2024: surface heat, population and distance to vegetation.">
+<meta property="og:title" content="Surface urban heat island and
+distance to vegetation in Lagos State, Nigeria, 2020–2024">
+<meta property="og:description" content="Urban heat island in Lagos
+State, 2020–2024: surface heat, population and distance to vegetation.">
 <meta property="og:url" content="https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/">
 <meta property="og:image" content="https://oloyededavid.github.io/Lagos-Urban-Heat-Analytics/assets/og.png">
 <meta property="og:image:width" content="1200">
@@ -23,7 +25,7 @@
     <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=zodiak@500,700&amp;display=swap">
     <link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
+<body data-counter="oloyededavid-lagos-uhi-v1" data-store="lagos-reaction-1">
 <!-- study-bar:start --><style>
 .sn-bar{font:400 14px/1.4 'Range Dash','Satoshi',system-ui,-apple-system,'Segoe UI',sans-serif;background:#fff;border-bottom:1px solid #e5e5e1;color:#141412;position:relative;z-index:1000}
 .sn-bar .sn-in{max-width:1240px;margin:0 auto;padding:4px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
@@ -432,52 +434,90 @@ cut-offs, buffers of 0 to 120 m and population layers, and from 0.2 to
 1.9 °C within single LGAs. In these ranges the vegetated cells are left
 out of the nearby group. These are cross-sectional associations. They do
 not show cause or trend.</p>
-<h2 id="data-and-code-availability">Data and code availability</h2>
-<p>Code is released under the MIT licence and derived data under CC BY
+<!-- page-end:start -->
+<section id="key-terms" aria-labelledby="h-terms">
+    <h2 id="h-terms">Key terms</h2>
+    <dl class="glossary">
+        <dt>Surface urban heat island</dt><dd>How much warmer the land surface is than the countryside around the city. It is a land temperature, not the temperature of the air people breathe.</dd>
+        <dt>Land surface temperature</dt><dd>The temperature of the ground, roofs and tree tops as a satellite sees it on clear days, here from Landsat images taken around 11:00 local time, December to February.</dd>
+        <dt>Countryside reference</dt><dd>Land within 20 km of the state that ESA WorldCover 2021 classes as trees, shrubs, grass, crops, wetland or mangrove. Each cell’s heat is measured against it.</dd>
+        <dt>NDVI</dt><dd>A greenness index from satellite images. A cell counts as vegetated when its median NDVI is at least 0.4.</dd>
+        <dt>300 m from vegetation</dt><dd>The straight-line distance used to split residents into those near vegetation and those farther away (about four minutes’ walk on a direct path).</dd>
+        <dt>Built-up cell</dt><dd>A cell that ESA WorldCover 2021 classes as built-up. The main comparison is between built-up cells only. Land cover comes from the single 10 m label at each cell centre, so it is only roughly held fixed.</dd>
+        <dt>WorldPop</dt><dd>A modelled map of where people live, at 100 m. It is an estimate, not a census count.</dd>
+        <dt>LGA</dt><dd>Local government area. Lagos State has 20, and the heat gap is also reported within the LGAs that have enough residents in both groups.</dd>
+        <dt>Heat gap</dt><dd>How much warmer the land surface is where residents beyond 300 m from vegetation live than where residents within 300 m live.</dd>
+        <dt>Cross-sectional association</dt><dd>Two things that go together across places at one time. It does not show that one causes the other.</dd>
+    </dl>
+</section>
+
+<section id="data-code" aria-labelledby="h-dc">
+    <h2 id="h-dc">Data, code and citation</h2>
+    <p>Code is released under the MIT licence and derived data under CC BY
 4.0, from <a
 href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics"
 class="uri">https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics</a>.
 Source data keep their own terms: Landsat (USGS), ESA WorldCover,
 WorldPop and FAO GAUL.</p>
-<h2 id="references">References</h2>
-<p>Oke, T. R. (1982). The energetic basis of the urban heat island.
-<em>Quarterly Journal of the Royal Meteorological Society</em>,
-108(455), 1–24. https://doi.org/10.1002/qj.49710845502</p>
-<p>Tatem, A. J. (2017). WorldPop, open data for spatial demography.
-<em>Scientific Data</em>, 4, 170004.
-https://doi.org/10.1038/sdata.2017.4</p>
-<p>USGS. Landsat Collection 2 Level 2 surface temperature and
-reflectance products, accessed through Microsoft Planetary Computer.</p>
-<p>Voogt, J. A., &amp; Oke, T. R. (2003). Thermal remote sensing of
-urban climates. <em>Remote Sensing of Environment</em>, 86(3), 370–384.
-https://doi.org/10.1016/S0034-4257(03)00079-8</p>
-<p>WorldPop. (2020). <em>Unconstrained individual countries 2000–2020
-(100 m): Nigeria</em>. University of Southampton.
-https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/NGA/nga_ppp_2020.tif</p>
-<p>Zanaga, D., Van De Kerchove, R., Daems, D., et al. (2022). <em>ESA
-WorldCover 10 m 2021 v200</em>. Zenodo.
-https://doi.org/10.5281/zenodo.7254221</p>
+    <ul class="downloads">
+        <li><a href="data/sensitivity_population.json" download>sensitivity_population.json</a><span>Heat gap with each population layer</span></li>
+        <li><a href="data/access.json" download>access.json</a><span>Distance to vegetation and residents beyond 300 m</span></li>
+        <li><a href="data/gap_specifications.json" download>gap_specifications.json</a><span>Heat gap under each specification</span></li>
+        <li><a href="data/extra_analysis.json" download>extra_analysis.json</a><span>Heat gap by land cover and threshold</span></li>
+        <li><a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics/raw/main/paper/paper.docx">Paper (Word)</a><span>Same text, for printing or comment</span></li>
+        <li><a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics">Repository</a><span>Scripts, tests and the audit record</span></li>
+    </ul>
+    <h3 id="cite">How to cite</h3>
+    <div class="citation">
+        <p id="cite-text">Oloyede, D. O. (2026). <i>Surface urban heat island and distance to vegetation in Lagos State, Nigeria, 2020–2024</i>. https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics</p>
+        <button type="button" class="button" id="copy-cite">Copy citation</button>
+    </div>
+</section>
+
+<section class="note" aria-labelledby="h-note">
+    <h2 id="h-note">A note from me</h2>
+    <p>Thank you for reading. I set out to ask whether people who live far from greenery in Lagos also live on hotter ground, and the gap is positive in every check I report, though those checks do not cover choices I never varied. An audit showed where my words had gone further than my numbers: it is the land surface that is warmer, not the residents, and the quoted ranges left out vegetated cells. I have tried to say exactly what was tested.</p>
+    <p>The study is cross-sectional. It shows where surface heat and distance from vegetation go together, not that planting trees would cool a street. That would need a different kind of study, for example measuring before and after planting.</p>
+    <p>If you know Lagos and something here does not match what you see on the ground, I would like to hear it: <a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics/issues">open an issue on the repository</a>.</p>
+    <p class="sign">David</p>
+</section>
 
 <section id="feedback" class="feedback" aria-labelledby="h-fb">
-    <h2 id="h-fb">What did you think of this page?</h2>
+    <h2 id="h-fb">Was this research useful?</h2>
     <div class="react-row">
         <div class="reactions" role="group" aria-labelledby="h-fb">
-            <button type="button" class="react" data-react="Useful" aria-pressed="false">Useful <span class="rc"></span></button>
-            <button type="button" class="react" data-react="Interesting" aria-pressed="false">Interesting <span class="rc"></span></button>
-            <button type="button" class="react" data-react="Needs clarity" aria-pressed="false">Unclear in places <span class="rc"></span></button>
+            <button type="button" class="button react" data-react="Useful" aria-pressed="false">Useful <span class="rc"></span></button>
+            <button type="button" class="button react" data-react="Interesting" aria-pressed="false">Interesting <span class="rc"></span></button>
+            <button type="button" class="button react" data-react="Needs clarity" aria-pressed="false">Needs clarity <span class="rc"></span></button>
         </div>
         <span class="react-status" id="react-status" role="status"></span>
     </div>
-    <p class="react-note">One reaction per browser. Counts are anonymous and stored with a public counter. To say what is unclear, open an issue on the repository.</p>
+    <p class="react-note">One reaction per browser. Counts are anonymous and kept by a public counter.</p>
 </section>
+<!-- page-end:end -->
+<h2 id="references">References</h2>
+<ol class="refs" role="list">
+<li>Oke, T. R. (1982). The energetic basis of the urban heat island. <em>Quarterly Journal of the Royal Meteorological Society</em>, 108(455), 1–24. <a href="https://doi.org/10.1002/qj.49710845502">doi:10.1002/qj.49710845502</a></li>
+<li>Tatem, A. J. (2017). WorldPop, open data for spatial demography. <em>Scientific Data</em>, 4, 170004. <a href="https://doi.org/10.1038/sdata.2017.4">doi:10.1038/sdata.2017.4</a></li>
+<li>USGS. Landsat Collection 2 Level 2 surface temperature and reflectance products, accessed through Microsoft Planetary Computer.</li>
+<li>Voogt, J. A., &amp; Oke, T. R. (2003). Thermal remote sensing of urban climates. <em>Remote Sensing of Environment</em>, 86(3), 370–384. <a href="https://doi.org/10.1016/S0034-4257(03)00079-8">doi:10.1016/S0034-4257(03)00079-8</a></li>
+<li>WorldPop. (2020). <em>Unconstrained individual countries 2000–2020 (100 m): Nigeria</em>. University of Southampton. <a href="https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/NGA/nga_ppp_2020.tif">https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/NGA/nga_ppp_2020.tif</a></li>
+<li>Zanaga, D., Van De Kerchove, R., Daems, D., et al. (2022). <em>ESA WorldCover 10 m 2021 v200</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.7254221">doi:10.5281/zenodo.7254221</a></li>
+</ol>
 </main>
 
+<button type="button" class="to-top" id="to-top" aria-label="Back to top" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+
 <footer>
-    <p>David Oloyede · <a href="https://github.com/oloyededavid">github.com/oloyededavid</a> · Last updated November 2026</p>
-    <p>Code (MIT) and derived data (CC BY 4.0): <a href="https://github.com/oloyededavid/Lagos-Urban-Heat-Analytics">github.com/oloyededavid/Lagos-Urban-Heat-Analytics</a>. Source data keep their own licences.</p>
+    <div class="inner">
+        <p class="sig"><span>David Oloyede</span><span><a href="https://github.com/oloyededavid">github.com/oloyededavid</a></span><span>Last updated November
+2026</span><span class="views" id="views" hidden></span></p>
+        <p>Code MIT, derived data CC BY 4.0. Source data keep their own terms: Landsat (USGS), ESA WorldCover, Copernicus DEM GLO-30 (ESA and Airbus), WorldPop, FAO GAUL and Natural Earth.</p>
+        <!-- study-others:start --><p class="others">Other studies: <a href="https://oloyededavid.github.io/Observational-Hydrology-Extremes/">Nigeria floods, drought and design rainfall</a> · <a href="https://oloyededavid.github.io/Ogun-Catchment-Coast-Observatory/">Ogun surface water</a> · <a href="https://oloyededavid.github.io/Oueme-Ogun-Groundwater-Recharge/">Ouémé–Ogun recharge</a> · <a href="https://oloyededavid.github.io/Groundwater-Storage-Gravimetry/">Lake Chad water storage</a> · <a href="https://oloyededavid.github.io/Coastal-Hydrogeology-Modeling/">Lekki–Epe groundwater</a></p><!-- study-others:end -->
+    </div>
 </footer>
 <script src="assets/explore.js"></script>
-<script src="assets/feedback.js"></script>
+<script src="assets/study.js"></script>
 <!-- study-nav:start --><section class="sn-next" aria-label="Next study"><div class="sn-in"><p class="sn-k">Next study</p><a class="sn-card" href="https://oloyededavid.github.io/Coastal-Hydrogeology-Modeling/"><span class="sn-media"><img src="assets/next-study.webp" width="720" height="540" loading="lazy" decoding="async" alt=""></span><span class="sn-t"><b>Urban sealing and the shallow water table of the Lekki–Epe barrier, Lagos</b><span>How much of the barrier has been sealed since the 1980s, and what that could do to the water table beneath it.</span></span><span class="sn-arrow" aria-hidden="true">→</span></a><a class="sn-back" href="https://oloyededavid.github.io/geospatial-rs-portfolio/#studies"><span aria-hidden="true">←</span> Back to all studies</a></div></section><!-- study-nav:end -->
 </body>
 </html>
