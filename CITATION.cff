@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this analysis or its data, please cite it as below."
-title: "Lagos Urban Heat & Population Exposure Analytics"
+title: "Surface urban heat island and distance to vegetation in Lagos State, Nigeria, 2020–2024"
 type: software
 license:
   - MIT
@@ -19,5 +19,5 @@ keywords:
   - MODIS
   - Sentinel-2
   - Getis-Ord Gi*
-  - heat exposure
+  - distance to vegetation
   - Google Earth Engine

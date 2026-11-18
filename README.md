@@ -1,6 +1,6 @@
-# Lagos Urban Heat & Exposure Analytics
+# Lagos urban heat: surface heat island and distance to vegetation
 
-Dry-season land surface temperature, hot spots and population heat exposure across the
+Dry-season land surface temperature, hot spots and where residents live relative to warm ground across the
 20 Local Government Areas (LGAs) of Lagos State, Nigeria, and how the city's surface heat
 island has changed over four decades (1985–2026).
 
