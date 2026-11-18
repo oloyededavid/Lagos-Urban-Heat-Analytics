@@ -26,7 +26,7 @@ All numbers come from one Google Earth Engine export (script v2.0.0), covering t
 | Vegetation | Alone, every +0.1 of NDVI goes with surfaces about 1.7 °C cooler (R² = 0.94). |
 | Vegetation vs built-up | NDVI and NDBI are almost mirror images (r = −0.97, VIF = 15.5). Allowing for built-up density, NDVI's effect falls to −0.4 °C per +0.1 and its 95% interval includes zero. The data cannot separate the cooling from trees from the absence of concrete. |
 | Sensor check | MODIS (1 km) ranks the LGAs almost the same as Landsat (Spearman ρ = 0.97), but reads about 5.4 °C cooler. |
-| Exposure | Heat meets the most people in Ajeromi/Ifelodun, Mushin, Agege, Shomolu and Surulere. |
+| Heat and population | Heat meets the most people in Ajeromi/Ifelodun, Mushin, Agege, Shomolu and Surulere. |
 
 These are cross-sectional associations across 20 large areas, not causes or forecasts.
 
@@ -62,7 +62,7 @@ The statistics are computed in `scripts/analyze_uhi.py`:
 
 - **Clustering:** global Moran's I with Queen contiguity and k-nearest-neighbour weights (k = 3, 5, 8), 999 permutations.
 - **Hot spots:** Getis-Ord Gi* with two-sided p-values and Benjamini–Hochberg false discovery rate control. An LGA counts as stable across k only if its z-score keeps the same sign for all three values of k.
-- **Heat exposure index:** the min–max scaled temperature multiplied by the scaled log population density, with a rank-based check.
+- **Heat and population index:** the min–max scaled temperature multiplied by the scaled log population density, with a rank-based check.
 - **Regressions:** OLS with 95% confidence intervals, VIF, a leave-one-out check and residual Moran's I.
 - **Sensor agreement:** Landsat–MODIS Spearman and Pearson correlation, mean difference and RMSE.
 
