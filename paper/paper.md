@@ -12,7 +12,7 @@ We ask whether residents of Lagos State who live far from vegetation also live o
 
 # 1. Introduction
 
-Cities are warmer than the land around them. The air-temperature version of this is largest on clear, calm nights (Oke, 1982). Satellite surface temperature measures the ground surface instead, and that is the quantity used here (Voogt & Oke, 2003). Few such studies cover African cities. One that compared Lagos, Nairobi, Addis Ababa and Lusaka with Landsat found surface temperature rising with the density of impervious surface and falling with green space along the urban–rural gradient, and the cities with more impervious surface 3–4 °C warmer (Simwanda et al., 2019). This study asks a narrower question: where residents live relative to vegetation, and how warm the ground is there.
+Cities are warmer than the land around them. The air-temperature version of this is largest on clear, calm nights (Oke, 1982). Satellite surface temperature measures the ground surface instead, and that is the quantity used here (Voogt & Oke, 2003). Such studies were still uncommon for African cities in 2019; one that compared Lagos, Nairobi, Addis Ababa and Lusaka with Landsat found surface temperature rising with the density of impervious surface and falling with green space along the urban–rural gradient, and the cities with more impervious surface 3–4 °C warmer (Simwanda et al., 2019). This study asks a narrower question: where residents live relative to vegetation, and how warm the ground is there.
 
 Lagos State holds about 14.0 million modelled residents on its mapped land. Built-up land lies mainly west of the lagoon, and tree cover is concentrated in the east and along the water.
 
